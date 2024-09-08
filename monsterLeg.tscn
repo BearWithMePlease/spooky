@@ -1,0 +1,16 @@
+[gd_scene load_steps=2 format=3 uid="uid://3h6eguht44i6"]
+
+[ext_resource type="Script" path="res://monsterLeg.gd" id="1_pqr8q"]
+
+[node name="Leg" type="Line2D"]
+z_index = -1
+y_sort_enabled = true
+position = Vector2(9, 7)
+points = PackedVector2Array(0, 0, 269, 189, 456, 255, 618, 163)
+default_color = Color(0, 0, 0, 1)
+joint_mode = 2
+begin_cap_mode = 2
+end_cap_mode = 2
+antialiased = true
+script = ExtResource("1_pqr8q")
+lineLength = 300.0
