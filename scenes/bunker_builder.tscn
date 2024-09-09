@@ -1,0 +1,54 @@
+[gd_scene load_steps=6 format=3 uid="uid://dmkhp5el2xbu7"]
+
+[ext_resource type="Script" path="res://scripts/modules.gd" id="1_oercy"]
+[ext_resource type="Script" path="res://scripts/grid_module.gd" id="1_vpysb"]
+[ext_resource type="PackedScene" uid="uid://bmudhur7ptrne" path="res://prefab/ModuleButton.tscn" id="2_8ridg"]
+
+[sub_resource type="Gradient" id="Gradient_ih224"]
+offsets = PackedFloat32Array(0.442257)
+colors = PackedColorArray(0.196078, 0.196078, 0.196078, 1)
+
+[sub_resource type="GradientTexture1D" id="GradientTexture1D_a51lf"]
+gradient = SubResource("Gradient_ih224")
+
+[node name="BunkerBuilder" type="Node2D"]
+
+[node name="Camera" type="Camera2D" parent="."]
+position = Vector2(576, 324)
+
+[node name="Background" type="Sprite2D" parent="Camera"]
+visible = false
+texture = SubResource("GradientTexture1D_a51lf")
+
+[node name="Building_Space" type="Node2D" parent="."]
+
+[node name="Module_Mover" type="Sprite2D" parent="Building_Space"]
+modulate = Color(0.2, 0.866667, 0.2, 0.933333)
+z_index = 1
+script = ExtResource("1_vpysb")
+
+[node name="GUI" type="CanvasLayer" parent="."]
+
+[node name="Modules" type="HBoxContainer" parent="GUI"]
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -325.0
+offset_top = -125.0
+offset_right = 325.0
+grow_horizontal = 2
+grow_vertical = 0
+theme_override_constants/separation = 50
+alignment = 1
+script = ExtResource("1_oercy")
+color_valid_spot = Color(0.2, 0.866667, 0.2, 0.933333)
+color_invalid_spot = Color(0.866667, 0.2, 0.2, 0.933333)
+
+[node name="Debug_Module_Button" parent="GUI/Modules" instance=ExtResource("2_8ridg")]
+visible = false
+layout_mode = 2
+
+[connection signal="mouse_entered" from="GUI/Modules" to="GUI/Modules" method="mouse_gui_status" binds= [true]]
+[connection signal="mouse_exited" from="GUI/Modules" to="GUI/Modules" method="mouse_gui_status" binds= [false]]
