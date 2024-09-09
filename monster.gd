@@ -1,16 +1,28 @@
 extends Node2D
 
-# Inspired by The Rain World https://youtu.be/sVntwsrjNe4
+class_name Monster
 
+# Inspired by The Rain World https://youtu.be/sVntwsrjNe4
+@export var monsterSpeed: float = 300.0
+@export var facesCount: int = 4
 @export var legsCount: int = 16
-@export var radius: float = 30.0
+@export var legRadius: float = 30.0
 @export var monsterLegScene: PackedScene = null
+@export var monsterFaceScene: PackedScene = null
+@export var particles: CPUParticles2D = null
 var _legPosition: Array[Vector2] = []
 var _legGroundPos: Array[Vector2] = []
 var _legIsOnGround: Array[bool] = []
 var _legs: Array[MonsterLeg] = []
+var _faces: Array[RigidBody2D] = []
 
 func _ready() -> void:
+	for i in facesCount:
+		var face := monsterFaceScene.instantiate() as RigidBody2D
+		add_child(face)
+		face.position = Vector2(randf_range(-1, 1), randf_range(-1, 1))
+		_faces.append(face)
+	
 	for i in legsCount:
 		var leg := monsterLegScene.instantiate() as MonsterLeg
 		add_child(leg)
@@ -24,7 +36,7 @@ func _ready() -> void:
 		_legPosition[legIndex] = Vector2(
 			cos(angle),
 			sin(angle)
-		) * radius
+		) * legRadius
 		angle += 2.0 * PI / float(_legs.size())
 
 func _process(delta: float) -> void:
@@ -38,15 +50,32 @@ func _process(delta: float) -> void:
 	if(Input.is_action_pressed("Left")):
 		input.x -= 1
 	input = input.normalized()
-	const SPEED: float = 300.0
-	global_position += input * SPEED * delta
+	global_position += input * monsterSpeed * delta
 	
+	var center := Vector2(0, 0)
+	for faceIndex in _faces.size():
+		var rigidbody := _faces[faceIndex] as RigidBody2D
+		if rigidbody != null:
+			rigidbody.global_position = lerp(rigidbody.global_position, global_position, delta)
+			#const FORCE: float = 1
+			#var direction := -rigidbody.position
+			#rigidbody.apply_force(direction * FORCE)
+			#rigidbody.linear_velocity = clamp(rigidbody.linear_velocity, Vector2(-100, -100), Vector2(100, 100))
+			rigidbody.linear_velocity = rigidbody.linear_velocity * clampf(1.0 - delta * 10000.0, 0, 1)
+			center += rigidbody.global_position
+	center /= _faces.size()
+	global_position = lerp(global_position, center, 10.0 * delta)
+	# 
 	for legIndex in _legs.size():
 		var raySource: Vector2 = global_position + _legPosition[legIndex]
-		_legs[legIndex].setFixedPoint(raySource, _legGroundPos[legIndex], _legIsOnGround[legIndex])
+		_legs[legIndex].updateLeg(raySource, _legGroundPos[legIndex], _legIsOnGround[legIndex])
+	
+	var allPoints: Array[Vector2] = []
+	for leg in _legs:
+		allPoints.append_array(leg.getAllPoints())
+	particles.emission_points = allPoints
 
 func _physics_process(delta):
-	var angleStep: float = 2.0 * PI / float(_legs.size())
 	for legIndex in _legs.size():
 		# Check if position of legs is valid
 		# not longer then leg itself
@@ -56,35 +85,26 @@ func _physics_process(delta):
 		if (direction).length() > _legs[legIndex].getLegLength():
 			needsToFindNewPos = true
 		
-	 	#is in right range of angle
-		var targetAngle: float = angleStep * legIndex
-		var targetDir = Vector2(
-			cos(targetAngle),
-			sin(targetAngle)
-		).normalized()
-		direction = direction.normalized()
-		
-		#if direction.dot(targetDir) < 0.3:
-			#needsToFindNewPos = true
-		
 		if not needsToFindNewPos and _legIsOnGround[legIndex]:
 			continue
-			
-		#var rayDir: Vector2 = Vector2(
-			#cos(targetAngle + randf_range(-angleStep * 0.25, angleStep * 0.25)),
-			#sin(targetAngle + randf_range(-angleStep * 0.25, angleStep * 0.25))
-		#)
-		var rayDir: Vector2 = Vector2(
-			cos(randf_range(0, 2 * PI)),
-			sin(randf_range(0, 2 * PI))
-		)
-		var rayTarget: Vector2 = raySource + rayDir.normalized() * _legs[legIndex].getLegLength()
-		var space_state = get_world_2d().direct_space_state
-		var query = PhysicsRayQueryParameters2D.create(raySource, rayTarget)
-		query.collide_with_areas = true
-		var result = space_state.intersect_ray(query) 
-		if result:
-			_legGroundPos[legIndex] = result.position
-			_legIsOnGround[legIndex] = true
-		else:
-			_legIsOnGround[legIndex] = false
+		
+		# Try to find ground randomly 10 times with raycast
+		for i in 10:
+			var randomDirection: Vector2 = Vector2(
+				cos(randf_range(0, 2 * PI)),
+				sin(randf_range(0, 2 * PI))
+			).normalized()
+			var rayTarget: Vector2 = raySource + randomDirection * _legs[legIndex].getLegLength()
+			var query = PhysicsRayQueryParameters2D.create(raySource, rayTarget)
+			#query.collide_with_areas = true
+			query.collide_with_bodies = true
+			query.collision_mask = 0b10
+			var space_state = get_world_2d().direct_space_state
+			var result = space_state.intersect_ray(query)
+			# If found, store it
+			if result:
+				_legGroundPos[legIndex] = result.position
+				_legIsOnGround[legIndex] = true
+				break
+			else:
+				_legIsOnGround[legIndex] = false
