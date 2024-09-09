@@ -6,6 +6,11 @@ static var GRID_SIZE = 96
 static var MODULE_PATH = "res://imgs/modules/"
 static var HASH_SHIFT = 16 # -> max value 2^16 otherwise collision possible
 
+""" x is position:
+	u
+l	x	r
+	d
+"""
 enum ModuleDirection {
 	N = 0b00, # None
 	L = 0b01, # Left
@@ -13,11 +18,11 @@ enum ModuleDirection {
 	H = 0b11, # Horizontal (Left+Right)
 }
 
-enum ModuleStairDirection {
-	N = 0b00, # None
-	U = 0b01, # Up
-	D = 0b10, # Down
-	V = 0b11  # Vertical (Up+Down)
+enum ModuleVerticalDirection {
+	N = 0b0000, # None
+	U = 0b0100, # Up
+	D = 0b1000, # Down
+	V = 0b1100  # Vertical (Up+Down)
 }
 
 enum ModuleType {
@@ -111,7 +116,7 @@ func _process(delta: float) -> void:
 			mover.modulate = color_valid_spot
 			
 			var new_mover_direction = adjust_surroundings(grid_position)
-			mover.set_direction(new_mover_direction)
+			mover.set_direction(new_mover_direction & ModuleDirection.H, new_mover_direction & ModuleVerticalDirection.V)
 			
 			if Input.is_action_just_pressed("click"):
 				on_build_module()
@@ -122,8 +127,12 @@ func _process(delta: float) -> void:
 func mouse_gui_status(mouse_over_gui:bool):
 	self.mouse_over_gui = mouse_over_gui
 
-static func get_module_path(type: ModuleType, direction: ModuleDirection):
-	return MODULE_PATH + ModuleType.find_key(type).to_lower() + "_" + ModuleDirection.find_key(direction).to_lower() + ".png"
+static func get_module_path(type: ModuleType, direction: ModuleDirection, vertical_direction: ModuleVerticalDirection = ModuleVerticalDirection.N):
+	var type_str = ModuleType.find_key(type).to_lower()
+	var direction_str = ModuleDirection.find_key(direction).to_lower()
+	var vertical_direction_str = ("_" + ModuleVerticalDirection.find_key(vertical_direction).to_lower()) if type == ModuleType.STAIR else ""
+	
+	return MODULE_PATH + type_str + "/" + direction_str + vertical_direction_str + ".png"
 
 # hash grid position. NEEDS to be int due to shift operation
 static func get_grid_id(position:Vector2i):
@@ -182,41 +191,55 @@ func can_build_module(grid_position: Vector2):
 	
 	return true
 
-func adjust_surroundings(position: Vector2, removing = false) -> ModuleDirection:
-	var connection_slot_left = position + GRID_SIZE * (connections[type][0]-Vector2.ONE)
-	var connection_slot_right = position + GRID_SIZE * (connections[type][len(connections[type])-1]-Vector2.ONE)
+func adjust_surroundings(position: Vector2, removing = false) -> int:
+	var connection_slot_first = position + GRID_SIZE * (connections[type][0]-Vector2.ONE)
+	var connection_slot_last = position + GRID_SIZE * (connections[type][len(connections[type])-1]-Vector2.ONE)
 	
-	var left_position = connection_slot_left + Vector2(-GRID_SIZE, 0)
-	var right_position = connection_slot_right + Vector2(GRID_SIZE, 0)
+	var surroundings = {
+		ModuleDirection.L: connection_slot_first + Vector2(-GRID_SIZE, 0), 			# left
+		ModuleDirection.R: connection_slot_last + Vector2(GRID_SIZE, 0),			# right
+		ModuleVerticalDirection.U: connection_slot_first + Vector2(0, -GRID_SIZE),	# up
+		ModuleVerticalDirection.D: connection_slot_last + Vector2(0, GRID_SIZE)	# down
+	}
 	
-	var grid_module: GridModule
-	var mover_direction: ModuleDirection = ModuleDirection.N
-	if grid.has(get_grid_id(left_position)):
-		grid_module = grid.get(get_grid_id(left_position)) as GridModule
+	var mover_direction: int = 0b0000 # combination of ModuleDirection & ModuleVerticalDirection
+	
+	for direction in surroundings.keys():
+		var pos = surroundings[direction]
+		var grid_module = grid.get(get_grid_id(pos)) as GridModule
+
+		if grid_module == null or not connections[grid_module.node.type].has(grid_module.scale_index):
+			continue
+
+		# Vertical direction only allowed for stairs
+		if direction & ModuleVerticalDirection.V != 0 and (grid_module.node.type != ModuleType.STAIR or type != ModuleType.STAIR):
+			continue
+			
+
+		# update surrounding (inverse direction L->R; U->D; N->N)
+		var opposite_direction = ModuleDirection.H & (~(direction | ModuleVerticalDirection.V))
+		var opposite_vertical_direction = ModuleVerticalDirection.V & (~(direction | ModuleDirection.H))
 		
-		if connections[grid_module.node.type].has(grid_module.scale_index):
-			grid_module.node.adjust_direction(ModuleDirection.R, removing)
-			mover_direction = ModuleDirection.L
-	if grid.has(get_grid_id(right_position)):
-		grid_module = grid.get(get_grid_id(right_position)) as GridModule
+		# None stays None
+		if direction & ModuleDirection.H == 0: opposite_direction = ModuleDirection.N
+		if direction & ModuleVerticalDirection.V == 0: opposite_vertical_direction = ModuleVerticalDirection.N
 		
-		if connections[grid_module.node.type].has(grid_module.scale_index):
-			grid_module.node.adjust_direction(ModuleDirection.L, removing)
-			if mover_direction == ModuleDirection.L: mover_direction = ModuleDirection.H
-			else: mover_direction = ModuleDirection.R
-	
+		grid_module.node.adjust_direction(opposite_direction, opposite_vertical_direction, removing)
+		
+		# update mover
+		mover_direction |= direction
+
 	return mover_direction
 
 func on_build_module():
 	# Instantiate module prefab
 	var node = mover.duplicate() as Module
-	node.init(grid_position, type, mover.direction)
+	node.init(grid_position, type, mover.direction, mover.vertical_direction)
 	mover.get_parent().add_child(node)
 	
 	# Add module to each grid slot it occupies
 	for x in range(scales[type].x):
 		for y in range(scales[type].y):
-			print(x," ", y)
 			var module = GridModule.new(node, Vector2(x+1,y+1))
 			var slot_position = Vector2(node.position.x + GRID_SIZE * x, node.position.y - GRID_SIZE * y)
 			grid[get_grid_id(slot_position)] = module
