@@ -114,7 +114,6 @@ func _process(delta: float) -> void:
 				_points[i].position = lerp(_oldTargetGlobalPoint, _targetObject.global_position, _ease_in_out_back(_changeTargetTimer / changeTime))
 			else:
 				_points[i].position = lerp(_oldTargetGlobalPoint, _targetGlobalPoint, _ease_in_out_back(_changeTargetTimer / changeTime))
-			
 	# Simulate rope behaviour
 	_simulate(delta * verletSimulationSpeed)
 	
@@ -130,38 +129,81 @@ func _ease_in_out_back(x: float) -> float:
 		return (pow(2 * x, 2) * ((c2 + 1) * 2 * x - c2)) / 2
 	else:
 		return (pow(2 * x - 2, 2) * ((c2 + 1) * (2 * x - 2) + c2) + 2) / 2
-		
+
+# https://forum.godotengine.org/t/how-to-get-all-children-from-a-node/18587/3
+func get_all_children(in_node,arr:=[]):
+	arr.push_back(in_node)
+	for child in in_node.get_children():
+		arr = get_all_children(child,arr)
+	return arr
+
+func isPointInRect(point: Vector2, rect: Rect2) -> bool:
+	return point.x > rect.position.x && point.x < rect.position.x + rect.size.x && point.y > rect.position.y && point.y < rect.position.y + rect.size.y
+
+# Hello darkness, my old friend (part of my C++ physics engine)
+func findCollisionSolution(point: Rect2, rect: Rect2) -> Dictionary:
+	var minDepth: float = 1e10
+	var normal: Vector2 = Vector2.ZERO
+
+	if point.position.x < rect.position.x:
+		var depth = point.position.x + point.size.x - rect.position.x
+		if(depth < minDepth):
+			minDepth = depth
+			normal = Vector2(-1, 0)
+
+	if point.position.x + point.size.x > rect.position.x + rect.size.x:
+		var depth = rect.position.x + rect.size.x - point.position.x
+		if(depth < minDepth):
+			minDepth = depth
+			normal = Vector2(1, 0)
+
+	if point.position.y < rect.position.y:
+		var depth = point.position.y + point.size.y - rect.position.y
+		if depth < minDepth:
+			minDepth = depth
+			normal = Vector2(0, 1)
+
+	if point.position.y + point.size.y > rect.position.y + rect.size.y: 
+		var depth = rect.position.y + rect.size.y - point.position.y
+		if depth < minDepth:
+			minDepth = depth
+			normal = Vector2(0, -1)
+	 
+	return {
+		"depth": minDepth,
+		"normal": normal
+	}
+
+var allRects: Array[Rect2] = []
+
 # Verlet Intergation https://youtu.be/PGk0rnyTa1U
-func _simulate(delta: float):	
+func _simulate(delta: float) -> void:
+	if len(allRects) == 0:
+		for child in get_all_children(get_tree().root):
+			if child is CollisionShape2D:
+				var rect := (child as CollisionShape2D).shape.get_rect()
+				if rect != null:
+					allRects.append(Rect2(child.global_position - rect.size * child.global_scale * 0.5, rect.size * child.global_scale))
+		
 	for p in _points:
 		if not p.locked:
 			var positionBeforeUpdate := Vector2(p.position.x, p.position.y)
 			p.position += (p.position - p.prevPosition) * verletSmoothness
 			p.position += Vector2.DOWN * gravity * delta * delta
+			for rect in allRects:
+				if isPointInRect(p.position, rect):
+					var solution := findCollisionSolution(Rect2(p.position, Vector2(15, 15)), rect)
+					if(solution["depth"] <= 1e9):
+						p.position += solution["normal"] * abs(solution["depth"] * 2.0)
 			p.prevPosition = positionBeforeUpdate
+	
+	# this loop is really performance heavy, and not because of sqrt in normalize.
+	# but because python sucks with loops
+	var stickCentre: Vector2 = Vector2.ZERO
+	var stickChange: Vector2 = Vector2.ZERO
 	for i in numIterations:
 		for stick in _sticks:
-			var stickCentre := (stick.pointA.position + stick.pointB.position) / 2.0
-			var stickDir := (stick.pointA.position - stick.pointB.position).normalized()
-			if not stick.pointA.locked:
-				stick.pointA.position = stickCentre + stickDir * stick.length / 2.0
-			if not stick.pointB.locked:
-				stick.pointB.position = stickCentre - stickDir * stick.length / 2.0
-
-# Wobly collision of lines with ground using raycast
-func _physics_process(delta):
-	for stick in _sticks:
-		var raySource = stick.pointA.position
-		var rayTarget = stick.pointB.position
-		var rayDirection = (raySource - rayTarget).normalized()
-		var space_state = get_world_2d().direct_space_state
-		var query = PhysicsRayQueryParameters2D.create(raySource, rayTarget)
-		query.collide_with_bodies = true
-		query.collision_mask = 0b10
-		var result = space_state.intersect_ray(query) 
-		if result:
-			stick.pointB.position = result.position + rayDirection * 2.0
-			stick.pointA.locked = true
-			stick.pointA.position = result.position + rayDirection * 2.0
-			stick.pointB.locked = true
-			
+			stickCentre = (stick.pointA.position + stick.pointB.position)
+			stickChange = (stick.pointA.position - stick.pointB.position).normalized() * stick.length
+			stick.pointA.position = (stickCentre + stickChange) * 0.5
+			stick.pointB.position = (stickCentre - stickChange) * 0.5

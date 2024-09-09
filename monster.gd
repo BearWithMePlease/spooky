@@ -10,11 +10,13 @@ class_name Monster
 @export var monsterLegScene: PackedScene = null
 @export var monsterFaceScene: PackedScene = null
 @export var particles: CPUParticles2D = null
+@export var player: RigidBody2D = null
 var _legPosition: Array[Vector2] = []
 var _legGroundPos: Array[Vector2] = []
 var _legIsOnGround: Array[bool] = []
 var _legs: Array[MonsterLeg] = []
 var _faces: Array[RigidBody2D] = []
+var _isPlayerVisible: bool = false
 
 func _ready() -> void:	
 	# Generate faces
@@ -41,9 +43,13 @@ func _ready() -> void:
 			sin(angle)
 		) * legRadius
 		angle += 2.0 * PI / float(_legs.size())
+		
+	center = global_position
 
+var center := Vector2(0, 0)
+var input: Vector2 = Vector2(0, 0)
 func _process(delta: float) -> void:
-	var input: Vector2 = Vector2.ZERO
+	input = Vector2.ZERO
 	if(Input.is_action_pressed("Forward")):
 		input.y -= 1
 	if(Input.is_action_pressed("Back")):
@@ -53,19 +59,7 @@ func _process(delta: float) -> void:
 	if(Input.is_action_pressed("Left")):
 		input.x -= 1
 	input = input.normalized()
-	global_position += input * monsterSpeed * delta
 
-	var center := Vector2(0, 0)
-	for faceIndex in _faces.size():
-		var rigidbody := _faces[faceIndex] as RigidBody2D
-		if rigidbody != null:
-			# Lerp position of heads towards monster center
-			rigidbody.global_position = lerp(rigidbody.global_position, global_position, delta)
-			center += rigidbody.global_position
-	center /= _faces.size()
-	# Lerp monster center to center of heads
-	global_position = lerp(global_position, center, 10.0 * delta)
-	
 	# Update ground positions of legs
 	for legIndex in _legs.size():
 		var raySource: Vector2 = global_position + _legPosition[legIndex]
@@ -78,6 +72,27 @@ func _process(delta: float) -> void:
 	particles.emission_points = allPoints
 
 func _physics_process(delta):
+	var newCenter := Vector2(0, 0)
+	for faceIndex in _faces.size():
+		var rigidbody := _faces[faceIndex] as RigidBody2D
+		if rigidbody != null:
+			# Lerp position of heads towards monster center
+			rigidbody.global_position = lerp(rigidbody.global_position, center, delta)
+			newCenter += rigidbody.global_position
+			rigidbody.linear_velocity = input * monsterSpeed
+	newCenter /= _faces.size()
+	center = newCenter
+	global_position = center
+	
+	var playerTarget := self.global_position + (player.global_position - global_position).normalized() * 1000.0
+	var query = PhysicsRayQueryParameters2D.create(global_position, playerTarget)
+	query.collide_with_bodies = true
+	query.collision_mask = 0b10
+	var space_state = get_world_2d().direct_space_state
+	var result = space_state.intersect_ray(query)
+	if result and result.collider is Player:
+		pass # See player
+	
 	for legIndex in _legs.size():
 		# Check if position of legs is valid
 		# not longer then leg itself
@@ -90,18 +105,17 @@ func _physics_process(delta):
 		if not needsToFindNewPos and _legIsOnGround[legIndex]:
 			continue
 		
-		# Try to find ground randomly 10 times with raycast
-		for i in 10:
+		# Try to find ground randomly few times with raycast
+		for i in 5:
 			var randomDirection: Vector2 = Vector2(
 				cos(randf_range(0, 2 * PI)),
 				sin(randf_range(0, 2 * PI))
 			).normalized()
 			var rayTarget: Vector2 = raySource + randomDirection * _legs[legIndex].getLegLength()
-			var query = PhysicsRayQueryParameters2D.create(raySource, rayTarget)
+			query = PhysicsRayQueryParameters2D.create(raySource, rayTarget)
 			query.collide_with_bodies = true
 			query.collision_mask = 0b10
-			var space_state = get_world_2d().direct_space_state
-			var result = space_state.intersect_ray(query)
+			result = space_state.intersect_ray(query)
 			# If found, store it
 			if result:
 				_legGroundPos[legIndex] = result.position
