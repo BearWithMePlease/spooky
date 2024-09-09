@@ -16,22 +16,25 @@ var _legIsOnGround: Array[bool] = []
 var _legs: Array[MonsterLeg] = []
 var _faces: Array[RigidBody2D] = []
 
-func _ready() -> void:
+func _ready() -> void:	
+	# Generate faces
 	for i in facesCount:
 		var face := monsterFaceScene.instantiate() as RigidBody2D
 		add_child(face)
 		face.position = Vector2(randf_range(-1, 1), randf_range(-1, 1))
 		_faces.append(face)
 	
+	# Generate legs
 	for i in legsCount:
 		var leg := monsterLegScene.instantiate() as MonsterLeg
 		add_child(leg)
 		_legs.append(leg)
-		
-	var angle: float = 0.0
+	
 	_legPosition.resize(_legs.size())
 	_legGroundPos.resize(_legs.size())
 	_legIsOnGround.resize(_legs.size())
+	# make initial legs positions in circle (makes kinda no sence anymore)
+	var angle: float = 0.0
 	for legIndex in _legs.size():
 		_legPosition[legIndex] = Vector2(
 			cos(angle),
@@ -51,28 +54,27 @@ func _process(delta: float) -> void:
 		input.x -= 1
 	input = input.normalized()
 	global_position += input * monsterSpeed * delta
-	
+
 	var center := Vector2(0, 0)
 	for faceIndex in _faces.size():
 		var rigidbody := _faces[faceIndex] as RigidBody2D
 		if rigidbody != null:
+			# Lerp position of heads towards monster center
 			rigidbody.global_position = lerp(rigidbody.global_position, global_position, delta)
-			#const FORCE: float = 1
-			#var direction := -rigidbody.position
-			#rigidbody.apply_force(direction * FORCE)
-			#rigidbody.linear_velocity = clamp(rigidbody.linear_velocity, Vector2(-100, -100), Vector2(100, 100))
-			rigidbody.linear_velocity = rigidbody.linear_velocity * clampf(1.0 - delta * 10000.0, 0, 1)
 			center += rigidbody.global_position
 	center /= _faces.size()
+	# Lerp monster center to center of heads
 	global_position = lerp(global_position, center, 10.0 * delta)
-	# 
+	
+	# Update ground positions of legs
 	for legIndex in _legs.size():
 		var raySource: Vector2 = global_position + _legPosition[legIndex]
 		_legs[legIndex].updateLeg(raySource, _legGroundPos[legIndex], _legIsOnGround[legIndex])
 	
+	# Make particles spawn at legs
 	var allPoints: Array[Vector2] = []
 	for leg in _legs:
-		allPoints.append_array(leg.getAllPoints())
+		allPoints.append_array(leg.getAllUnlockedPoints())
 	particles.emission_points = allPoints
 
 func _physics_process(delta):
@@ -96,7 +98,6 @@ func _physics_process(delta):
 			).normalized()
 			var rayTarget: Vector2 = raySource + randomDirection * _legs[legIndex].getLegLength()
 			var query = PhysicsRayQueryParameters2D.create(raySource, rayTarget)
-			#query.collide_with_areas = true
 			query.collide_with_bodies = true
 			query.collision_mask = 0b10
 			var space_state = get_world_2d().direct_space_state

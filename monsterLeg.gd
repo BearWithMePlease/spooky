@@ -18,6 +18,7 @@ class Stick:
 @export var numIterations: int = 100
 @export var changeTime: float = 3.0 # more => faster
 @export var verletSmoothness: float = 0.75 # more => more janky
+@export var verletSimulationSpeed: float = 2.0
 
 var _targetGlobalPoint := Vector2(0, 0)
 var _oldTargetGlobalPoint := Vector2(0, 0)
@@ -26,6 +27,7 @@ var _points: Array[Point] = [] # simulated points
 var _sticks: Array[Stick] = []
 var _isInited: bool = false
 var _isOnGround: bool = false
+var _targetObject: Node2D = null
 var _changeTargetTimer: float = 0.0
 
 """from and to must be points in GLOBAL SPACE"""
@@ -33,16 +35,26 @@ func updateLeg(from: Vector2, to: Vector2, isOnGround: bool) -> void:
 	_sourceGlobalPoint = from
 	if not _isInited:
 		_initialize(from, to)
-	if (_targetGlobalPoint - to).length() > 0.1:
+	const DST_NEW_POINT := 0.1
+	if (_targetGlobalPoint - to).length() > DST_NEW_POINT:
 		_oldTargetGlobalPoint = _points[_points.size() - 1].position
 		_targetGlobalPoint = to
 		_changeTargetTimer = 0.0
 	_isOnGround = isOnGround
+	
+func targetObject(node: Node2D):
+	if _targetObject == node:
+		return
+	_oldTargetGlobalPoint = _points[_points.size() - 1].position
+	_changeTargetTimer = 0.0
+	_targetObject = node
+	_isOnGround = false
 
 func getLegLength() -> float:
 	return lineLength
 	
-func getAllPoints() -> Array[Vector2]:
+"""returns array of unlocked points in LOCAL SPACE"""
+func getAllUnlockedPoints() -> Array[Vector2]:
 	var arr: Array[Vector2] = []
 	for point in _points:
 		if not point.locked:
@@ -98,10 +110,13 @@ func _process(delta: float) -> void:
 		if _points[i].locked:
 			# Transition between old position and new using easing function
 			_changeTargetTimer = min(changeTime, _changeTargetTimer + delta)
-			_points[i].position = lerp(_oldTargetGlobalPoint, _targetGlobalPoint, _ease_in_out_back(_changeTargetTimer / changeTime))
-	
+			if _targetObject != null:
+				_points[i].position = lerp(_oldTargetGlobalPoint, _targetObject.global_position, _ease_in_out_back(_changeTargetTimer / changeTime))
+			else:
+				_points[i].position = lerp(_oldTargetGlobalPoint, _targetGlobalPoint, _ease_in_out_back(_changeTargetTimer / changeTime))
+			
 	# Simulate rope behaviour
-	_simulate(delta * 2.0)
+	_simulate(delta * verletSimulationSpeed)
 	
 	# Set Line2D points
 	for pointIndex in _points.size():
@@ -141,7 +156,6 @@ func _physics_process(delta):
 		var rayDirection = (raySource - rayTarget).normalized()
 		var space_state = get_world_2d().direct_space_state
 		var query = PhysicsRayQueryParameters2D.create(raySource, rayTarget)
-		#query.collide_with_areas = true
 		query.collide_with_bodies = true
 		query.collision_mask = 0b10
 		var result = space_state.intersect_ray(query) 
@@ -150,6 +164,4 @@ func _physics_process(delta):
 			stick.pointA.locked = true
 			stick.pointA.position = result.position + rayDirection * 2.0
 			stick.pointB.locked = true
-		elif not stick.pointA.locked:
-			stick.pointA.position += Vector2.DOWN * gravity * 10.0 * delta * delta
 			
