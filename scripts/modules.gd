@@ -2,7 +2,7 @@ extends HBoxContainer
 
 class_name Modules
 
-static var GRID_SIZE = 96
+static var GRID_SIZE = 64
 static var MODULE_PATH = "res://imgs/modules/"
 static var HASH_SHIFT = 16 # -> max value 2^16 otherwise collision possible
 
@@ -27,22 +27,26 @@ enum ModuleVerticalDirection {
 
 enum ModuleType {
 	NONE,
+	TRASH,
 	CORRIDOR,
 	STAIR,
 	ROOM_1,
 	ROOM_2,
-	ROOM_3
+	ROOM_3,
+	GENERATOR
 }
 
 # Module has base size of grid_size. Larger modules can be of n*grid_size in each direction
 # module_scales[ModuleType] = Vector2(n,k) (actual_size = n * grid_size)
 static var scales = {
 	ModuleType.NONE: Vector2(0,0),
+	ModuleType.TRASH: Vector2(0,0),
 	ModuleType.CORRIDOR: Vector2(1,1),
 	ModuleType.STAIR: Vector2(1,1),
 	ModuleType.ROOM_1: Vector2(1,1),
 	ModuleType.ROOM_2: Vector2(1,2),
-	ModuleType.ROOM_3: Vector2(2,2)
+	ModuleType.ROOM_3: Vector2(2,2),
+	ModuleType.GENERATOR: Vector2(4,2),
 }
 
 # Module has docking slots. Add slot to array where docking a different module is possible
@@ -50,11 +54,13 @@ static var scales = {
 # IMPORTANT: left connection is first vector && right connection is last vector
 static var connections = {
 	ModuleType.NONE: [],
+	ModuleType.TRASH: [],
 	ModuleType.CORRIDOR: [Vector2(1,1)],
 	ModuleType.STAIR: [Vector2(1,1)],
 	ModuleType.ROOM_1: [Vector2(1,1)],
 	ModuleType.ROOM_2: [Vector2(1,1)],
-	ModuleType.ROOM_3: [Vector2(1,1), Vector2(2,1)]
+	ModuleType.ROOM_3: [Vector2(1,1), Vector2(2,1)],
+	ModuleType.GENERATOR: [Vector2(1,1), Vector2(4,1)],
 }
 
 var module_button := preload("res://prefab/ModuleButton.tscn")
@@ -66,11 +72,12 @@ var module_button := preload("res://prefab/ModuleButton.tscn")
 
 var grid: Dictionary = {}
 
-@onready var mover = $"../../Building_Space/Module_Mover"
+@onready var mover = %Module_Mover # Unique Name
 var moving = false
 var grid_position: Vector2
 var type: ModuleType = ModuleType.NONE
 var mouse_over_gui = false
+var force_update = false
 
 var animation_running = false
 var animation_old_position: Vector2 = Vector2.ZERO
@@ -98,33 +105,38 @@ func _ready() -> void:
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta: float) -> void:
 	var old_grid_position = grid_position
-	grid_position = get_grid_position()
+	grid_position = get_grid_position(mover.get_global_mouse_position())
 	
 	# move module to cursor with animation
 	move_to_cursor(delta) 
-	
+
 	# only process if grid_position has changed or click action
-	if grid_position == old_grid_position and not Input.is_action_just_pressed("click"):
+	if grid_position == old_grid_position and not Input.is_action_just_pressed("click") and not force_update:
 		return
+	
+	force_update = false
 	
 	if moving:
 		if grid_position != old_grid_position and can_build_module(old_grid_position):
 			# Remove module direction
 			adjust_surroundings(old_grid_position, true)
-
+	
 		# set color highlighting & on click -> build function
 		if can_build_module(grid_position):
 			# Valid build spot
-			on_valid_build_spot()
+			mover.sprite.modulate = color_valid_spot
+			Input.set_default_cursor_shape(Input.CURSOR_MOVE)
+			
+			var new_mover_direction = adjust_surroundings(grid_position)
+			mover.set_direction(new_mover_direction & ModuleDirection.H, new_mover_direction & ModuleVerticalDirection.V)
 			
 			if Input.is_action_just_pressed("click"):
 				on_build_module()
 		else:
 			# Invalid build spot
-			mover.modulate = color_invalid_spot
+			mover.sprite.modulate = color_invalid_spot
 			mover.set_direction(ModuleDirection.N)
 			Input.set_default_cursor_shape(Input.CURSOR_FORBIDDEN)
-			self.mouse_default_cursor_shape = Control.CURSOR_FORBIDDEN
 	else:
 		# Cleanup old position
 		var old_module = grid.get(get_grid_id(old_grid_position)) as GridModule
@@ -143,18 +155,14 @@ func _process(delta: float) -> void:
 		
 		if Input.is_action_just_pressed("click"):
 				on_undo_build_module()
-		
-
-func on_valid_build_spot():
-	mover.modulate = color_valid_spot
-	Input.set_default_cursor_shape(Input.CURSOR_MOVE)
-	self.mouse_default_cursor_shape = Control.CURSOR_MOVE
-	
-	var new_mover_direction = adjust_surroundings(grid_position)
-	mover.set_direction(new_mover_direction & ModuleDirection.H, new_mover_direction & ModuleVerticalDirection.V)
 
 func mouse_gui_status(mouse_over_gui:bool):
+	if self.mouse_over_gui == mouse_over_gui:
+		return
+	
 	self.mouse_over_gui = mouse_over_gui
+	self.force_update = true
+	mover.visible = not mouse_over_gui
 
 static func get_module_path(type: ModuleType, direction: ModuleDirection, vertical_direction: ModuleVerticalDirection = ModuleVerticalDirection.N):
 	var type_str = ModuleType.find_key(type).to_lower()
@@ -164,8 +172,8 @@ static func get_module_path(type: ModuleType, direction: ModuleDirection, vertic
 	return MODULE_PATH + type_str + "/" + direction_str + vertical_direction_str + ".png"
 
 # hash grid position. NEEDS to be int due to shift operation
-static func get_grid_id(position:Vector2i):
-	return (position.x << HASH_SHIFT) + position.y
+static func get_grid_id(pos:Vector2i):
+	return (pos.x << HASH_SHIFT) + pos.y
 
 func move_to_cursor(delta: float):
 	if animation_running:
@@ -183,6 +191,10 @@ func move_to_cursor(delta: float):
 		animation_weight = 0
 
 func on_module_type_select(type: ModuleType, new_position = null):
+	if type == ModuleType.TRASH:
+		remove_mover()
+		return
+	
 	self.type = type
 	moving = true
 	mover.z_index = 1
@@ -190,19 +202,23 @@ func on_module_type_select(type: ModuleType, new_position = null):
 	if new_position == null:
 		animation_new_position = grid_position
 		mover.init(grid_position, type, ModuleDirection.N)
+		mover.position.y -= GRID_SIZE
+		force_update = true
 	else:
 		animation_new_position = new_position
 		mover.init(new_position, type, ModuleDirection.N)
 
+func remove_mover():
+	moving = false
+	mover.sprite.texture = null
+
 # Gets mouse to grid position. Only works for positive coords
-func get_grid_position():
-	var mouse_position = mover.get_global_mouse_position()
-	
-	var coord = Vector2i(roundi(mouse_position.x), roundi(mouse_position.y))
+func get_grid_position(pos: Vector2):
+	var coord = Vector2i(roundi(pos.x), roundi(pos.y))
 	var modulo = Vector2i(coord.x % GRID_SIZE, coord.y % GRID_SIZE)
 
-	coord.x = coord.x - modulo.x if modulo.x < GRID_SIZE / 2 else coord.x + (GRID_SIZE - modulo.x)
-	coord.y = coord.y - modulo.y if modulo.y < GRID_SIZE / 2 else coord.y + (GRID_SIZE - modulo.y)
+	coord.x = coord.x - modulo.x if modulo.x < floori(GRID_SIZE / 2.0) else coord.x + (GRID_SIZE - modulo.x)
+	coord.y = coord.y - modulo.y if modulo.y < floori(GRID_SIZE / 2.0) else coord.y + (GRID_SIZE - modulo.y)
 	
 	return Vector2(coord.x, coord.y)
 
@@ -219,9 +235,9 @@ func can_build_module(grid_position: Vector2):
 	
 	return true
 
-func adjust_surroundings(position: Vector2, removing = false) -> int:
-	var connection_slot_first = position + GRID_SIZE * (connections[type][0]-Vector2.ONE)
-	var connection_slot_last = position + GRID_SIZE * (connections[type][len(connections[type])-1]-Vector2.ONE)
+func adjust_surroundings(pos: Vector2, removing = false) -> int:
+	var connection_slot_first = pos + GRID_SIZE * (connections[type][0]-Vector2.ONE)
+	var connection_slot_last = pos + GRID_SIZE * (connections[type][len(connections[type])-1]-Vector2.ONE)
 	
 	var surroundings = {
 		ModuleDirection.L: connection_slot_first + Vector2(-GRID_SIZE, 0), 			# left
@@ -233,8 +249,7 @@ func adjust_surroundings(position: Vector2, removing = false) -> int:
 	var mover_direction: int = 0b0000 # combination of ModuleDirection & ModuleVerticalDirection
 	
 	for direction in surroundings.keys():
-		var pos = surroundings[direction]
-		var grid_module = grid.get(get_grid_id(pos)) as GridModule
+		var grid_module = grid.get(get_grid_id(surroundings[direction])) as GridModule
 
 		if grid_module == null or not connections[grid_module.node.type].has(grid_module.scale_index):
 			continue
@@ -275,11 +290,10 @@ func on_build_module():
 	
 	# Clean up
 	moving = false
-	mover.visible = false
+	mover.sprite.texture = null
 	type = ModuleType.NONE
 	grid_position = Vector2(-1, -1)
 	Input.set_default_cursor_shape(Input.CURSOR_ARROW)
-	self.mouse_default_cursor_shape = Control.CURSOR_ARROW
 
 func on_undo_build_module():
 	# Instantiate module prefab
@@ -315,12 +329,9 @@ func on_undo_build_module():
 	
 	on_module_type_select(type, current_position)
 	
-	if grid_position == current_position:
-		# Stays on grid slot - Is always valid
-		on_valid_build_spot()
-	else:
+	force_update = true
+	
+	if grid_position != current_position:
 		# Move to cursor grid slot
 		adjust_surroundings(current_position, true)
 		grid_position = current_position
-		
-	

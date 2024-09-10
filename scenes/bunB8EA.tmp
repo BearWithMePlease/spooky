@@ -1,8 +1,9 @@
-[gd_scene load_steps=6 format=3 uid="uid://dmkhp5el2xbu7"]
+[gd_scene load_steps=7 format=3 uid="uid://dmkhp5el2xbu7"]
 
 [ext_resource type="Script" path="res://scripts/modules.gd" id="1_oercy"]
 [ext_resource type="Script" path="res://scripts/builder_camera.gd" id="1_omeyi"]
-[ext_resource type="PackedScene" uid="uid://c8k2daifrhtu" path="res://prefab/modules/default.tscn" id="2_6atq6"]
+[ext_resource type="PackedScene" uid="uid://bmudhur7ptrne" path="res://prefab/ModuleButton.tscn" id="2_8ridg"]
+[ext_resource type="Script" path="res://scripts/module.gd" id="2_fxro4"]
 
 [sub_resource type="Gradient" id="Gradient_ih224"]
 offsets = PackedFloat32Array(0.442257)
@@ -23,8 +24,12 @@ texture = SubResource("GradientTexture1D_a51lf")
 
 [node name="Building_Space" type="Node2D" parent="."]
 
-[node name="Module_Mover" parent="Building_Space" instance=ExtResource("2_6atq6")]
-unique_name_in_owner = true
+[node name="Module_Mover" type="Node2D" parent="Building_Space"]
+modulate = Color(0.2, 0.866667, 0.2, 0.933333)
+z_index = 1
+script = ExtResource("2_fxro4")
+
+[node name="Sprite" type="Sprite2D" parent="Building_Space/Module_Mover"]
 
 [node name="GUI" type="CanvasLayer" parent="."]
 
@@ -46,6 +51,10 @@ color_valid_spot = Color(0.2, 0.866667, 0.2, 0.933333)
 color_invalid_spot = Color(0.866667, 0.2, 0.2, 0.933333)
 color_hover_spot = Color(0.862745, 0.862745, 0.862745, 1)
 animation_duration = 0.1
+
+[node name="Debug_Module_Button" parent="GUI/Modules" instance=ExtResource("2_8ridg")]
+visible = false
+layout_mode = 2
 
 [connection signal="mouse_entered" from="GUI/Modules" to="GUI/Modules" method="mouse_gui_status" binds= [true]]
 [connection signal="mouse_exited" from="GUI/Modules" to="GUI/Modules" method="mouse_gui_status" binds= [false]]

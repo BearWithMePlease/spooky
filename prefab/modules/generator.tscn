@@ -1,0 +1,52 @@
+[gd_scene load_steps=7 format=3 uid="uid://ogv0kj11knlg"]
+
+[ext_resource type="Script" path="res://scripts/module.gd" id="2_2pgmg"]
+[ext_resource type="Script" path="res://TEST_CAN_BE_REMOVED.gd" id="3_p5h12"]
+
+[sub_resource type="CompressedTexture2D" id="CompressedTexture2D_kt6y4"]
+load_path = "res://.godot/imported/n.png-1ec2e8f598e9f74fc814bf1888a59a5e.ctex"
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_lxb0d"]
+
+[sub_resource type="Gradient" id="Gradient_u3fny"]
+
+[sub_resource type="GradientTexture2D" id="GradientTexture2D_srxob"]
+gradient = SubResource("Gradient_u3fny")
+
+[node name="Generator" type="Node2D"]
+script = ExtResource("2_2pgmg")
+
+[node name="Sprite" type="Sprite2D" parent="."]
+texture = SubResource("CompressedTexture2D_kt6y4")
+centered = false
+
+[node name="Borders" type="StaticBody2D" parent="Sprite"]
+position = Vector2(128, 64)
+
+[node name="Ceiling" type="CollisionPolygon2D" parent="Sprite/Borders"]
+polygon = PackedVector2Array(-128, 13, -128, -26, 128, -26, 128, 13, 124, 13, 124, -22, -123, -22, -123, 13)
+
+[node name="Floor" type="CollisionPolygon2D" parent="Sprite/Borders"]
+polygon = PackedVector2Array(128, 61, -128, 61, -128, 64, 128, 64)
+
+[node name="Connection_Left" type="CollisionPolygon2D" parent="Sprite/Borders"]
+polygon = PackedVector2Array(-128, 13, -128, 61, -123, 61, -123, 13)
+
+[node name="Connection_Right" type="CollisionPolygon2D" parent="Sprite/Borders"]
+polygon = PackedVector2Array(124, 13, 124, 61, 128, 61, 128, 13)
+
+[node name="RigidBody2D" type="CharacterBody2D" parent="Sprite"]
+position = Vector2(128, 63)
+script = ExtResource("3_p5h12")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Sprite/RigidBody2D"]
+shape = SubResource("RectangleShape2D_lxb0d")
+
+[node name="Sprite2D" type="Sprite2D" parent="Sprite/RigidBody2D"]
+position = Vector2(-9.53674e-07, 9.53674e-07)
+scale = Vector2(0.3125, 0.3125)
+texture = SubResource("GradientTexture2D_srxob")
+
+[node name="Camera2D" type="Camera2D" parent="."]
+scale = Vector2(0.226466, 9.84)
+zoom = Vector2(1.085, 1.085)
