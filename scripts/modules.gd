@@ -61,7 +61,8 @@ var module_button := preload("res://prefab/ModuleButton.tscn")
 
 @export var color_valid_spot: Color
 @export var color_invalid_spot: Color
-@export var animation_duration: float = 0.1
+@export var color_hover_spot: Color
+@export var animation_duration: float = 0.5
 
 var grid: Dictionary = {}
 
@@ -96,33 +97,61 @@ func _ready() -> void:
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta: float) -> void:
+	var old_grid_position = grid_position
+	grid_position = get_grid_position()
+	
+	# move module to cursor with animation
+	move_to_cursor(delta) 
+	
+	# only process if grid_position has changed or click action
+	if grid_position == old_grid_position and not Input.is_action_just_pressed("click"):
+		return
+	
 	if moving:
-		var new_grid_position = get_grid_position()
-		move_to_cursor(delta, new_grid_position) # move module to cursor with animation
-		
-		# only process if grid_position has changed or build action
-		if new_grid_position == grid_position and not Input.is_action_just_pressed("click"):
-			return
-		
-		var old_grid_position = grid_position
-		grid_position = new_grid_position
-
 		if grid_position != old_grid_position and can_build_module(old_grid_position):
 			# Remove module direction
 			adjust_surroundings(old_grid_position, true)
 
 		# set color highlighting & on click -> build function
 		if can_build_module(grid_position):
-			mover.modulate = color_valid_spot
-			
-			var new_mover_direction = adjust_surroundings(grid_position)
-			mover.set_direction(new_mover_direction & ModuleDirection.H, new_mover_direction & ModuleVerticalDirection.V)
+			# Valid build spot
+			on_valid_build_spot()
 			
 			if Input.is_action_just_pressed("click"):
 				on_build_module()
 		else:
+			# Invalid build spot
 			mover.modulate = color_invalid_spot
 			mover.set_direction(ModuleDirection.N)
+			Input.set_default_cursor_shape(Input.CURSOR_FORBIDDEN)
+			self.mouse_default_cursor_shape = Control.CURSOR_FORBIDDEN
+	else:
+		# Cleanup old position
+		var old_module = grid.get(get_grid_id(old_grid_position)) as GridModule
+		if old_module != null:
+			old_module.node.modulate = Color.WHITE
+		
+		# Not moving any module - can edit placed modules
+		var module = grid.get(get_grid_id(grid_position)) as GridModule
+		if module == null:
+			Input.set_default_cursor_shape(Input.CURSOR_ARROW)
+			return
+		
+		# Highlight hovered modules
+		Input.set_default_cursor_shape(Input.CURSOR_POINTING_HAND)
+		module.node.modulate = color_hover_spot
+		
+		if Input.is_action_just_pressed("click"):
+				on_undo_build_module()
+		
+
+func on_valid_build_spot():
+	mover.modulate = color_valid_spot
+	Input.set_default_cursor_shape(Input.CURSOR_MOVE)
+	self.mouse_default_cursor_shape = Control.CURSOR_MOVE
+	
+	var new_mover_direction = adjust_surroundings(grid_position)
+	mover.set_direction(new_mover_direction & ModuleDirection.H, new_mover_direction & ModuleVerticalDirection.V)
 
 func mouse_gui_status(mouse_over_gui:bool):
 	self.mouse_over_gui = mouse_over_gui
@@ -138,7 +167,7 @@ static func get_module_path(type: ModuleType, direction: ModuleDirection, vertic
 static func get_grid_id(position:Vector2i):
 	return (position.x << HASH_SHIFT) + position.y
 
-func move_to_cursor(delta: float, grid_position: Vector2):
+func move_to_cursor(delta: float):
 	if animation_running:
 		animation_weight = clamp(animation_weight + delta / animation_duration, 0, 1)
 		mover.position = lerp(animation_old_position, animation_new_position, animation_weight)
@@ -153,18 +182,17 @@ func move_to_cursor(delta: float, grid_position: Vector2):
 		animation_new_position = grid_position
 		animation_weight = 0
 
-func on_module_type_select(type: ModuleType, texture: CompressedTexture2D):
-	print("Using: ", ModuleType.find_key(type))
-	
+func on_module_type_select(type: ModuleType, new_position = null):
 	self.type = type
 	moving = true
-	animation_new_position = get_grid_position()
-	mover.init(animation_new_position, type, ModuleDirection.N)
 	mover.z_index = 1
 	
-	# set offset
-	#mover.offset = -scales[type] * grid_size / 2
-	
+	if new_position == null:
+		animation_new_position = grid_position
+		mover.init(grid_position, type, ModuleDirection.N)
+	else:
+		animation_new_position = new_position
+		mover.init(new_position, type, ModuleDirection.N)
 
 # Gets mouse to grid position. Only works for positive coords
 func get_grid_position():
@@ -185,7 +213,7 @@ func can_build_module(grid_position: Vector2):
 	# check all grid slots
 	for x in range(scales[type].x):
 		for y in range(scales[type].y):
-			var new_pos = Vector2(grid_position.x + GRID_SIZE * x,grid_position.y - GRID_SIZE * y)
+			var new_pos = grid_position + GRID_SIZE * Vector2(x,-y)
 			if grid.has(get_grid_id(new_pos)):
 				return false
 	
@@ -235,13 +263,14 @@ func on_build_module():
 	# Instantiate module prefab
 	var node = mover.duplicate() as Module
 	node.init(grid_position, type, mover.direction, mover.vertical_direction)
+	node.z_index = -1
 	mover.get_parent().add_child(node)
 	
 	# Add module to each grid slot it occupies
 	for x in range(scales[type].x):
 		for y in range(scales[type].y):
 			var module = GridModule.new(node, Vector2(x+1,y+1))
-			var slot_position = Vector2(node.position.x + GRID_SIZE * x, node.position.y - GRID_SIZE * y)
+			var slot_position = grid_position + GRID_SIZE * Vector2(x,-y)
 			grid[get_grid_id(slot_position)] = module
 	
 	# Clean up
@@ -249,3 +278,49 @@ func on_build_module():
 	mover.visible = false
 	type = ModuleType.NONE
 	grid_position = Vector2(-1, -1)
+	Input.set_default_cursor_shape(Input.CURSOR_ARROW)
+	self.mouse_default_cursor_shape = Control.CURSOR_ARROW
+
+func on_undo_build_module():
+	# Instantiate module prefab
+	var current_module = grid.get(get_grid_id(grid_position)) as GridModule
+	if current_module == null:
+		print("Undo module: Module not found")
+		return
+	
+	# find scale_index (1,1), bottom left corner
+	var bottom_left_slot = grid_position - (current_module.scale_index - Vector2.ONE) * GRID_SIZE * Vector2(1,-1)
+	current_module = grid.get(get_grid_id(bottom_left_slot)) as GridModule
+	if current_module == null:
+		print("Undo module: Bottom left module not found")
+		return
+	
+	# Remove all grid slots of module
+	type = current_module.node.type
+	var current_node = current_module.node
+	var current_position = current_module.node.position
+	for x in range(scales[type].x):
+		for y in range(scales[type].y):
+			var slot_position = current_position + GRID_SIZE * Vector2(x,-y)
+			var slot_id = get_grid_id(slot_position)
+			var slot_module = grid.get(slot_id) as GridModule
+			if slot_module == null:
+				print("Undo module: Could not erase a slot")
+
+			grid.erase(slot_id)
+			slot_module.free()
+
+	# Free node
+	current_node.free()
+	
+	on_module_type_select(type, current_position)
+	
+	if grid_position == current_position:
+		# Stays on grid slot - Is always valid
+		on_valid_build_spot()
+	else:
+		# Move to cursor grid slot
+		adjust_surroundings(current_position, true)
+		grid_position = current_position
+		
+	

@@ -10,10 +10,8 @@ func _ready() -> void:
 		return
 		
 	var path = Modules.get_module_path(module_type, module_direction)
-	var texture: CompressedTexture2D = load(path)
+	$"./Module_Img".texture = load(path)
 	
-	$"./Module_Img".texture = texture
-	
-	var callable = Callable($"..".on_module_type_select).bind(module_type, texture)
+	var callable = Callable($"..".on_module_type_select).bind(module_type)
 	self.pressed.connect(callable)
 	
