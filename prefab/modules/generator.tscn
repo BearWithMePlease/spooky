@@ -1,8 +1,7 @@
-[gd_scene load_steps=16 format=3 uid="uid://ogv0kj11knlg"]
+[gd_scene load_steps=12 format=3 uid="uid://ogv0kj11knlg"]
 
 [ext_resource type="Script" path="res://scripts/module.gd" id="2_2pgmg"]
 [ext_resource type="Texture2D" uid="uid://ba82qlhnxs647" path="res://imgs/modules/generator/n.png" id="2_f5htx"]
-[ext_resource type="Script" path="res://TEST_CAN_BE_REMOVED.gd" id="3_p5h12"]
 [ext_resource type="PackedScene" uid="uid://dki4talhc74jp" path="res://prefab/ceiling_lamp.tscn" id="3_uedks"]
 [ext_resource type="PackedScene" uid="uid://tbs4ifkjrnhc" path="res://prefab/vent.tscn" id="5_nnwbo"]
 
@@ -31,15 +30,6 @@ fill_from = Vector2(0.5, 0.5)
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_0u251"]
 size = Vector2(78, 48)
-
-[sub_resource type="RectangleShape2D" id="RectangleShape2D_lxb0d"]
-
-[sub_resource type="Gradient" id="Gradient_u3fny"]
-offsets = PackedFloat32Array(0)
-colors = PackedColorArray(0.464286, 0.356402, 0.111952, 1)
-
-[sub_resource type="GradientTexture2D" id="GradientTexture2D_srxob"]
-gradient = SubResource("Gradient_u3fny")
 
 [node name="Generator" type="Node2D"]
 script = ExtResource("2_2pgmg")
@@ -106,20 +96,3 @@ position = Vector2(107, 107)
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Sprite/Interactables/Generator"]
 position = Vector2(2, -6)
 shape = SubResource("RectangleShape2D_0u251")
-
-[node name="RigidBody2D" type="CharacterBody2D" parent="."]
-position = Vector2(169, 109)
-script = ExtResource("3_p5h12")
-
-[node name="CollisionShape2D" type="CollisionShape2D" parent="RigidBody2D"]
-shape = SubResource("RectangleShape2D_lxb0d")
-
-[node name="Sprite2D" type="Sprite2D" parent="RigidBody2D"]
-light_mask = 2
-scale = Vector2(0.3125, 0.3125)
-texture = SubResource("GradientTexture2D_srxob")
-
-[node name="Camera2D" type="Camera2D" parent="."]
-scale = Vector2(0.226466, 9.84)
-offset = Vector2(129.785, 64.09)
-zoom = Vector2(4.095, 4.095)

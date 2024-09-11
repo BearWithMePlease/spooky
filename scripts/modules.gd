@@ -27,26 +27,24 @@ enum ModuleVerticalDirection {
 
 enum ModuleType {
 	NONE,
-	TRASH,
 	CORRIDOR,
-	STAIR,
-	ROOM_1,
-	ROOM_2,
-	ROOM_3,
-	GENERATOR
+	GENERATOR,
+	COMMUNICATION,
+	ENTRY,
+	WATER,
+	WEAPONS
 }
 
 # Module has base size of grid_size. Larger modules can be of n*grid_size in each direction
 # module_scales[ModuleType] = Vector2(n,k) (actual_size = n * grid_size)
 static var scales = {
 	ModuleType.NONE: Vector2(0,0),
-	ModuleType.TRASH: Vector2(0,0),
 	ModuleType.CORRIDOR: Vector2(1,1),
-	ModuleType.STAIR: Vector2(1,1),
-	ModuleType.ROOM_1: Vector2(1,1),
-	ModuleType.ROOM_2: Vector2(1,2),
-	ModuleType.ROOM_3: Vector2(2,2),
 	ModuleType.GENERATOR: Vector2(4,2),
+	ModuleType.COMMUNICATION: Vector2(2,2),
+	ModuleType.ENTRY: Vector2(3,2),
+	ModuleType.WATER: Vector2(3,2),
+	ModuleType.WEAPONS: Vector2(2,2)
 }
 
 # Module has docking slots. Add slot to array where docking a different module is possible
@@ -54,13 +52,12 @@ static var scales = {
 # IMPORTANT: left connection is first vector && right connection is last vector
 static var connections = {
 	ModuleType.NONE: [],
-	ModuleType.TRASH: [],
 	ModuleType.CORRIDOR: [Vector2(1,1)],
-	ModuleType.STAIR: [Vector2(1,1)],
-	ModuleType.ROOM_1: [Vector2(1,1)],
-	ModuleType.ROOM_2: [Vector2(1,1)],
-	ModuleType.ROOM_3: [Vector2(1,1), Vector2(2,1)],
 	ModuleType.GENERATOR: [Vector2(1,1), Vector2(4,1)],
+	ModuleType.COMMUNICATION: [Vector2(1,1), Vector2(2,1)],
+	ModuleType.ENTRY: [Vector2(1,1), Vector2(3,1)],
+	ModuleType.WATER: [Vector2(1,1), Vector2(3,1)],
+	ModuleType.WEAPONS: [Vector2(1,1), Vector2(2,1)],
 }
 
 var module_button := preload("res://prefab/ModuleButton.tscn")
@@ -111,13 +108,13 @@ func _process(delta: float) -> void:
 	move_to_cursor(delta) 
 
 	# only process if grid_position has changed or click action
-	if grid_position == old_grid_position and not Input.is_action_just_pressed("click") and not force_update:
+	if grid_position == old_grid_position and not Input.is_action_just_pressed("click") and not Input.is_action_just_pressed("right_click") and not force_update:
 		return
 	
 	force_update = false
 	
 	if moving:
-		if grid_position != old_grid_position and can_build_module(old_grid_position):
+		if grid_position != old_grid_position and can_build_module(old_grid_position, true):
 			# Remove module direction
 			adjust_surroundings(old_grid_position, true)
 	
@@ -132,11 +129,26 @@ func _process(delta: float) -> void:
 			
 			if Input.is_action_just_pressed("click"):
 				on_build_module()
+			elif Input.is_action_just_pressed("right_click"):
+				# Remove mover module
+				adjust_surroundings(grid_position, true)
+				
+				self.type = ModuleType.NONE
+				moving = false
+				force_update = true
+				mover.sprite.texture = null
 		else:
 			# Invalid build spot
 			mover.sprite.modulate = color_invalid_spot
 			mover.set_direction(ModuleDirection.N)
 			Input.set_default_cursor_shape(Input.CURSOR_FORBIDDEN)
+			
+			if Input.is_action_just_pressed("right_click"):
+				# Remove mover module
+				self.type = ModuleType.NONE
+				moving = false
+				force_update = true
+				mover.sprite.texture = null
 	else:
 		# Cleanup old position
 		var old_module = grid.get(get_grid_id(old_grid_position)) as GridModule
@@ -154,7 +166,9 @@ func _process(delta: float) -> void:
 		module.node.modulate = color_hover_spot
 		
 		if Input.is_action_just_pressed("click"):
-				on_undo_build_module()
+			on_undo_build_module(true)
+		elif Input.is_action_just_pressed("right_click"):
+			on_undo_build_module(false) # Will undo but not grab item
 
 func mouse_gui_status(mouse_over_gui:bool):
 	if self.mouse_over_gui == mouse_over_gui:
@@ -167,7 +181,7 @@ func mouse_gui_status(mouse_over_gui:bool):
 static func get_module_path(type: ModuleType, direction: ModuleDirection, vertical_direction: ModuleVerticalDirection = ModuleVerticalDirection.N):
 	var type_str = ModuleType.find_key(type).to_lower()
 	var direction_str = ModuleDirection.find_key(direction).to_lower()
-	var vertical_direction_str = ("_" + ModuleVerticalDirection.find_key(vertical_direction).to_lower()) if type == ModuleType.STAIR else ""
+	var vertical_direction_str = ("_" + ModuleVerticalDirection.find_key(vertical_direction).to_lower()) if type == ModuleType.CORRIDOR else ""
 	
 	return MODULE_PATH + type_str + "/" + direction_str + vertical_direction_str + ".png"
 
@@ -191,10 +205,6 @@ func move_to_cursor(delta: float):
 		animation_weight = 0
 
 func on_module_type_select(type: ModuleType, new_position = null):
-	if type == ModuleType.TRASH:
-		remove_mover()
-		return
-	
 	self.type = type
 	moving = true
 	mover.z_index = 1
@@ -223,8 +233,8 @@ func get_grid_position(pos: Vector2):
 	return Vector2(coord.x, coord.y)
 
 # Check if there is already a module in that position (on grid)
-func can_build_module(grid_position: Vector2):
-	if mouse_over_gui: return false
+func can_build_module(grid_position: Vector2, ignore_gui:bool = false):
+	if mouse_over_gui and not ignore_gui: return false
 	
 	# check all grid slots
 	for x in range(scales[type].x):
@@ -254,8 +264,8 @@ func adjust_surroundings(pos: Vector2, removing = false) -> int:
 		if grid_module == null or not connections[grid_module.node.type].has(grid_module.scale_index):
 			continue
 
-		# Vertical direction only allowed for stairs
-		if direction & ModuleVerticalDirection.V != 0 and (grid_module.node.type != ModuleType.STAIR or type != ModuleType.STAIR):
+		# Vertical direction only allowed for corridor
+		if direction & ModuleVerticalDirection.V != 0 and (grid_module.node.type != ModuleType.CORRIDOR or type != ModuleType.CORRIDOR):
 			continue
 			
 
@@ -295,7 +305,7 @@ func on_build_module():
 	grid_position = Vector2(-1, -1)
 	Input.set_default_cursor_shape(Input.CURSOR_ARROW)
 
-func on_undo_build_module():
+func on_undo_build_module(grab_item:bool):
 	# Instantiate module prefab
 	var current_module = grid.get(get_grid_id(grid_position)) as GridModule
 	if current_module == null:
@@ -327,11 +337,12 @@ func on_undo_build_module():
 	# Free node
 	current_node.free()
 	
-	on_module_type_select(type, current_position)
+	if grab_item:
+		on_module_type_select(type, current_position)
 	
 	force_update = true
 	
-	if grid_position != current_position:
+	if grid_position != current_position or not grab_item:
 		# Move to cursor grid slot
 		adjust_surroundings(current_position, true)
 		grid_position = current_position

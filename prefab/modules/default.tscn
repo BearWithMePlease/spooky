@@ -1,8 +1,11 @@
-[gd_scene load_steps=3 format=3 uid="uid://c8k2daifrhtu"]
+[gd_scene load_steps=4 format=3 uid="uid://c8k2daifrhtu"]
 
 [ext_resource type="Script" path="res://scripts/module.gd" id="1_m2rkb"]
 
 [sub_resource type="OccluderPolygon2D" id="OccluderPolygon2D_2fw73"]
+polygon = PackedVector2Array(0, 0, 0, 0, 4, 0, 4, 48, 0, 48)
+
+[sub_resource type="OccluderPolygon2D" id="OccluderPolygon2D_pxh4c"]
 polygon = PackedVector2Array(0, 0, 0, 0, 4, 0, 4, 48, 0, 48)
 
 [node name="Default" type="Node2D"]
@@ -26,7 +29,7 @@ polygon = PackedVector2Array(124, 13, 124, 61, 128, 61, 128, 13)
 
 [node name="LightOccluder2D" type="LightOccluder2D" parent="Sprite/Borders/Connection_Right"]
 position = Vector2(124, 13)
-occluder = SubResource("OccluderPolygon2D_2fw73")
+occluder = SubResource("OccluderPolygon2D_pxh4c")
 
 [node name="Lights" type="Node2D" parent="Sprite"]
 
