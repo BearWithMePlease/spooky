@@ -17,12 +17,18 @@ var _legIsOnGround: Array[bool] = []
 var _legs: Array[MonsterLeg] = []
 var _faces: Array[RigidBody2D] = []
 var _isPlayerVisible: bool = false
+# Used in physics_process:
+var _center := Vector2(0, 0)
+var _input: Vector2 = Vector2(0, 0)
+const WALL_COLLISION_MASK = 0b10
 
-func _ready() -> void:	
+func _ready() -> void:
+	_center = global_position
 	# Generate faces
 	for i in facesCount:
 		var face := monsterFaceScene.instantiate() as RigidBody2D
 		add_child(face)
+		# little random so that they push each other
 		face.position = Vector2(randf_range(-1, 1), randf_range(-1, 1))
 		_faces.append(face)
 	
@@ -35,7 +41,8 @@ func _ready() -> void:
 	_legPosition.resize(_legs.size())
 	_legGroundPos.resize(_legs.size())
 	_legIsOnGround.resize(_legs.size())
-	# make initial legs positions in circle (makes kinda no sence anymore)
+	
+	# make initial legs positions in circle
 	var angle: float = 0.0
 	for legIndex in _legs.size():
 		_legPosition[legIndex] = Vector2(
@@ -44,21 +51,17 @@ func _ready() -> void:
 		) * legRadius
 		angle += 2.0 * PI / float(_legs.size())
 		
-	center = global_position
-
-var center := Vector2(0, 0)
-var input: Vector2 = Vector2(0, 0)
 func _process(delta: float) -> void:
-	input = Vector2.ZERO
+	_input = Vector2.ZERO
 	if(Input.is_action_pressed("Forward")):
-		input.y -= 1
+		_input.y -= 1
 	if(Input.is_action_pressed("Back")):
-		input.y += 1
+		_input.y += 1
 	if(Input.is_action_pressed("Right")):
-		input.x += 1
+		_input.x += 1
 	if(Input.is_action_pressed("Left")):
-		input.x -= 1
-	input = input.normalized()
+		_input.x -= 1
+	_input = _input.normalized()
 
 	# Update ground positions of legs
 	for legIndex in _legs.size():
@@ -72,33 +75,36 @@ func _process(delta: float) -> void:
 	particles.emission_points = allPoints
 
 func _physics_process(delta):
-	var newCenter := Vector2(0, 0)
+	# Monster rigidbody movement
+	var newCenter := Vector2.ZERO
 	for faceIndex in _faces.size():
 		var rigidbody := _faces[faceIndex] as RigidBody2D
 		if rigidbody != null:
 			# Lerp position of heads towards monster center
-			rigidbody.global_position = lerp(rigidbody.global_position, center, delta)
+			rigidbody.global_position = lerp(rigidbody.global_position, _center, delta)
 			newCenter += rigidbody.global_position
-			rigidbody.linear_velocity = input * monsterSpeed
+			rigidbody.linear_velocity = _input * monsterSpeed
 	newCenter /= _faces.size()
-	center = newCenter
-	global_position = center
+	_center = newCenter
+	global_position = _center
 	
+	# Raycasting player
 	var playerTarget := self.global_position + (player.global_position - global_position).normalized() * 1000.0
 	var query = PhysicsRayQueryParameters2D.create(global_position, playerTarget)
 	query.collide_with_bodies = true
-	query.collision_mask = 0b10
+	query.collision_mask = player.collision_layer
 	var space_state = get_world_2d().direct_space_state
 	var result = space_state.intersect_ray(query)
 	if result and result.collider is Player:
 		pass # See player
+	
 	
 	for legIndex in _legs.size():
 		# Check if position of legs is valid
 		# not longer then leg itself
 		var needsToFindNewPos: bool = false
 		var raySource: Vector2 = global_position + _legPosition[legIndex]
-		var direction := _legGroundPos[legIndex] - raySource
+		var direction: Vector2 = _legGroundPos[legIndex] - raySource
 		if (direction).length() > _legs[legIndex].getLegLength():
 			needsToFindNewPos = true
 		
@@ -106,6 +112,7 @@ func _physics_process(delta):
 			continue
 		
 		# Try to find ground randomly few times with raycast
+		_legIsOnGround[legIndex] = false
 		for i in 5:
 			var randomDirection: Vector2 = Vector2(
 				cos(randf_range(0, 2 * PI)),
@@ -114,12 +121,10 @@ func _physics_process(delta):
 			var rayTarget: Vector2 = raySource + randomDirection * _legs[legIndex].getLegLength()
 			query = PhysicsRayQueryParameters2D.create(raySource, rayTarget)
 			query.collide_with_bodies = true
-			query.collision_mask = 0b10
+			query.collision_mask = WALL_COLLISION_MASK
 			result = space_state.intersect_ray(query)
 			# If found, store it
 			if result:
 				_legGroundPos[legIndex] = result.position
 				_legIsOnGround[legIndex] = true
 				break
-			else:
-				_legIsOnGround[legIndex] = false
