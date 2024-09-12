@@ -17,6 +17,8 @@ var module_prefabs = {
 	Modules.ModuleType.GENERATOR: preload("res://prefab/modules/generator.tscn"),
 	Modules.ModuleType.WATER: preload("res://prefab/modules/water.tscn"),
 	Modules.ModuleType.WEAPONS: preload("res://prefab/modules/weapons.tscn"),
+	Modules.ModuleType.BEDROOM: preload("res://prefab/modules/bedroom.tscn"),
+	Modules.ModuleType.HOSPITAL: preload("res://prefab/modules/hospital.tscn")
 }
 
 var builder_modules: Array[Module] = []

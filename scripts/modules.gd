@@ -32,7 +32,9 @@ enum ModuleType {
 	COMMUNICATION,
 	ENTRY,
 	WATER,
-	WEAPONS
+	WEAPONS,
+	HOSPITAL,
+	BEDROOM
 }
 
 # Module has base size of grid_size. Larger modules can be of n*grid_size in each direction
@@ -44,7 +46,9 @@ static var scales = {
 	ModuleType.COMMUNICATION: Vector2(2,2),
 	ModuleType.ENTRY: Vector2(3,2),
 	ModuleType.WATER: Vector2(3,2),
-	ModuleType.WEAPONS: Vector2(2,2)
+	ModuleType.WEAPONS: Vector2(2,2),
+	ModuleType.HOSPITAL: Vector2(3, 2),
+	ModuleType.BEDROOM: Vector2(2, 2)
 }
 
 # Module has docking slots. Add slot to array where docking a different module is possible
@@ -58,6 +62,8 @@ static var connections = {
 	ModuleType.ENTRY: [Vector2(1,1), Vector2(3,1)],
 	ModuleType.WATER: [Vector2(1,1), Vector2(3,1)],
 	ModuleType.WEAPONS: [Vector2(1,1), Vector2(2,1)],
+	ModuleType.HOSPITAL: [Vector2(1,1), Vector2(3, 1)],
+	ModuleType.BEDROOM: [Vector2(1,1), Vector2(2,1)]
 }
 
 var module_button := preload("res://prefab/module_button.tscn")
@@ -256,7 +262,7 @@ func get_surroundings(grid_position: Vector2, type: ModuleType) -> Dictionary:
 	}
 
 # Check if there is already a module in that position (on grid)
-func can_build_module(grid_position: Vector2, ignore_gui:bool = false):
+func can_build_module(grid_position: Vector2, ignore_gui: bool = false):
 	if mouse_over_gui and not ignore_gui: return false
 	
 	# check if all grid slots are empty
@@ -267,10 +273,10 @@ func can_build_module(grid_position: Vector2, ignore_gui:bool = false):
 				return false
 	
 	# only allow connected modules to be buildable
-	#var surrounding_check = adjust_surroundings(grid_position, false, true)
-	#if surrounding_check & (ModuleDirection.H | ModuleVerticalDirection.V) == 0:
+	var surrounding_check = adjust_surroundings(grid_position, false, true)
+	if surrounding_check & (ModuleDirection.H | ModuleVerticalDirection.V) == 0:
 		# module not connected with anything
-		#return false
+		return false
 	
 	return true
 
