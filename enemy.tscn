@@ -1,0 +1,99 @@
+[gd_scene load_steps=10 format=3 uid="uid://c3cfufhet1let"]
+
+[ext_resource type="Script" path="res://monster.gd" id="1_1tsk6"]
+[ext_resource type="Texture2D" uid="uid://bsfoxkgqdmhpf" path="res://images/wall.png" id="2_76fud"]
+[ext_resource type="PackedScene" uid="uid://mb1u0vbty7ft" path="res://prefabs/monsterFace.tscn" id="3_1t6w6"]
+[ext_resource type="PackedScene" uid="uid://3h6eguht44i6" path="res://prefabs/monsterLeg.tscn" id="3_02nh1"]
+[ext_resource type="Script" path="res://scripts/player/player.gd" id="5_68e1l"]
+[ext_resource type="Texture2D" uid="uid://cgulootwnw36w" path="res://images/monster/player.png" id="5_ipgw7"]
+[ext_resource type="Script" path="res://fps.gd" id="7_xy3cy"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_y38ng"]
+size = Vector2(98.7465, 88.6354)
+
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_syc5l"]
+
+[node name="Enemy" type="Node2D"]
+
+[node name="Monster" type="Node2D" parent="." node_paths=PackedStringArray("particles", "player")]
+z_index = 1
+y_sort_enabled = true
+position = Vector2(276, 367)
+script = ExtResource("1_1tsk6")
+monsterSpeed = 5.0
+facesCount = 5
+legsCount = 25
+monsterLegScene = ExtResource("3_02nh1")
+monsterFaceScene = ExtResource("3_1t6w6")
+particles = NodePath("CPUParticles2D")
+player = NodePath("../Player")
+
+[node name="CPUParticles2D" type="CPUParticles2D" parent="Monster"]
+amount = 25
+lifetime = 3.0
+emission_shape = 4
+emission_points = PackedVector2Array()
+emission_colors = PackedColorArray()
+direction = Vector2(0, 0)
+spread = 180.0
+gravity = Vector2(0, 2)
+initial_velocity_min = 2.0
+initial_velocity_max = 15.0
+scale_amount_min = 4.0
+scale_amount_max = 4.0
+color = Color(0.00784314, 0.00784314, 0.14902, 1)
+
+[node name="Walls" type="Node2D" parent="."]
+
+[node name="Wall3" type="Sprite2D" parent="Walls"]
+position = Vector2(545.5, 556)
+scale = Vector2(7.88889, 0.699495)
+texture = ExtResource("2_76fud")
+
+[node name="StaticBody2D" type="StaticBody2D" parent="Walls/Wall3"]
+collision_layer = 2
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Walls/Wall3/StaticBody2D"]
+shape = SubResource("RectangleShape2D_y38ng")
+
+[node name="Wall4" type="Sprite2D" parent="Walls"]
+position = Vector2(546, 162)
+scale = Vector2(7.88889, 0.699495)
+texture = ExtResource("2_76fud")
+
+[node name="StaticBody2D" type="StaticBody2D" parent="Walls/Wall4"]
+collision_layer = 2
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Walls/Wall4/StaticBody2D"]
+shape = SubResource("RectangleShape2D_y38ng")
+
+[node name="Wall5" type="Sprite2D" parent="Walls"]
+position = Vector2(546, 353)
+scale = Vector2(0.767676, 0.699495)
+texture = ExtResource("2_76fud")
+
+[node name="StaticBody2D" type="StaticBody2D" parent="Walls/Wall5"]
+collision_layer = 2
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Walls/Wall5/StaticBody2D"]
+shape = SubResource("RectangleShape2D_y38ng")
+
+[node name="Player" type="RigidBody2D" parent="."]
+position = Vector2(802, 468)
+collision_layer = 2
+collision_mask = 3
+contact_monitor = true
+script = ExtResource("5_68e1l")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Player"]
+shape = SubResource("CapsuleShape2D_syc5l")
+
+[node name="Sprite2D" type="Sprite2D" parent="Player"]
+texture_filter = 1
+texture = ExtResource("5_ipgw7")
+
+[node name="fps" type="Label" parent="."]
+offset_right = 40.0
+offset_bottom = 23.0
+text = "59"
+script = ExtResource("7_xy3cy")

@@ -1,0 +1,24 @@
+[gd_scene load_steps=3 format=3 uid="uid://3h6eguht44i6"]
+
+[ext_resource type="Script" path="res://monsterLeg.gd" id="1_pqr8q"]
+[ext_resource type="Texture2D" uid="uid://bw6olo6fvsbaj" path="res://images/monster/legTexture.png" id="1_suxkp"]
+
+[node name="Leg" type="Line2D"]
+z_index = -1
+y_sort_enabled = true
+texture_filter = 1
+texture_repeat = 2
+position = Vector2(9, 7)
+points = PackedVector2Array(0, 0, 269, 189, 456, 255, 618, 163)
+texture = ExtResource("1_suxkp")
+texture_mode = 1
+joint_mode = 1
+begin_cap_mode = 2
+end_cap_mode = 2
+script = ExtResource("1_pqr8q")
+pointCount = 8
+lineLength = 250.0
+gravity = 150.0
+numIterations = 30
+changeTime = 0.5
+verletSimulationSpeed = 4.0

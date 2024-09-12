@@ -1,0 +1,45 @@
+[gd_scene load_steps=7 format=3 uid="uid://ogv0kj11knlg"]
+
+[ext_resource type="Texture2D" uid="uid://cwfn55kdpxbpj" path="res://imgs/modules/generator/generator_n.png" id="1_6ju5a"]
+[ext_resource type="Script" path="res://scripts/module.gd" id="2_2pgmg"]
+[ext_resource type="Script" path="res://TEST_CAN_BE_REMOVED.gd" id="3_p5h12"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_lxb0d"]
+
+[sub_resource type="Gradient" id="Gradient_u3fny"]
+
+[sub_resource type="GradientTexture2D" id="GradientTexture2D_srxob"]
+gradient = SubResource("Gradient_u3fny")
+
+[node name="Generator" type="Sprite2D"]
+texture = ExtResource("1_6ju5a")
+script = ExtResource("2_2pgmg")
+
+[node name="Borders" type="StaticBody2D" parent="."]
+
+[node name="Ceiling" type="CollisionPolygon2D" parent="Borders"]
+polygon = PackedVector2Array(-128, 13, -128, -26, 128, -26, 128, 13, 124, 13, 124, -22, -123, -22, -123, 13)
+
+[node name="Floor" type="CollisionPolygon2D" parent="Borders"]
+polygon = PackedVector2Array(128, 60, -128, 60, -128, 64, 128, 64)
+
+[node name="DoorLeft" type="CollisionPolygon2D" parent="Borders"]
+polygon = PackedVector2Array(-128, 13, -128, 60, -123, 60, -123, 13)
+
+[node name="DoorRight" type="CollisionPolygon2D" parent="Borders"]
+polygon = PackedVector2Array(124, 13, 124, 60, 128, 60, 128, 13)
+
+[node name="RigidBody2D" type="CharacterBody2D" parent="."]
+script = ExtResource("3_p5h12")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="RigidBody2D"]
+shape = SubResource("RectangleShape2D_lxb0d")
+
+[node name="Sprite2D" type="Sprite2D" parent="RigidBody2D"]
+position = Vector2(-9.53674e-07, 9.53674e-07)
+scale = Vector2(0.3125, 0.3125)
+texture = SubResource("GradientTexture2D_srxob")
+
+[node name="Camera2D" type="Camera2D" parent="."]
+scale = Vector2(0.226466, 9.84)
+zoom = Vector2(4.44, 4.44)

@@ -1,0 +1,117 @@
+[gd_scene load_steps=8 format=3 uid="uid://dmkhp5el2xbu7"]
+
+[ext_resource type="Texture2D" path="res://imgs/modules/corridor_LR.png" id="1_3xxxt"]
+[ext_resource type="Script" path="res://scripts/modules.gd" id="1_oercy"]
+[ext_resource type="Script" path="res://scripts/module_button.gd" id="2_0r2se"]
+[ext_resource type="Texture2D" path="res://imgs/modules/room1.png" id="2_erp46"]
+[ext_resource type="Texture2D" path="res://imgs/modules/corridor_LTR.png" id="2_ky00x"]
+
+[sub_resource type="Gradient" id="Gradient_ih224"]
+offsets = PackedFloat32Array(0.442257)
+colors = PackedColorArray(0.196078, 0.196078, 0.196078, 1)
+
+[sub_resource type="GradientTexture1D" id="GradientTexture1D_a51lf"]
+gradient = SubResource("Gradient_ih224")
+
+[node name="BunkerBuilder" type="Node2D"]
+
+[node name="Camera" type="Camera2D" parent="."]
+position = Vector2(576, 324)
+
+[node name="Background" type="Sprite2D" parent="Camera"]
+visible = false
+texture = SubResource("GradientTexture1D_a51lf")
+
+[node name="Building_Space" type="Node2D" parent="."]
+
+[node name="Module_Mover" type="Sprite2D" parent="Building_Space"]
+modulate = Color(0.2, 0.866667, 0.2, 0.933333)
+z_index = 1
+texture = ExtResource("1_3xxxt")
+
+[node name="GUI" type="CanvasLayer" parent="."]
+
+[node name="Modules" type="HBoxContainer" parent="GUI" node_paths=PackedStringArray("mover")]
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -325.0
+offset_top = -125.0
+offset_right = 325.0
+grow_horizontal = 2
+grow_vertical = 0
+theme_override_constants/separation = 50
+alignment = 1
+script = ExtResource("1_oercy")
+mover = NodePath("../../Building_Space/Module_Mover")
+color_valid_spot = Color(0.2, 0.866667, 0.2, 0.933333)
+color_invalid_spot = Color(0.866667, 0.2, 0.2, 0.933333)
+animation_duration = 0.1
+
+[node name="Corridor" type="Button" parent="GUI/Modules"]
+custom_minimum_size = Vector2(125, 0)
+layout_mode = 2
+mouse_filter = 1
+script = ExtResource("2_0r2se")
+
+[node name="Module_Img" type="TextureRect" parent="GUI/Modules/Corridor"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 3.0
+offset_top = 3.0
+offset_right = -3.0
+offset_bottom = -3.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("1_3xxxt")
+expand_mode = 2
+stretch_mode = 5
+
+[node name="Stair" type="Button" parent="GUI/Modules"]
+custom_minimum_size = Vector2(125, 0)
+layout_mode = 2
+mouse_filter = 1
+script = ExtResource("2_0r2se")
+
+[node name="Module_Img" type="TextureRect" parent="GUI/Modules/Stair"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 3.0
+offset_top = 3.0
+offset_right = -3.0
+offset_bottom = -3.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("2_ky00x")
+expand_mode = 2
+stretch_mode = 5
+
+[node name="Room_1" type="Button" parent="GUI/Modules"]
+custom_minimum_size = Vector2(125, 0)
+layout_mode = 2
+mouse_filter = 1
+script = ExtResource("2_0r2se")
+
+[node name="Module_Img" type="TextureRect" parent="GUI/Modules/Room_1"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 3.0
+offset_top = 3.0
+offset_right = -3.0
+offset_bottom = -3.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("2_erp46")
+expand_mode = 2
+stretch_mode = 5
+
+[connection signal="mouse_entered" from="GUI/Modules" to="GUI/Modules" method="mouse_gui_status" binds= [true]]
+[connection signal="mouse_exited" from="GUI/Modules" to="GUI/Modules" method="mouse_gui_status" binds= [false]]

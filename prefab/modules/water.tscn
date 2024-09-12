@@ -1,0 +1,101 @@
+[gd_scene load_steps=11 format=3 uid="uid://qr05ktwbxvl1"]
+
+[ext_resource type="Script" path="res://scripts/module.gd" id="1_ihai3"]
+[ext_resource type="Texture2D" uid="uid://bylcwkiuwpvgc" path="res://imgs/modules/water/n.png" id="2_rcalp"]
+[ext_resource type="PackedScene" uid="uid://dki4talhc74jp" path="res://prefab/ceiling_lamp.tscn" id="3_oe547"]
+
+[sub_resource type="OccluderPolygon2D" id="OccluderPolygon2D_ixtf7"]
+polygon = PackedVector2Array(5, 0, 0, 0, 0, -39, 192, -39, 192, 0, 187, 0, 187, -35, 5, -35)
+
+[sub_resource type="OccluderPolygon2D" id="OccluderPolygon2D_uhtxo"]
+polygon = PackedVector2Array(0, 51, 0, 48, 192, 48, 192, 51)
+
+[sub_resource type="OccluderPolygon2D" id="OccluderPolygon2D_2fw73"]
+polygon = PackedVector2Array(0, 0, 5, 0, 5, 48, 0, 48)
+
+[sub_resource type="OccluderPolygon2D" id="OccluderPolygon2D_16s4d"]
+polygon = PackedVector2Array(-1, 0, 4, 0, 4, 48, -1, 48)
+
+[sub_resource type="Gradient" id="Gradient_nv86c"]
+interpolation_mode = 2
+offsets = PackedFloat32Array(0, 0.670635)
+colors = PackedColorArray(1, 1, 1, 1, 0, 0, 0, 1)
+
+[sub_resource type="GradientTexture2D" id="GradientTexture2D_fp0cu"]
+gradient = SubResource("Gradient_nv86c")
+width = 16
+height = 16
+fill = 1
+fill_from = Vector2(0.5, 0.5)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_fgi5g"]
+size = Vector2(76, 44)
+
+[node name="Water" type="Node2D"]
+script = ExtResource("1_ihai3")
+
+[node name="Sprite" type="Sprite2D" parent="."]
+texture = ExtResource("2_rcalp")
+centered = false
+
+[node name="Borders" type="StaticBody2D" parent="Sprite"]
+position = Vector2(128, 64)
+
+[node name="Ceiling" type="CollisionPolygon2D" parent="Sprite/Borders"]
+polygon = PackedVector2Array(-128, 13, -123, 13, -123, -22, 59, -22, 59, 13, 64, 13, 64, -26, -128, -26)
+
+[node name="LightOccluder2D" type="LightOccluder2D" parent="Sprite/Borders/Ceiling"]
+position = Vector2(-128, 13)
+occluder = SubResource("OccluderPolygon2D_ixtf7")
+
+[node name="Floor" type="CollisionPolygon2D" parent="Sprite/Borders"]
+polygon = PackedVector2Array(-128, 61, -128, 64, 64, 64, 64, 61)
+
+[node name="LightOccluder2D" type="LightOccluder2D" parent="Sprite/Borders/Floor"]
+position = Vector2(-128, 13)
+occluder = SubResource("OccluderPolygon2D_uhtxo")
+
+[node name="Connection_Left" type="CollisionPolygon2D" parent="Sprite/Borders"]
+polygon = PackedVector2Array(-128, 13, -128, 61, -123, 61, -123, 13)
+
+[node name="LightOccluder2D" type="LightOccluder2D" parent="Sprite/Borders/Connection_Left"]
+position = Vector2(-128, 13)
+occluder = SubResource("OccluderPolygon2D_2fw73")
+
+[node name="Connection_Right" type="CollisionPolygon2D" parent="Sprite/Borders"]
+position = Vector2(-64, 0)
+polygon = PackedVector2Array(123, 13, 123, 61, 128, 61, 128, 13)
+
+[node name="LightOccluder2D" type="LightOccluder2D" parent="Sprite/Borders/Connection_Right"]
+position = Vector2(124, 13)
+occluder = SubResource("OccluderPolygon2D_16s4d")
+
+[node name="Lights" type="Node2D" parent="Sprite"]
+
+[node name="Ceiling_Light" parent="Sprite/Lights" instance=ExtResource("3_oe547")]
+position = Vector2(151, 59)
+
+[node name="PointLight2D2" type="PointLight2D" parent="Sprite/Lights" groups=["electric_light"]]
+position = Vector2(34, 62)
+energy = 0.5
+texture = SubResource("GradientTexture2D_fp0cu")
+
+[node name="PointLight2D3" type="PointLight2D" parent="Sprite/Lights" groups=["electric_light"]]
+position = Vector2(64, 63)
+energy = 0.5
+texture = SubResource("GradientTexture2D_fp0cu")
+
+[node name="PointLight2D" type="PointLight2D" parent="Sprite/Lights" groups=["electric_light"]]
+position = Vector2(139, 103)
+energy = 0.5
+texture = SubResource("GradientTexture2D_fp0cu")
+
+[node name="Interactables" type="Node2D" parent="Sprite"]
+
+[node name="Water" type="Area2D" parent="Sprite/Interactables" groups=["interact_water"]]
+visible = false
+position = Vector2(132, 98)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Sprite/Interactables/Water"]
+position = Vector2(-20, 5)
+shape = SubResource("RectangleShape2D_fgi5g")

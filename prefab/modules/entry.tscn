@@ -1,0 +1,83 @@
+[gd_scene load_steps=10 format=3 uid="uid://bfybpjp7cy6px"]
+
+[ext_resource type="Script" path="res://scripts/module.gd" id="1_5fn1d"]
+[ext_resource type="Texture2D" uid="uid://6nxjctjk3yyh" path="res://imgs/modules/entry/n.png" id="2_byjog"]
+[ext_resource type="PackedScene" uid="uid://dki4talhc74jp" path="res://prefab/ceiling_lamp.tscn" id="3_607tg"]
+[ext_resource type="PackedScene" uid="uid://tbs4ifkjrnhc" path="res://prefab/vent.tscn" id="4_yww76"]
+
+[sub_resource type="OccluderPolygon2D" id="OccluderPolygon2D_mqtd2"]
+polygon = PackedVector2Array(0, 0, 5, 0, 5, -35, 187, -35, 187, 0, 192, 0, 192, -39, 0, -39)
+
+[sub_resource type="OccluderPolygon2D" id="OccluderPolygon2D_fy17q"]
+polygon = PackedVector2Array(0, 51, 0, 48, 47, 48, 61, 34, 131, 34, 145, 48, 192, 48, 192, 51)
+
+[sub_resource type="OccluderPolygon2D" id="OccluderPolygon2D_2fw73"]
+polygon = PackedVector2Array(0, 0, 0, 0, 5, 0, 5, 48, 0, 48)
+
+[sub_resource type="OccluderPolygon2D" id="OccluderPolygon2D_7pg3w"]
+polygon = PackedVector2Array(0, 0, 0, 0, 5, 0, 5, 48, 0, 48)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_2xmmm"]
+size = Vector2(69, 61)
+
+[node name="Entry" type="Node2D"]
+script = ExtResource("1_5fn1d")
+
+[node name="Sprite" type="Sprite2D" parent="."]
+texture = ExtResource("2_byjog")
+centered = false
+
+[node name="Borders" type="StaticBody2D" parent="Sprite"]
+position = Vector2(128, 64)
+
+[node name="Ceiling" type="CollisionPolygon2D" parent="Sprite/Borders"]
+polygon = PackedVector2Array(-128, 13, -123, 13, -123, -22, 59, -22, 59, 13, 64, 13, 64, -26, -128, -26)
+
+[node name="LightOccluder2D" type="LightOccluder2D" parent="Sprite/Borders/Ceiling"]
+position = Vector2(-128, 13)
+occluder = SubResource("OccluderPolygon2D_mqtd2")
+
+[node name="Floor" type="CollisionPolygon2D" parent="Sprite/Borders"]
+polygon = PackedVector2Array(-128, 64, 64, 64, 64, 61, 17, 61, 3, 47, -67, 47, -81, 61, -128, 61)
+
+[node name="LightOccluder2D" type="LightOccluder2D" parent="Sprite/Borders/Floor"]
+position = Vector2(-128, 13)
+occluder = SubResource("OccluderPolygon2D_fy17q")
+occluder_light_mask = 1025
+
+[node name="Connection_Left" type="CollisionPolygon2D" parent="Sprite/Borders"]
+polygon = PackedVector2Array(-128, 13, -128, 61, -123, 61, -123, 13)
+
+[node name="LightOccluder2D" type="LightOccluder2D" parent="Sprite/Borders/Connection_Left"]
+position = Vector2(-128, 13)
+occluder = SubResource("OccluderPolygon2D_2fw73")
+occluder_light_mask = 1025
+
+[node name="Connection_Right" type="CollisionPolygon2D" parent="Sprite/Borders"]
+position = Vector2(-65, 0)
+polygon = PackedVector2Array(124, 13, 124, 61, 129, 61, 129, 13)
+
+[node name="LightOccluder2D" type="LightOccluder2D" parent="Sprite/Borders/Connection_Right"]
+position = Vector2(124, 13)
+occluder = SubResource("OccluderPolygon2D_7pg3w")
+occluder_light_mask = 1025
+
+[node name="Lights" type="Node2D" parent="Sprite"]
+
+[node name="Ceiling_Light" parent="Sprite/Lights" instance=ExtResource("3_607tg")]
+position = Vector2(32, 59)
+
+[node name="Ceiling_Light2" parent="Sprite/Lights" instance=ExtResource("3_607tg")]
+position = Vector2(156, 74)
+
+[node name="Interactables" type="Node2D" parent="Sprite"]
+
+[node name="Vent" parent="Sprite/Interactables" instance=ExtResource("4_yww76")]
+position = Vector2(158, 112)
+
+[node name="Entry" type="Area2D" parent="Sprite/Interactables" groups=["interact_entry"]]
+position = Vector2(97, 82)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Sprite/Interactables/Entry"]
+position = Vector2(-0.5, -2.5)
+shape = SubResource("RectangleShape2D_2xmmm")
