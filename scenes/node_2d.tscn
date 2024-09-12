@@ -1,0 +1,32 @@
+[gd_scene load_steps=3 format=3 uid="uid://j00edj28pywa"]
+
+[ext_resource type="Script" path="res://scripts/player/playercontroller.gd" id="1_83ddj"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_f6nv2"]
+size = Vector2(1197.5, 101)
+
+[node name="Node2D" type="Node2D"]
+
+[node name="playercontroller" type="Node" parent="."]
+script = ExtResource("1_83ddj")
+
+[node name="StaticBody2D2" type="StaticBody2D" parent="."]
+
+[node name="CollisionShape2D4" type="CollisionShape2D" parent="StaticBody2D2"]
+position = Vector2(1068, 435)
+rotation = -1.0472
+shape = SubResource("RectangleShape2D_f6nv2")
+
+[node name="CollisionShape2D3" type="CollisionShape2D" parent="StaticBody2D2"]
+position = Vector2(578, 528)
+shape = SubResource("RectangleShape2D_f6nv2")
+
+[node name="CollisionShape2D2" type="CollisionShape2D" parent="StaticBody2D2"]
+position = Vector2(11, 422)
+rotation = 1.57079
+shape = SubResource("RectangleShape2D_f6nv2")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="StaticBody2D2"]
+position = Vector2(108, 474)
+rotation = 0.261799
+shape = SubResource("RectangleShape2D_f6nv2")
