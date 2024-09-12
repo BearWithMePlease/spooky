@@ -1,6 +1,8 @@
 extends Node2D
 class_name Module
 
+var is_mover: bool
+
 var type: Modules.ModuleType
 var direction: Modules.ModuleDirection
 var vertical_direction: Modules.ModuleVerticalDirection
@@ -23,7 +25,10 @@ var vertical_floor_right: CollisionPolygon2D
 func _ready() -> void:
 	# Useful for debugging:
 	# init(Vector2(0,0), Modules.ModuleType.CORRIDOR, Modules.ModuleDirection.H, Modules.ModuleVerticalDirection.U)
-	pass
+	
+	var module_mover = get_node_or_null("%Module_Mover")
+	if module_mover != null and self.get_instance_id() == module_mover.get_instance_id():
+		is_mover = true
 
 func init(module_position:Vector2, type:Modules.ModuleType, direction: Modules.ModuleDirection, vertical_direction: Modules.ModuleVerticalDirection = Modules.ModuleVerticalDirection.N):
 	self.position = module_position
@@ -44,10 +49,15 @@ func init(module_position:Vector2, type:Modules.ModuleType, direction: Modules.M
 
 func fetch_nodes():
 	self.sprite = get_node_or_null(^"Sprite")
+	if self.sprite == null:
+		push_error("Failed to fetch sprite node")
+
+	if self.is_mover:
+		return
+	
 	self.connection_left = get_node_or_null(^"Sprite/Borders/Connection_Left")
 	self.connection_right = get_node_or_null(^"Sprite/Borders/Connection_Right")
-	
-	if self.sprite == null || self.connection_left == null || self.connection_right == null:
+	if self.connection_left == null || self.connection_right == null:
 		push_error("Failed to fetch some Essential nodes")
 	
 	# Only used if type is corridor
@@ -66,7 +76,6 @@ func fetch_nodes():
 		failed = failed || self.vertical_connection_left == null || self.vertical_connection_right == null
 		failed = failed || self.vertical_ceiling_left == null || self.vertical_ceiling_right == null
 		failed = failed || self.vertical_floor_left == null || self.vertical_floor_right == null
-		
 		if failed:
 			push_error("Failed to fetch some Corridor nodes")
 
@@ -83,6 +92,9 @@ func adjust_direction(direction: Modules.ModuleDirection, vertical_direction: Mo
 	else: set_direction(self.direction | direction, self.vertical_direction | vertical_direction) 				# Add
 
 func handle_doors():
+	if self.is_mover:
+		return
+	
 	if self.type != Modules.ModuleType.CORRIDOR || self.vertical_direction == Modules.ModuleVerticalDirection.N:
 		# Handle every module type except when a corridor has a vertical direction
 		if self.connection_left == null || self.connection_right == null:

@@ -286,7 +286,7 @@ func adjust_surroundings(pos: Vector2, removing = false) -> int:
 
 func on_build_module():
 	# Instantiate module prefab
-	var node = mover.duplicate() as Module
+	var node = Globals.module_prefabs[type].instantiate() as Module
 	node.init(grid_position, type, mover.direction, mover.vertical_direction)
 	node.z_index = -1
 	mover.get_parent().add_child(node)

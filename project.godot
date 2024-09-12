@@ -15,6 +15,10 @@ run/main_scene="res://scenes/bunker_builder.tscn"
 config/features=PackedStringArray("4.3", "GL Compatibility")
 config/icon="res://icon.svg"
 
+[autoload]
+
+Globals="*res://scripts/globals.gd"
+
 [debug]
 
 gdscript/warnings/shadowed_variable=0
