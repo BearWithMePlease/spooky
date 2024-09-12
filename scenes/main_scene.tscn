@@ -1,3 +1,21 @@
-[gd_scene format=3 uid="uid://bmxc3w1pfbnt3"]
+[gd_scene load_steps=4 format=3 uid="uid://bo6ew1t4jg2x6"]
+
+[ext_resource type="Script" path="res://scripts/main_scene.gd" id="1_0jyw0"]
+
+[sub_resource type="Gradient" id="Gradient_q12pf"]
+
+[sub_resource type="GradientTexture1D" id="GradientTexture1D_nd1t7"]
+gradient = SubResource("Gradient_q12pf")
+width = 32
 
 [node name="MainScene" type="Node2D"]
+script = ExtResource("1_0jyw0")
+
+[node name="Modules" type="Node2D" parent="."]
+
+[node name="Player" type="Sprite2D" parent="."]
+scale = Vector2(1, 32)
+texture = SubResource("GradientTexture1D_nd1t7")
+
+[node name="Camera2D" type="Camera2D" parent="Player"]
+zoom = Vector2(5, 5)

@@ -40,6 +40,7 @@ interact_communication=""
 interact_water=""
 interact_weapons=""
 interact_entry=""
+spawn_point=""
 
 [input]
 

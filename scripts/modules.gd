@@ -60,7 +60,7 @@ static var connections = {
 	ModuleType.WEAPONS: [Vector2(1,1), Vector2(2,1)],
 }
 
-var module_button := preload("res://prefab/ModuleButton.tscn")
+var module_button := preload("res://prefab/module_button.tscn")
 
 @export var color_valid_spot: Color
 @export var color_invalid_spot: Color
@@ -77,6 +77,7 @@ var grid_position: Vector2
 var type: ModuleType = ModuleType.NONE
 var mouse_over_gui = false
 var force_update = false
+var all_connected = false
 
 var animation_running = false
 var animation_old_position: Vector2 = Vector2.ZERO
@@ -265,11 +266,11 @@ func can_build_module(grid_position: Vector2, ignore_gui:bool = false):
 			if grid.has(get_grid_id(new_pos)):
 				return false
 	
-	# check if module is connected
-	var surrounding_check = adjust_surroundings(grid_position, false, true)
-	if surrounding_check & (ModuleDirection.H | ModuleVerticalDirection.V) == 0:
+	# only allow connected modules to be buildable
+	#var surrounding_check = adjust_surroundings(grid_position, false, true)
+	#if surrounding_check & (ModuleDirection.H | ModuleVerticalDirection.V) == 0:
 		# module not connected with anything
-		return false
+		#return false
 	
 	return true
 
@@ -375,14 +376,19 @@ func on_undo_build_module(grab_item:bool):
 
 func check_all_connected():
 	# Set all grid nodes to not connected
+	var total_nodes_count = {}
 	for grid_module:GridModule in self.grid.values():
-		grid_module.node.connected = false
-		grid_module.node.modulate = color_invalid_spot
+		if not total_nodes_count.has(grid_module.node):
+			total_nodes_count[grid_module.node.get_instance_id()] = true
+			grid_module.node.connected = false
+			grid_module.node.modulate = color_invalid_spot
+			
 	
 	var root_node = grid.get(get_grid_id(GRID_SIZE * entry_position)) as GridModule
 	root_node.node.connected = true
 	root_node.node.modulate = Color.WHITE
 	var search_nodes: Array[GridModule] = [root_node]
+	var connected_node_count = 1
 	
 	while len(search_nodes) != 0:
 		var next_search: Array[GridModule] = []
@@ -400,7 +406,22 @@ func check_all_connected():
 					# new connection found - add to new search cycle
 					next_module.node.connected = true
 					next_module.node.modulate = Color.WHITE
+					connected_node_count += 1
 					
 					next_search.append(next_module)
 
 		search_nodes = next_search
+	
+	self.all_connected = len(total_nodes_count.values()) == connected_node_count
+
+func on_confirm_build():
+	if not self.all_connected:
+		print("Nah uh. You need to connect everything")
+		return
+	
+	var nodes_dict = {}
+	for grid_module:GridModule in grid.values():
+		nodes_dict[grid_module.node.get_instance_id()] = grid_module.node
+	var nodes = nodes_dict.values() as Array[Module]
+	
+	Globals.switch_scene(Globals.SceneType.BUNKER_BUILD, Globals.SceneType.MAIN_SCENE, nodes)
