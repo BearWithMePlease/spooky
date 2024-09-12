@@ -65,7 +65,9 @@ var module_button := preload("res://prefab/ModuleButton.tscn")
 @export var color_valid_spot: Color
 @export var color_invalid_spot: Color
 @export var color_hover_spot: Color
+@export var color_invalid_hover_spot: Color
 @export var animation_duration: float = 0.5
+@export var entry_position: Vector2 = Vector2(3,3)
 
 var grid: Dictionary = {}
 
@@ -91,13 +93,18 @@ func _ready() -> void:
 	
 	# Instantiate available modules (gui module button)
 	for type in ModuleType.values():
-		if type == ModuleType.NONE:
+		if type == ModuleType.NONE or type == ModuleType.ENTRY:
 			continue
 		
 		var button = module_button.instantiate()
 		button.module_type = type
 		button.module_direction = ModuleDirection.N
 		self.add_child(button)
+		
+	# Add Entry
+	on_module_type_select(ModuleType.ENTRY)
+	grid_position = GRID_SIZE * entry_position
+	on_build_module()
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta: float) -> void:
@@ -153,7 +160,7 @@ func _process(delta: float) -> void:
 		# Cleanup old position
 		var old_module = grid.get(get_grid_id(old_grid_position)) as GridModule
 		if old_module != null:
-			old_module.node.modulate = Color.WHITE
+			old_module.node.modulate = Color.WHITE if old_module.node.connected else color_invalid_spot
 		
 		# Not moving any module - can edit placed modules
 		var module = grid.get(get_grid_id(grid_position)) as GridModule
@@ -163,7 +170,8 @@ func _process(delta: float) -> void:
 		
 		# Highlight hovered modules
 		Input.set_default_cursor_shape(Input.CURSOR_POINTING_HAND)
-		module.node.modulate = color_hover_spot
+		
+		module.node.modulate = color_hover_spot if module.node.connected else color_invalid_hover_spot
 		
 		if Input.is_action_just_pressed("click"):
 			on_undo_build_module(true)
@@ -232,30 +240,38 @@ func get_grid_position(pos: Vector2):
 	
 	return Vector2(coord.x, coord.y)
 
+func get_surroundings(grid_position: Vector2, type: ModuleType) -> Dictionary:
+	var connection_slot_first = grid_position + GRID_SIZE * (connections[type][0]-Vector2.ONE)
+	var connection_slot_last = grid_position + GRID_SIZE * (connections[type][len(connections[type])-1]-Vector2.ONE)
+	
+	return {
+		ModuleDirection.L: connection_slot_first + Vector2(-GRID_SIZE, 0), 		# left
+		ModuleDirection.R: connection_slot_last + Vector2(GRID_SIZE, 0),			# right
+		ModuleVerticalDirection.U: connection_slot_first + Vector2(0, -GRID_SIZE),	# up
+		ModuleVerticalDirection.D: connection_slot_last + Vector2(0, GRID_SIZE)	# down
+	}
+
 # Check if there is already a module in that position (on grid)
 func can_build_module(grid_position: Vector2, ignore_gui:bool = false):
 	if mouse_over_gui and not ignore_gui: return false
 	
-	# check all grid slots
+	# check if all grid slots are empty
 	for x in range(scales[type].x):
 		for y in range(scales[type].y):
 			var new_pos = grid_position + GRID_SIZE * Vector2(x,-y)
 			if grid.has(get_grid_id(new_pos)):
 				return false
 	
+	# check if module is connected
+	var surrounding_check = adjust_surroundings(grid_position, false, true)
+	if surrounding_check & (ModuleDirection.H | ModuleVerticalDirection.V) == 0:
+		# module not connected with anything
+		return false
+	
 	return true
 
-func adjust_surroundings(pos: Vector2, removing = false) -> int:
-	var connection_slot_first = pos + GRID_SIZE * (connections[type][0]-Vector2.ONE)
-	var connection_slot_last = pos + GRID_SIZE * (connections[type][len(connections[type])-1]-Vector2.ONE)
-	
-	var surroundings = {
-		ModuleDirection.L: connection_slot_first + Vector2(-GRID_SIZE, 0), 			# left
-		ModuleDirection.R: connection_slot_last + Vector2(GRID_SIZE, 0),			# right
-		ModuleVerticalDirection.U: connection_slot_first + Vector2(0, -GRID_SIZE),	# up
-		ModuleVerticalDirection.D: connection_slot_last + Vector2(0, GRID_SIZE)	# down
-	}
-	
+func adjust_surroundings(pos: Vector2, removing = false, read_only = false) -> int:
+	var surroundings = get_surroundings(pos, type)
 	var mover_direction: int = 0b0000 # combination of ModuleDirection & ModuleVerticalDirection
 	
 	for direction in surroundings.keys():
@@ -277,7 +293,8 @@ func adjust_surroundings(pos: Vector2, removing = false) -> int:
 		if direction & ModuleDirection.H == 0: opposite_direction = ModuleDirection.N
 		if direction & ModuleVerticalDirection.V == 0: opposite_vertical_direction = ModuleVerticalDirection.N
 		
-		grid_module.node.adjust_direction(opposite_direction, opposite_vertical_direction, removing)
+		if not read_only:
+			grid_module.node.adjust_direction(opposite_direction, opposite_vertical_direction, removing)
 		
 		# update mover
 		mover_direction |= direction
@@ -298,6 +315,8 @@ func on_build_module():
 			var slot_position = grid_position + GRID_SIZE * Vector2(x,-y)
 			grid[get_grid_id(slot_position)] = module
 	
+	check_all_connected()
+	
 	# Clean up
 	moving = false
 	mover.sprite.texture = null
@@ -310,6 +329,9 @@ func on_undo_build_module(grab_item:bool):
 	var current_module = grid.get(get_grid_id(grid_position)) as GridModule
 	if current_module == null:
 		print("Undo module: Module not found")
+		return
+	
+	if current_module.node.type == ModuleType.ENTRY:
 		return
 	
 	# find scale_index (1,1), bottom left corner
@@ -340,9 +362,42 @@ func on_undo_build_module(grab_item:bool):
 	if grab_item:
 		on_module_type_select(type, current_position)
 	
-	force_update = true
-	
 	if grid_position != current_position or not grab_item:
 		# Move to cursor grid slot
 		adjust_surroundings(current_position, true)
 		grid_position = current_position
+	
+	check_all_connected()
+	force_update = true
+
+func check_all_connected():
+	# Set all grid nodes to not connected
+	for grid_module:GridModule in self.grid.values():
+		grid_module.node.connected = false
+		grid_module.node.modulate = color_invalid_spot
+	
+	var root_node = grid.get(get_grid_id(GRID_SIZE * entry_position)) as GridModule
+	root_node.node.connected = true
+	root_node.node.modulate = Color.WHITE
+	var search_nodes: Array[GridModule] = [root_node]
+	
+	while len(search_nodes) != 0:
+		var next_search: Array[GridModule] = []
+		for search in search_nodes:
+			# check surrounding of search node
+			var surroundings = get_surroundings(search.node.position, search.node.type)
+			for direction in surroundings.keys():
+				if direction & (search.node.direction | search.node.vertical_direction) == 0:
+					# node has no connection in this direction
+					continue
+				
+				# check single direction of search node
+				var next_module = grid.get(get_grid_id(surroundings[direction])) as GridModule
+				if next_module != null and not next_module.node.connected:
+					# new connection found - add to new search cycle
+					next_module.node.connected = true
+					next_module.node.modulate = Color.WHITE
+					
+					next_search.append(next_module)
+
+		search_nodes = next_search

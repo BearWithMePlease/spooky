@@ -45,6 +45,7 @@ script = ExtResource("1_oercy")
 color_valid_spot = Color(0.2, 0.866667, 0.2, 0.933333)
 color_invalid_spot = Color(0.866667, 0.2, 0.2, 0.933333)
 color_hover_spot = Color(0.862745, 0.862745, 0.862745, 1)
+color_invalid_hover_spot = Color(0.69963, 0.13647, 0.142437, 1)
 animation_duration = 0.1
 
 [connection signal="mouse_entered" from="GUI/Modules" to="GUI/Modules" method="mouse_gui_status" binds= [true]]

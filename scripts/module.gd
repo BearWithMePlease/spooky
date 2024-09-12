@@ -2,6 +2,7 @@ extends Node2D
 class_name Module
 
 var is_mover: bool
+var connected: bool = false
 
 var type: Modules.ModuleType
 var direction: Modules.ModuleDirection
