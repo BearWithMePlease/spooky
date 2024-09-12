@@ -91,12 +91,11 @@ func _ready() -> void:
 	
 	# Instantiate available modules (gui module button)
 	for type in ModuleType.values():
-		if type == ModuleType.NONE:
+		if type == ModuleType.NONE or type == ModuleType.ENTRY:
 			continue
 		
 		var button = module_button.instantiate()
 		button.module_type = type
-		button.module_direction = ModuleDirection.N
 		self.add_child(button)
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
@@ -185,6 +184,10 @@ static func get_module_path(type: ModuleType, direction: ModuleDirection, vertic
 	
 	return MODULE_PATH + type_str + "/" + direction_str + vertical_direction_str + ".png"
 
+static func get_icon_path(type: ModuleType):
+	var type_str = ModuleType.find_key(type).to_lower()
+	return MODULE_PATH + type_str + "/icon.png"
+	
 # hash grid position. NEEDS to be int due to shift operation
 static func get_grid_id(pos:Vector2i):
 	return (pos.x << HASH_SHIFT) + pos.y

@@ -1,12 +1,12 @@
 [gd_scene load_steps=10 format=3 uid="uid://bgicak3vvgkh8"]
 
-[ext_resource type="Script" path="res://monster.gd" id="1_1tsk6"]
+[ext_resource type="Script" path="res://scripts/monster.gd" id="1_1tsk6"]
 [ext_resource type="Texture2D" uid="uid://bsfoxkgqdmhpf" path="res://images/wall.png" id="2_76fud"]
 [ext_resource type="PackedScene" uid="uid://mb1u0vbty7ft" path="res://prefabs/monsterFace.tscn" id="3_1t6w6"]
 [ext_resource type="PackedScene" uid="uid://3h6eguht44i6" path="res://prefabs/monsterLeg.tscn" id="3_02nh1"]
 [ext_resource type="Script" path="res://scripts/player/player.gd" id="5_68e1l"]
 [ext_resource type="Texture2D" uid="uid://cgulootwnw36w" path="res://images/monster/player.png" id="5_ipgw7"]
-[ext_resource type="Script" path="res://fps.gd" id="7_xy3cy"]
+[ext_resource type="Script" path="res://scripts/fps.gd" id="7_xy3cy"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_y38ng"]
 size = Vector2(98.7465, 88.6354)
