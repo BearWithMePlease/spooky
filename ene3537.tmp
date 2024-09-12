@@ -1,0 +1,120 @@
+[gd_scene load_steps=7 format=3 uid="uid://c3cfufhet1let"]
+
+[ext_resource type="Script" path="res://monster.gd" id="1_1tsk6"]
+[ext_resource type="Texture2D" uid="uid://bsvefht7jcchd" path="res://images/face.png" id="1_l7n1k"]
+[ext_resource type="Texture2D" uid="uid://bsfoxkgqdmhpf" path="res://images/wall.png" id="2_76fud"]
+[ext_resource type="Script" path="res://monsterLeg.gd" id="3_jpsdr"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_altyg"]
+size = Vector2(100, 98)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_6bd8l"]
+size = Vector2(100, 98)
+
+[node name="Enemy" type="Node2D"]
+
+[node name="Monster" type="Node2D" parent="." node_paths=PackedStringArray("legs")]
+position = Vector2(276, 367)
+script = ExtResource("1_1tsk6")
+legs = [NodePath("Leg"), NodePath("Leg2"), NodePath("Leg3"), NodePath("Leg4"), NodePath("Leg5"), NodePath("Leg6")]
+
+[node name="Face" type="Sprite2D" parent="Monster"]
+texture_filter = 1
+texture = ExtResource("1_l7n1k")
+
+[node name="Leg" type="Line2D" parent="Monster"]
+z_index = -1
+y_sort_enabled = true
+script = ExtResource("3_jpsdr")
+
+[node name="Leg2" type="Line2D" parent="Monster"]
+z_index = -1
+y_sort_enabled = true
+points = PackedVector2Array(142, -195, 0, 0)
+script = ExtResource("3_jpsdr")
+
+[node name="Leg3" type="Line2D" parent="Monster"]
+z_index = -1
+y_sort_enabled = true
+points = PackedVector2Array(142, -195, 0, 0)
+script = ExtResource("3_jpsdr")
+
+[node name="Leg4" type="Line2D" parent="Monster"]
+z_index = -1
+y_sort_enabled = true
+points = PackedVector2Array(142, -195, 0, 0)
+script = ExtResource("3_jpsdr")
+
+[node name="Leg5" type="Line2D" parent="Monster"]
+z_index = -1
+y_sort_enabled = true
+points = PackedVector2Array(142, -195, 0, 0)
+script = ExtResource("3_jpsdr")
+
+[node name="Leg6" type="Line2D" parent="Monster"]
+z_index = -1
+y_sort_enabled = true
+points = PackedVector2Array(142, -195, 0, 0)
+script = ExtResource("3_jpsdr")
+
+[node name="Walls" type="Node2D" parent="."]
+
+[node name="Wall" type="Sprite2D" parent="Walls"]
+position = Vector2(87, 334)
+scale = Vector2(0.489899, 5.43939)
+texture = ExtResource("2_76fud")
+
+[node name="Area2D" type="Area2D" parent="Walls/Wall"]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Walls/Wall/Area2D"]
+shape = SubResource("RectangleShape2D_altyg")
+
+[node name="Wall2" type="Sprite2D" parent="Walls"]
+position = Vector2(1055, 351)
+scale = Vector2(0.489899, 5.43939)
+texture = ExtResource("2_76fud")
+
+[node name="Area2D" type="Area2D" parent="Walls/Wall2"]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Walls/Wall2/Area2D"]
+shape = SubResource("RectangleShape2D_altyg")
+
+[node name="Wall3" type="Sprite2D" parent="Walls"]
+position = Vector2(562, 556)
+scale = Vector2(5.87879, 0.699495)
+texture = ExtResource("2_76fud")
+
+[node name="Area2D" type="Area2D" parent="Walls/Wall3"]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Walls/Wall3/Area2D"]
+shape = SubResource("RectangleShape2D_6bd8l")
+
+[node name="Wall4" type="Sprite2D" parent="Walls"]
+position = Vector2(657, 138)
+scale = Vector2(5.87879, 0.699495)
+texture = ExtResource("2_76fud")
+
+[node name="Area2D" type="Area2D" parent="Walls/Wall4"]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Walls/Wall4/Area2D"]
+shape = SubResource("RectangleShape2D_6bd8l")
+
+[node name="Wall5" type="Sprite2D" parent="Walls"]
+position = Vector2(789, 352)
+scale = Vector2(0.616162, 0.592172)
+texture = ExtResource("2_76fud")
+
+[node name="Area2D" type="Area2D" parent="Walls/Wall5"]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Walls/Wall5/Area2D"]
+shape = SubResource("RectangleShape2D_6bd8l")
+
+[node name="Wall6" type="Sprite2D" parent="Walls"]
+position = Vector2(462, 301)
+scale = Vector2(0.616162, 0.592172)
+texture = ExtResource("2_76fud")
+
+[node name="Area2D" type="Area2D" parent="Walls/Wall6"]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Walls/Wall6/Area2D"]
+shape = SubResource("RectangleShape2D_6bd8l")

@@ -1,4 +1,4 @@
-[gd_scene load_steps=10 format=3 uid="uid://bgicak3vvgkh8"]
+[gd_scene load_steps=9 format=3 uid="uid://c3cfufhet1let"]
 
 [ext_resource type="Script" path="res://monster.gd" id="1_1tsk6"]
 [ext_resource type="Texture2D" uid="uid://bsfoxkgqdmhpf" path="res://images/wall.png" id="2_76fud"]
@@ -6,7 +6,6 @@
 [ext_resource type="PackedScene" uid="uid://3h6eguht44i6" path="res://prefabs/monsterLeg.tscn" id="3_02nh1"]
 [ext_resource type="Script" path="res://player.gd" id="5_68e1l"]
 [ext_resource type="Texture2D" uid="uid://cgulootwnw36w" path="res://images/monster/player.png" id="5_ipgw7"]
-[ext_resource type="Script" path="res://fps.gd" id="7_xy3cy"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_y38ng"]
 size = Vector2(98.7465, 88.6354)
@@ -16,13 +15,9 @@ size = Vector2(98.7465, 88.6354)
 [node name="Enemy" type="Node2D"]
 
 [node name="Monster" type="Node2D" parent="." node_paths=PackedStringArray("particles", "player")]
-z_index = 1
-y_sort_enabled = true
 position = Vector2(276, 367)
 script = ExtResource("1_1tsk6")
-monsterSpeed = 5.0
 facesCount = 5
-legsCount = 25
 monsterLegScene = ExtResource("3_02nh1")
 monsterFaceScene = ExtResource("3_1t6w6")
 particles = NodePath("CPUParticles2D")
@@ -91,9 +86,3 @@ shape = SubResource("CapsuleShape2D_syc5l")
 [node name="Sprite2D" type="Sprite2D" parent="Player"]
 texture_filter = 1
 texture = ExtResource("5_ipgw7")
-
-[node name="fps" type="Label" parent="."]
-offset_right = 40.0
-offset_bottom = 23.0
-text = "59"
-script = ExtResource("7_xy3cy")

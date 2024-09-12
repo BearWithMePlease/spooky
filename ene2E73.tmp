@@ -1,0 +1,53 @@
+[gd_scene load_steps=9 format=3 uid="uid://c3cfufhet1let"]
+
+[ext_resource type="Script" path="res://monster.gd" id="1_1tsk6"]
+[ext_resource type="Texture2D" uid="uid://bsvefht7jcchd" path="res://images/monster/face.png" id="1_l7n1k"]
+[ext_resource type="Texture2D" uid="uid://bsfoxkgqdmhpf" path="res://images/wall.png" id="2_76fud"]
+[ext_resource type="PackedScene" uid="uid://mb1u0vbty7ft" path="res://prefabs/monsterFace.tscn" id="3_1t6w6"]
+[ext_resource type="PackedScene" uid="uid://3h6eguht44i6" path="res://prefabs/monsterLeg.tscn" id="3_02nh1"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_y38ng"]
+size = Vector2(98.7465, 88.6354)
+
+[sub_resource type="PhysicsMaterial" id="PhysicsMaterial_8qvg6"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_jld6m"]
+radius = 19.0263
+
+[node name="Enemy" type="Node2D"]
+
+[node name="Monster" type="Node2D" parent="."]
+position = Vector2(276, 367)
+script = ExtResource("1_1tsk6")
+monsterLegScene = ExtResource("3_02nh1")
+monsterFaceScene = ExtResource("3_1t6w6")
+
+[node name="Walls" type="Node2D" parent="."]
+
+[node name="Wall3" type="Sprite2D" parent="Walls"]
+position = Vector2(545.5, 556)
+scale = Vector2(7.88889, 0.699495)
+texture = ExtResource("2_76fud")
+
+[node name="StaticBody2D" type="StaticBody2D" parent="Walls/Wall3"]
+collision_layer = 2
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Walls/Wall3/StaticBody2D"]
+scale = Vector2(1, 1)
+shape = SubResource("RectangleShape2D_y38ng")
+
+[node name="RigidBody2D" type="RigidBody2D" parent="."]
+position = Vector2(695, 445)
+collision_mask = 3
+physics_material_override = SubResource("PhysicsMaterial_8qvg6")
+gravity_scale = 1.015
+can_sleep = false
+lock_rotation = true
+contact_monitor = true
+
+[node name="Face" type="Sprite2D" parent="RigidBody2D"]
+texture_filter = 1
+texture = ExtResource("1_l7n1k")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="RigidBody2D"]
+shape = SubResource("CircleShape2D_jld6m")

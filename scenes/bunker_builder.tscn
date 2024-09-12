@@ -6,7 +6,7 @@
 
 [sub_resource type="Gradient" id="Gradient_ih224"]
 offsets = PackedFloat32Array(0.442257)
-colors = PackedColorArray(0.196078, 0.196078, 0.196078, 1)
+colors = PackedColorArray(0.0431373, 0.0627451, 0.0862745, 1)
 
 [sub_resource type="GradientTexture1D" id="GradientTexture1D_a51lf"]
 gradient = SubResource("Gradient_ih224")
@@ -18,8 +18,12 @@ position = Vector2(576, 324)
 script = ExtResource("1_omeyi")
 
 [node name="Background" type="Sprite2D" parent="Camera"]
-visible = false
+z_index = -1
+y_sort_enabled = true
+scale = Vector2(3.354, 1)
 texture = SubResource("GradientTexture1D_a51lf")
+region_enabled = true
+region_rect = Rect2(0, 0, 1000, 2000)
 
 [node name="Building_Space" type="Node2D" parent="."]
 

@@ -1,4 +1,4 @@
-[gd_scene load_steps=10 format=3 uid="uid://bgicak3vvgkh8"]
+[gd_scene load_steps=10 format=3 uid="uid://c3cfufhet1let"]
 
 [ext_resource type="Script" path="res://monster.gd" id="1_1tsk6"]
 [ext_resource type="Texture2D" uid="uid://bsfoxkgqdmhpf" path="res://images/wall.png" id="2_76fud"]
@@ -16,13 +16,11 @@ size = Vector2(98.7465, 88.6354)
 [node name="Enemy" type="Node2D"]
 
 [node name="Monster" type="Node2D" parent="." node_paths=PackedStringArray("particles", "player")]
-z_index = 1
-y_sort_enabled = true
 position = Vector2(276, 367)
 script = ExtResource("1_1tsk6")
-monsterSpeed = 5.0
+monsterSpeed = 5000.0
 facesCount = 5
-legsCount = 25
+legsCount = 8
 monsterLegScene = ExtResource("3_02nh1")
 monsterFaceScene = ExtResource("3_1t6w6")
 particles = NodePath("CPUParticles2D")
