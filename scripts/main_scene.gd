@@ -1,5 +1,7 @@
 extends Node2D
 
+signal finished_ready
+
 @onready var modules := $Modules as NavigationRegion2D
 @onready var player = $Player
 @onready var monster = $Monster
@@ -30,6 +32,8 @@ func _ready() -> void:
 			to.y = boundry.position.y + boundry.size.y
 	modules.navigation_polygon.add_outline(PackedVector2Array([from, Vector2(from.x + to.x, from.y), to, Vector2(from.x, from.y + to.y)]))
 	modules.bake_navigation_polygon()
+	
+	finished_ready.emit()
 
 # Founds boundry of each module
 func _getAllModuleBoundingBoxes() -> Array[Rect2]:

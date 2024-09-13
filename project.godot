@@ -138,4 +138,3 @@ sprint={
 textures/canvas_textures/default_texture_filter=0
 renderer/rendering_method="gl_compatibility"
 renderer/rendering_method.mobile="gl_compatibility"
-environment/defaults/default_clear_color=Color(0.0431373, 0.0627451, 0.0862745, 1)
