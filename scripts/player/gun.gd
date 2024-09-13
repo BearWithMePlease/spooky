@@ -19,29 +19,32 @@ var casingEmpty = preload("res://scenes/casing.tscn")
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta: float) -> void:
+	
 	var direction = get_global_mouse_position() - self.global_position
+	var direction_angle = direction.angle()
 	
-	
-	
-	if !Input.is_action_pressed("click") || ammunition == 0:
-		self.rotation = direction.angle()
-	
-	
-	if Input.is_action_pressed("reload"):
-		$AnimationPlayer.play("reload_new")
-		ammunition = 30
-	
+	if visible:		
+		if !Input.is_action_pressed("click") || ammunition == 0:
+			self.rotation = direction_angle
+		
+		
+		if Input.is_action_pressed("reload"):
+			$AnimationPlayer.play("reload_new")
+			ammunition = 30
+		
+		
+		
+		if ammunition > 0:
+			manageShot(direction_angle, delta)
+	else:
+		self.rotation = direction_angle
+
 	if rotation > PI:
 		rotation -= 2*PI
 	
 	if rotation < -PI:
 		rotation += 2*PI	
-	
-	if ammunition > 0:
-		manageShot(direction.angle(), delta)
-		
-
-	#print(rotation)
+		#print(rotation)
 	if rotation > 0.5*PI || rotation < -0.5*PI :
 		#flip_v = true
 		
@@ -55,6 +58,7 @@ func _process(delta: float) -> void:
 		
 		#flip_v = false
 		spawner.flip_h = false
+
 	
 	
 var rpm = 600

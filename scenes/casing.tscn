@@ -1,4 +1,4 @@
-[gd_scene load_steps=5 format=3 uid="uid://b3pwwad2k2xaq"]
+[gd_scene load_steps=5 format=3 uid="uid://c7d31y0y47wwg"]
 
 [ext_resource type="Script" path="res://casing.gd" id="1_b8sgg"]
 [ext_resource type="Texture2D" uid="uid://o1prwr1jldk2" path="res://images/gun/casing.png" id="2_gaoii"]

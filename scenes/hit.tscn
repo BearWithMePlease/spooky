@@ -1,4 +1,4 @@
-[gd_scene load_steps=7 format=3 uid="uid://dfnlxo6ki2nyl"]
+[gd_scene load_steps=7 format=3 uid="uid://d5c7oof5h65e"]
 
 [ext_resource type="Texture2D" uid="uid://dqp31up6j880e" path="res://images/hit/wallbang placeholder.png" id="1_g0dkm"]
 [ext_resource type="Script" path="res://scenes/hit.gd" id="2_5p5nu"]
@@ -33,7 +33,6 @@ animations = [{
 }]
 
 [node name="hit" type="AnimatedSprite2D"]
-scale = Vector2(2, 2)
 sprite_frames = SubResource("SpriteFrames_18fch")
 autoplay = "default"
 frame = 2

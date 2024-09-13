@@ -2,8 +2,8 @@
 
 [ext_resource type="Texture2D" uid="uid://bsfoxkgqdmhpf" path="res://images/wall.png" id="1_teqsy"]
 [ext_resource type="Script" path="res://scripts/player/player_char.gd" id="2_wk836"]
-[ext_resource type="Texture2D" uid="uid://cdhkjlqvj2iq8" path="res://images/player/hazmat.png" id="3_y7i1a"]
-[ext_resource type="Texture2D" uid="uid://cdl3wg5u1x0i" path="res://images/player/hazmat_with_hands.png" id="4_e52vu"]
+[ext_resource type="Texture2D" uid="uid://843kfwxv80ts" path="res://images/player/hazmat.png" id="3_y7i1a"]
+[ext_resource type="Texture2D" uid="uid://bahc3spqbwwxl" path="res://images/player/hazmat_with_hands.png" id="4_e52vu"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_y38ng"]
 size = Vector2(98.7465, 122.946)
@@ -664,7 +664,6 @@ collision_layer = 2147483777
 collision_mask = 2147483777
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Walls/Wall4/StaticBody2D"]
-scale = Vector2(1, 1)
 shape = SubResource("RectangleShape2D_y38ng")
 
 [node name="Wall5" type="Sprite2D" parent="Walls"]

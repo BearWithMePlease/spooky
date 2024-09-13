@@ -24,44 +24,90 @@ var direction := 0
 
 var attemptInventory = false
 var inInventory = false
-
+var gunsAreGo = false
 
 func update_animation_tree_param():
 	
-	if velocity == Vector2.ZERO: # standing still
-		animation_tree["parameters/conditions/isNotSprint"] = true
-		animation_tree["parameters/conditions/isNotWalk"] = true
-		animation_tree["parameters/conditions/isNotWalkB"] = true
+	if gunsAreGo:
+		animation_tree["parameters/conditions/isGun"] = true
+		animation_tree["parameters/conditions/isNotGun"] = false
+
+		if velocity == Vector2.ZERO: # standing still
+			animation_tree["parameters/conditions/isNotSprint"] = true
+			animation_tree["parameters/conditions/isNotWalk"] = true
+			animation_tree["parameters/conditions/isNotWalkB"] = true
+			
+			animation_tree["parameters/conditions/isSprint"] = false
+			animation_tree["parameters/conditions/isWalk"] = false
+			animation_tree["parameters/conditions/isWalkB"] = false
 		
-		animation_tree["parameters/conditions/isSprint"] = false
-		animation_tree["parameters/conditions/isWalk"] = false
-		animation_tree["parameters/conditions/isWalkB"] = false
-	
-	elif (direction == -1 && $body3.flip_h) || (direction == 1 && !$body3.flip_h): # movement towards mouse (forward and sprint)
-		animation_tree["parameters/conditions/isNotSprint"] = true
-		animation_tree["parameters/conditions/isNotWalk"] = false # walking state
-		animation_tree["parameters/conditions/isNotWalkB"] = true
+		elif (direction == -1 && $body3.flip_h) || (direction == 1 && !$body3.flip_h): # movement towards mouse (forward and sprint)
+			animation_tree["parameters/conditions/isNotSprint"] = true
+			animation_tree["parameters/conditions/isNotWalk"] = false # walking state
+			animation_tree["parameters/conditions/isNotWalkB"] = true
+			
+			animation_tree["parameters/conditions/isSprint"] = false
+			animation_tree["parameters/conditions/isWalk"] = true # walking state
+			animation_tree["parameters/conditions/isWalkB"] = false
+			
+			if accel == ACCELERATION*2:
+				# other states do not get edited since we do not return to facing state
+				animation_tree["parameters/conditions/isNotSprint"] = false # sprinting state		
+				animation_tree["parameters/conditions/isSprint"] = true # sprinting state
 		
-		animation_tree["parameters/conditions/isSprint"] = false
-		animation_tree["parameters/conditions/isWalk"] = true # walking state
-		animation_tree["parameters/conditions/isWalkB"] = false
+			
+			
+		elif (direction == -1 && !$body3.flip_h) || (direction == 1 && $body3.flip_h):
+			animation_tree["parameters/conditions/isNotSprint"] = true
+			animation_tree["parameters/conditions/isNotWalk"] = true 
+			animation_tree["parameters/conditions/isNotWalkB"] = false # back walking state
+			
+			animation_tree["parameters/conditions/isSprint"] = false
+			animation_tree["parameters/conditions/isWalk"] = false 
+			animation_tree["parameters/conditions/isWalkB"] = true # back walking state
 		
-		if accel == ACCELERATION*2:
-			# other states do not get edited since we do not return to facing state
-			animation_tree["parameters/conditions/isNotSprint"] = false # sprinting state		
-			animation_tree["parameters/conditions/isSprint"] = true # sprinting state
-	
+	else:
 		
+		animation_tree["parameters/conditions/isGun"] = false
+		animation_tree["parameters/conditions/isNotGun"] = true
 		
-	elif (direction == -1 && !$body3.flip_h) || (direction == 1 && $body3.flip_h):
-		animation_tree["parameters/conditions/isNotSprint"] = true
-		animation_tree["parameters/conditions/isNotWalk"] = true 
-		animation_tree["parameters/conditions/isNotWalkB"] = false # back walking state
+		if velocity == Vector2.ZERO: # standing still
+			animation_tree["parameters/conditions/isNotSprintA"] = true
+			animation_tree["parameters/conditions/isNotWalkA"] = true
+			animation_tree["parameters/conditions/isNotWalkBA"] = true
+			
+			animation_tree["parameters/conditions/isSprintA"] = false
+			animation_tree["parameters/conditions/isWalkA"] = false
+			animation_tree["parameters/conditions/isWalkBA"] = false
 		
-		animation_tree["parameters/conditions/isSprint"] = false
-		animation_tree["parameters/conditions/isWalk"] = false 
-		animation_tree["parameters/conditions/isWalkB"] = true # back walking state
+		elif (direction == -1 && $body3.flip_h) || (direction == 1 && !$body3.flip_h): # movement towards mouse (forward and sprint)
+			animation_tree["parameters/conditions/isNotSprintA"] = true
+			animation_tree["parameters/conditions/isNotWalkA"] = false # walking state
+			animation_tree["parameters/conditions/isNotWalkBA"] = true
+			
+			animation_tree["parameters/conditions/isSprintA"] = false
+			animation_tree["parameters/conditions/isWalkA"] = true # walking state
+			animation_tree["parameters/conditions/isWalkBA"] = false
+			
+			if accel == ACCELERATION*2:
+				# other states do not get edited since we do not return to facing state
+				animation_tree["parameters/conditions/isNotSprintA"] = false # sprinting state		
+				animation_tree["parameters/conditions/isSprintA"] = true # sprinting state
 		
+			
+			
+		elif (direction == -1 && !$body3.flip_h) || (direction == 1 && $body3.flip_h):
+			animation_tree["parameters/conditions/isNotSprintA"] = true
+			animation_tree["parameters/conditions/isNotWalkA"] = true 
+			animation_tree["parameters/conditions/isNotWalkBA"] = false # back walking state
+			
+			animation_tree["parameters/conditions/isSprintA"] = false
+			animation_tree["parameters/conditions/isWalkA"] = false 
+			animation_tree["parameters/conditions/isWalkBA"] = true # back walking state
+			
+			
+			
+			
 		#if accel == ACCELERATION*2:
 				#animation_tree["parameters/conditions/isSprint"] = true # start sprint
 				#animation_tree["parameters/conditions/stopSprint"] = false # stay sprinting
@@ -170,6 +216,7 @@ func _ready():
 	gun.position = Vector2(0,0)
 	gun.world = world
 	gun.spawner = $body3
+	gun.visible = gunsAreGo
 	
 	$body3.flip_h = true
 	self.add_child(gun)
