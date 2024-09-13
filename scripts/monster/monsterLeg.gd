@@ -109,7 +109,6 @@ func _physics_process(delta: float) -> void:
 	
 	# It locks some if the points in the end of the line to make it more stretched,
 	# but looks kinda bad...
-	var dst := (_targetGlobalPoint - _sourceGlobalPoint).length()
 	_points[pointCount - 1].locked = _isOnGround
 	if _points[pointCount - 1].locked:
 		# Transition between old position and new using easing function

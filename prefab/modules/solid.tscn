@@ -1,7 +1,9 @@
-[gd_scene load_steps=3 format=3 uid="uid://dgdwjvv8tg4tu"]
+[gd_scene load_steps=3 format=3 uid="uid://t3qs0tvqdywp"]
 
 [ext_resource type="Script" path="res://scripts/module.gd" id="1_ebmac"]
-[ext_resource type="Texture2D" uid="uid://hrkfy5w1uxa8" path="res://imgs/modules/solid/n.png" id="2_ykfmj"]
+
+[sub_resource type="CompressedTexture2D" id="CompressedTexture2D_tk0m1"]
+load_path = "res://.godot/imported/n.png-b152e21a685cb41af886474a58dd955c.ctex"
 
 [node name="Default" type="Node2D"]
 script = ExtResource("1_ebmac")
@@ -9,7 +11,7 @@ script = ExtResource("1_ebmac")
 [node name="Sprite" type="Sprite2D" parent="."]
 z_index = 10
 y_sort_enabled = true
-texture = ExtResource("2_ykfmj")
+texture = SubResource("CompressedTexture2D_tk0m1")
 centered = false
 
 [node name="Borders" type="StaticBody2D" parent="Sprite"]

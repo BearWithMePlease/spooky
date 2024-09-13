@@ -17,7 +17,6 @@ var _legGroundPos: Array[Vector2] = []
 var _legIsOnGround: Array[bool] = []
 var _legs: Array[MonsterLeg] = []
 var _faces: Array[RigidBody2D] = []
-var _isPlayerVisible: bool = false
 # Used in physics_process:
 var _center := Vector2(0, 0)
 var _input: Vector2 = Vector2(0, 0)
@@ -53,7 +52,7 @@ func _ready() -> void:
 		) * legRadius
 		angle += 2.0 * PI / float(_legs.size())
 		
-func _process(delta: float) -> void:
+func _process(_delta: float) -> void:
 	_input = Vector2.ZERO
 	if(Input.is_action_pressed("Forward")):
 		_input.y -= 1

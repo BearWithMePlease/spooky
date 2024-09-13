@@ -30,6 +30,8 @@ script = ExtResource("8_m2gle")
 [node name="Background" type="Sprite2D" parent="Camera"]
 visible = false
 texture = SubResource("GradientTexture1D_bajml")
+region_enabled = true
+region_rect = Rect2(100, 100, 100, 100)
 
 [node name="Modules" type="NavigationRegion2D" parent="."]
 navigation_polygon = SubResource("NavigationPolygon_ki8cn")
