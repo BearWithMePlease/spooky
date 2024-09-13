@@ -1,6 +1,7 @@
-[gd_scene load_steps=11 format=3 uid="uid://qr05ktwbxvl1"]
+[gd_scene load_steps=12 format=3 uid="uid://qr05ktwbxvl1"]
 
 [ext_resource type="Script" path="res://scripts/module.gd" id="1_ihai3"]
+[ext_resource type="Texture2D" uid="uid://bbdoyjknw2ka" path="res://imgs/modules/water/wall.png" id="2_2nl0j"]
 [ext_resource type="Texture2D" uid="uid://bylcwkiuwpvgc" path="res://imgs/modules/water/n.png" id="2_rcalp"]
 [ext_resource type="PackedScene" uid="uid://dki4talhc74jp" path="res://prefab/ceiling_lamp.tscn" id="3_oe547"]
 
@@ -98,3 +99,9 @@ position = Vector2(132, 98)
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Sprite/Interactables/Water"]
 position = Vector2(-20, 5)
 shape = SubResource("RectangleShape2D_fgi5g")
+
+[node name="Wall" type="Sprite2D" parent="Sprite"]
+z_index = 10
+y_sort_enabled = true
+position = Vector2(96, 64)
+texture = ExtResource("2_2nl0j")

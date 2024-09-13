@@ -17,12 +17,14 @@ class CollisionResult:
 	var normal: Vector2
 	
 @export var pointCount: int = 15
-@export var lineLength: float = 200.0
+@export var lineLength: float = 100.0
 @export var gravity: float = 300.0
 @export var numIterations: int = 100
 @export var changeTime: float = 3.0 # more => faster
 @export var verletSmoothness: float = 0.75 # more => more janky
 @export var verletSimulationSpeed: float = 2.0
+@export var minWidth: float = 4.0
+@export var maxWidth: float = 8.0
 
 var _targetGlobalPoint := Vector2(0, 0)
 var _oldTargetGlobalPoint := Vector2(0, 0)
@@ -35,7 +37,7 @@ var _changeTargetTimer: float = 0.0
 var _allRects: Array[Rect2] = [] # buffer to hold all rectangles
 
 func _ready() -> void:
-	width = randf_range(8.0, 13.0)
+	width = randf_range(minWidth, maxWidth)
 	_allRects = []
 	if len(_allRects) == 0:
 		for child in get_all_children(get_tree().root):

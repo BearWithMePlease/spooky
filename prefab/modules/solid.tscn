@@ -1,0 +1,24 @@
+[gd_scene load_steps=3 format=3 uid="uid://dgdwjvv8tg4tu"]
+
+[ext_resource type="Script" path="res://scripts/module.gd" id="1_ebmac"]
+[ext_resource type="Texture2D" uid="uid://hrkfy5w1uxa8" path="res://imgs/modules/solid/n.png" id="2_ykfmj"]
+
+[node name="Default" type="Node2D"]
+script = ExtResource("1_ebmac")
+
+[node name="Sprite" type="Sprite2D" parent="."]
+z_index = 10
+y_sort_enabled = true
+texture = ExtResource("2_ykfmj")
+centered = false
+
+[node name="Borders" type="StaticBody2D" parent="Sprite"]
+
+[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="Sprite/Borders"]
+polygon = PackedVector2Array(0, 0, 64, 0, 64, 64, 0, 64)
+
+[node name="Lights" type="Node2D" parent="Sprite"]
+visible = false
+
+[node name="Interactables" type="Node2D" parent="Sprite"]
+visible = false

@@ -1,8 +1,6 @@
-[gd_scene load_steps=8 format=3 uid="uid://c3cfufhet1let"]
+[gd_scene load_steps=6 format=3 uid="uid://c3cfufhet1let"]
 
-[ext_resource type="Script" path="res://scripts/monster/monster.gd" id="1_pbcp0"]
-[ext_resource type="PackedScene" uid="uid://3h6eguht44i6" path="res://prefab/monsterLeg.tscn" id="2_7js84"]
-[ext_resource type="PackedScene" uid="uid://mb1u0vbty7ft" path="res://prefab/monsterFace.tscn" id="3_unkvq"]
+[ext_resource type="PackedScene" uid="uid://betx6m81e680d" path="res://prefab/monster/monster.tscn" id="1_xcd52"]
 [ext_resource type="Texture2D" uid="uid://bsfoxkgqdmhpf" path="res://images/wall.png" id="4_pjkcp"]
 [ext_resource type="Script" path="res://scripts/fps.gd" id="6_m5y2w"]
 
@@ -16,36 +14,7 @@ size = Vector2(98.7465, 88.6354)
 
 [node name="Enemy" type="Node2D"]
 
-[node name="Monster" type="Node2D" parent="." node_paths=PackedStringArray("particles", "player", "navigationAgent")]
-z_index = 1
-y_sort_enabled = true
-position = Vector2(276, 367)
-script = ExtResource("1_pbcp0")
-monsterSpeed = 5.0
-facesCount = 5
-legsCount = 25
-monsterLegScene = ExtResource("2_7js84")
-monsterFaceScene = ExtResource("3_unkvq")
-particles = NodePath("CPUParticles2D")
-player = NodePath("")
-navigationAgent = NodePath("NavigationAgent2D")
-
-[node name="CPUParticles2D" type="CPUParticles2D" parent="Monster"]
-amount = 25
-lifetime = 3.0
-emission_shape = 4
-emission_points = PackedVector2Array()
-emission_colors = PackedColorArray()
-direction = Vector2(0, 0)
-spread = 180.0
-gravity = Vector2(0, 2)
-initial_velocity_min = 2.0
-initial_velocity_max = 15.0
-scale_amount_min = 4.0
-scale_amount_max = 4.0
-color = Color(0.00784314, 0.00784314, 0.14902, 1)
-
-[node name="NavigationAgent2D" type="NavigationAgent2D" parent="Monster"]
+[node name="Monster" parent="." instance=ExtResource("1_xcd52")]
 
 [node name="NavigationRegion2D" type="NavigationRegion2D" parent="."]
 navigation_polygon = SubResource("NavigationPolygon_dci7e")
@@ -58,7 +27,6 @@ scale = Vector2(7.88889, 0.699495)
 texture = ExtResource("4_pjkcp")
 
 [node name="StaticBody2D" type="StaticBody2D" parent="NavigationRegion2D/Walls/Wall3"]
-collision_layer = 2
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="NavigationRegion2D/Walls/Wall3/StaticBody2D"]
 shape = SubResource("RectangleShape2D_y38ng")
@@ -69,7 +37,6 @@ scale = Vector2(7.88889, 0.699495)
 texture = ExtResource("4_pjkcp")
 
 [node name="StaticBody2D" type="StaticBody2D" parent="NavigationRegion2D/Walls/Wall4"]
-collision_layer = 2
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="NavigationRegion2D/Walls/Wall4/StaticBody2D"]
 shape = SubResource("RectangleShape2D_y38ng")
@@ -80,7 +47,6 @@ scale = Vector2(0.767676, 0.699495)
 texture = ExtResource("4_pjkcp")
 
 [node name="StaticBody2D" type="StaticBody2D" parent="NavigationRegion2D/Walls/Wall5"]
-collision_layer = 2
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="NavigationRegion2D/Walls/Wall5/StaticBody2D"]
 shape = SubResource("RectangleShape2D_y38ng")

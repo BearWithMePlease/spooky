@@ -1,6 +1,7 @@
-[gd_scene load_steps=11 format=3 uid="uid://bqlqfiprg6fyq"]
+[gd_scene load_steps=12 format=3 uid="uid://bqlqfiprg6fyq"]
 
 [ext_resource type="Script" path="res://scripts/module.gd" id="1_q3d5o"]
+[ext_resource type="Texture2D" uid="uid://bef4wmbeudiv1" path="res://imgs/modules/hospital/wall.png" id="2_bgywv"]
 [ext_resource type="Texture2D" uid="uid://bx4xg8n0qhh2b" path="res://imgs/modules/hospital/n.png" id="2_wde0a"]
 [ext_resource type="PackedScene" uid="uid://dki4talhc74jp" path="res://prefab/ceiling_lamp.tscn" id="3_cwk3e"]
 
@@ -89,3 +90,9 @@ position = Vector2(132, 98)
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Sprite/Interactables/Healing"]
 position = Vector2(-99, -2)
 shape = SubResource("RectangleShape2D_fgi5g")
+
+[node name="Wall" type="Sprite2D" parent="Sprite"]
+z_index = 10
+y_sort_enabled = true
+position = Vector2(96, 64)
+texture = ExtResource("2_bgywv")

@@ -42,6 +42,6 @@ texture = SubResource("GradientTexture1D_nd1t7")
 zoom = Vector2(5, 5)
 
 [node name="Monster" parent="." instance=ExtResource("7_yfrkd")]
-position = Vector2(0, 0)
+position = Vector2(116, 409)
 
 [connection signal="bake_finished" from="Modules" to="Monster" method="_on_modules_bake_finished"]
