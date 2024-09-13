@@ -1,6 +1,6 @@
 [gd_scene load_steps=3 format=3 uid="uid://3h6eguht44i6"]
 
-[ext_resource type="Script" path="res://monsterLeg.gd" id="1_pqr8q"]
+[ext_resource type="Script" path="res://scripts/monster/monsterLeg.gd" id="1_pqr8q"]
 [ext_resource type="Texture2D" uid="uid://bw6olo6fvsbaj" path="res://images/monster/legTexture.png" id="1_suxkp"]
 
 [node name="Leg" type="Line2D"]

@@ -10,7 +10,8 @@ class_name Monster
 @export var monsterLegScene: PackedScene = null
 @export var monsterFaceScene: PackedScene = null
 @export var particles: CPUParticles2D = null
-@export var player: RigidBody2D = null
+@export var player: Node2D = null
+@export var navigationAgent: NavigationAgent2D = null
 var _legPosition: Array[Vector2] = []
 var _legGroundPos: Array[Vector2] = []
 var _legIsOnGround: Array[bool] = []
@@ -28,7 +29,7 @@ func _ready() -> void:
 	for i in facesCount:
 		var face := monsterFaceScene.instantiate() as RigidBody2D
 		add_child(face)
-		# little random so that they push each other
+		# little random so that they push each other out
 		face.position = Vector2(randf_range(-1, 1), randf_range(-1, 1))
 		_faces.append(face)
 	
@@ -73,8 +74,13 @@ func _process(delta: float) -> void:
 	for leg in _legs:
 		allPoints.append_array(leg.getAllUnlockedPoints())
 	particles.emission_points = allPoints
+	
+	navigationAgent.target_position = get_global_mouse_position()
 
 func _physics_process(delta):
+	# Monster AI input
+	var aiInput: Vector2 = (navigationAgent.get_next_path_position() - global_position).normalized()
+	
 	# Monster rigidbody movement
 	var newCenter := Vector2.ZERO
 	for faceIndex in _faces.size():
@@ -83,20 +89,21 @@ func _physics_process(delta):
 			# Lerp position of heads towards monster center
 			rigidbody.global_position = lerp(rigidbody.global_position, _center, delta)
 			newCenter += rigidbody.global_position
-			rigidbody.linear_velocity = _input * monsterSpeed
+			rigidbody.linear_velocity = aiInput * monsterSpeed
 	newCenter /= _faces.size()
 	_center = newCenter
 	global_position = _center
 	
 	# Raycasting player
-	var playerTarget := self.global_position + (player.global_position - global_position).normalized() * 1000.0
-	var query = PhysicsRayQueryParameters2D.create(global_position, playerTarget)
-	query.collide_with_bodies = true
-	query.collision_mask = player.collision_layer
-	var space_state = get_world_2d().direct_space_state
-	var result = space_state.intersect_ray(query)
-	if result and result.collider is Player:
-		pass # See player
+	if player != null:
+		var playerTarget := self.global_position + (player.global_position - global_position).normalized() * 1000.0
+		var query = PhysicsRayQueryParameters2D.create(global_position, playerTarget)
+		query.collide_with_bodies = true
+		query.collision_mask = player.collision_layer
+		var space_state = get_world_2d().direct_space_state
+		var result = space_state.intersect_ray(query)
+		if result and result.collider is Player:
+			pass # See player
 	
 	
 	for legIndex in _legs.size():
@@ -119,10 +126,11 @@ func _physics_process(delta):
 				sin(randf_range(0, 2 * PI))
 			).normalized()
 			var rayTarget: Vector2 = raySource + randomDirection * _legs[legIndex].getLegLength()
-			query = PhysicsRayQueryParameters2D.create(raySource, rayTarget)
+			var query = PhysicsRayQueryParameters2D.create(raySource, rayTarget)
 			query.collide_with_bodies = true
 			query.collision_mask = WALL_COLLISION_MASK
-			result = space_state.intersect_ray(query)
+			var space_state = get_world_2d().direct_space_state
+			var result = space_state.intersect_ray(query)
 			# If found, store it
 			if result:
 				_legGroundPos[legIndex] = result.position

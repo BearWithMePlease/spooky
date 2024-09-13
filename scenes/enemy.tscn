@@ -1,0 +1,92 @@
+[gd_scene load_steps=8 format=3 uid="uid://c3cfufhet1let"]
+
+[ext_resource type="Script" path="res://scripts/monster/monster.gd" id="1_pbcp0"]
+[ext_resource type="PackedScene" uid="uid://3h6eguht44i6" path="res://prefab/monsterLeg.tscn" id="2_7js84"]
+[ext_resource type="PackedScene" uid="uid://mb1u0vbty7ft" path="res://prefab/monsterFace.tscn" id="3_unkvq"]
+[ext_resource type="Texture2D" uid="uid://bsfoxkgqdmhpf" path="res://images/wall.png" id="4_pjkcp"]
+[ext_resource type="Script" path="res://scripts/fps.gd" id="6_m5y2w"]
+
+[sub_resource type="NavigationPolygon" id="NavigationPolygon_dci7e"]
+vertices = PackedVector2Array(945, 597, 1240.66, 688.063, -58.8672, 695.93, 146, 597, 593.906, 394, 945, 515, 146, 515, 498.094, 394, 945.5, 203, 945.5, 121, 1216.33, -44.8828, -50.1094, -30.1094, 146.5, 121, 146.5, 203, 593.906, 312, 498.094, 312)
+polygons = Array[PackedInt32Array]([PackedInt32Array(0, 1, 2, 3), PackedInt32Array(4, 5, 6, 7), PackedInt32Array(8, 9, 10, 1), PackedInt32Array(11, 10, 9, 12), PackedInt32Array(8, 1, 0, 5), PackedInt32Array(2, 11, 12, 13, 6), PackedInt32Array(8, 5, 4, 14), PackedInt32Array(13, 8, 14, 15), PackedInt32Array(13, 15, 7, 6), PackedInt32Array(2, 6, 3)])
+outlines = Array[PackedVector2Array]([PackedVector2Array(-60, -40, -69, 706, 1251, 698, 1226, -55)])
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_y38ng"]
+size = Vector2(98.7465, 88.6354)
+
+[node name="Enemy" type="Node2D"]
+
+[node name="Monster" type="Node2D" parent="." node_paths=PackedStringArray("particles", "player", "navigationAgent")]
+z_index = 1
+y_sort_enabled = true
+position = Vector2(276, 367)
+script = ExtResource("1_pbcp0")
+monsterSpeed = 5.0
+facesCount = 5
+legsCount = 25
+monsterLegScene = ExtResource("2_7js84")
+monsterFaceScene = ExtResource("3_unkvq")
+particles = NodePath("CPUParticles2D")
+player = NodePath("")
+navigationAgent = NodePath("NavigationAgent2D")
+
+[node name="CPUParticles2D" type="CPUParticles2D" parent="Monster"]
+amount = 25
+lifetime = 3.0
+emission_shape = 4
+emission_points = PackedVector2Array()
+emission_colors = PackedColorArray()
+direction = Vector2(0, 0)
+spread = 180.0
+gravity = Vector2(0, 2)
+initial_velocity_min = 2.0
+initial_velocity_max = 15.0
+scale_amount_min = 4.0
+scale_amount_max = 4.0
+color = Color(0.00784314, 0.00784314, 0.14902, 1)
+
+[node name="NavigationAgent2D" type="NavigationAgent2D" parent="Monster"]
+
+[node name="NavigationRegion2D" type="NavigationRegion2D" parent="."]
+navigation_polygon = SubResource("NavigationPolygon_dci7e")
+
+[node name="Walls" type="Node2D" parent="NavigationRegion2D"]
+
+[node name="Wall3" type="Sprite2D" parent="NavigationRegion2D/Walls"]
+position = Vector2(545.5, 556)
+scale = Vector2(7.88889, 0.699495)
+texture = ExtResource("4_pjkcp")
+
+[node name="StaticBody2D" type="StaticBody2D" parent="NavigationRegion2D/Walls/Wall3"]
+collision_layer = 2
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="NavigationRegion2D/Walls/Wall3/StaticBody2D"]
+shape = SubResource("RectangleShape2D_y38ng")
+
+[node name="Wall4" type="Sprite2D" parent="NavigationRegion2D/Walls"]
+position = Vector2(546, 162)
+scale = Vector2(7.88889, 0.699495)
+texture = ExtResource("4_pjkcp")
+
+[node name="StaticBody2D" type="StaticBody2D" parent="NavigationRegion2D/Walls/Wall4"]
+collision_layer = 2
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="NavigationRegion2D/Walls/Wall4/StaticBody2D"]
+shape = SubResource("RectangleShape2D_y38ng")
+
+[node name="Wall5" type="Sprite2D" parent="NavigationRegion2D/Walls"]
+position = Vector2(546, 353)
+scale = Vector2(0.767676, 0.699495)
+texture = ExtResource("4_pjkcp")
+
+[node name="StaticBody2D" type="StaticBody2D" parent="NavigationRegion2D/Walls/Wall5"]
+collision_layer = 2
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="NavigationRegion2D/Walls/Wall5/StaticBody2D"]
+shape = SubResource("RectangleShape2D_y38ng")
+
+[node name="fps" type="Label" parent="."]
+offset_right = 40.0
+offset_bottom = 23.0
+text = "59"
+script = ExtResource("6_m5y2w")

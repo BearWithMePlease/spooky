@@ -224,13 +224,10 @@ func remove_mover():
 
 # Gets mouse to grid position. Only works for positive coords
 func get_grid_position(pos: Vector2):
-	var coord = Vector2i(roundi(pos.x), roundi(pos.y))
-	var modulo = Vector2i(coord.x % GRID_SIZE, coord.y % GRID_SIZE)
-
-	coord.x = coord.x - modulo.x if modulo.x < floori(GRID_SIZE / 2.0) else coord.x + (GRID_SIZE - modulo.x)
-	coord.y = coord.y - modulo.y if modulo.y < floori(GRID_SIZE / 2.0) else coord.y + (GRID_SIZE - modulo.y)
-	
-	return Vector2(coord.x, coord.y)
+	var posI: Vector2i = Vector2i(floori(pos.x + GRID_SIZE * 0.5), floori(pos.y + GRID_SIZE * 0.5))
+	var x: int = (posI.x / GRID_SIZE) if (posI.x >= 0) else ((posI.x + 1) / GRID_SIZE) - 1
+	var y: int = (posI.y / GRID_SIZE) if (posI.y >= 0) else ((posI.y + 1) / GRID_SIZE) - 1
+	return Vector2(x * GRID_SIZE, y * GRID_SIZE)
 
 # Check if there is already a module in that position (on grid)
 func can_build_module(grid_position: Vector2, ignore_gui:bool = false):
