@@ -77,14 +77,14 @@ occluder = SubResource("OccluderPolygon2D_16s4d")
 position = Vector2(115.366, 74)
 scale = Vector2(1.26983, 1.033)
 
-[node name="PointLight2D" type="PointLight2D" parent="Sprite/Lights" groups=["electric_light"]]
+[node name="PointLight2D" type="PointLight2D" parent="Sprite/Lights" groups=["electric_light", "hospital_light"]]
 position = Vector2(57, 103)
 energy = 0.5
 texture = SubResource("GradientTexture2D_fp0cu")
 
 [node name="Interactables" type="Node2D" parent="Sprite"]
 
-[node name="Healing" type="Area2D" parent="Sprite/Interactables" groups=["interact_water"]]
+[node name="Healing" type="Area2D" parent="Sprite/Interactables" groups=["interact_hospital"]]
 position = Vector2(132, 98)
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Sprite/Interactables/Healing"]

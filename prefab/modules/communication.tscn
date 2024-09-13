@@ -1,4 +1,4 @@
-[gd_scene load_steps=10 format=3 uid="uid://bwisoomk8helm"]
+[gd_scene load_steps=12 format=3 uid="uid://bwisoomk8helm"]
 
 [ext_resource type="Script" path="res://scripts/module.gd" id="1_rdnqu"]
 [ext_resource type="Texture2D" uid="uid://b64wfhxrqbnmr" path="res://imgs/modules/communication/n.png" id="2_43pyl"]
@@ -6,7 +6,7 @@
 [ext_resource type="PackedScene" uid="uid://dki4talhc74jp" path="res://prefab/ceiling_lamp.tscn" id="3_4bq63"]
 
 [sub_resource type="OccluderPolygon2D" id="OccluderPolygon2D_j4v7c"]
-polygon = PackedVector2Array(0, -3, 0, -50, 128, -50, 128, -4, 127, -4, 127, -49, 1, -49, 1, -3)
+polygon = PackedVector2Array(0, -3, 0, -50, 128, -50, 128, -3, 127, -3, 127, -49, 1, -49, 1, -3)
 
 [sub_resource type="OccluderPolygon2D" id="OccluderPolygon2D_mrxxm"]
 polygon = PackedVector2Array(0, 51, 128, 51, 128, 50, 0, 50)
@@ -17,6 +17,17 @@ polygon = PackedVector2Array(1, -3, 1, 50, 0, 50, 0, -3)
 [sub_resource type="OccluderPolygon2D" id="OccluderPolygon2D_qwdet"]
 polygon = PackedVector2Array(4, -3, 5, -3, 5, 50, 4, 50)
 
+[sub_resource type="Gradient" id="Gradient_a8xhd"]
+offsets = PackedFloat32Array(0.363333, 0.641667)
+colors = PackedColorArray(1, 1, 1, 1, 0, 0, 0, 1)
+
+[sub_resource type="GradientTexture2D" id="GradientTexture2D_a8e8n"]
+gradient = SubResource("Gradient_a8xhd")
+width = 16
+height = 16
+fill = 2
+fill_from = Vector2(0.5, 0.5)
+
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_v2cjc"]
 size = Vector2(60, 36)
 
@@ -24,6 +35,7 @@ size = Vector2(60, 36)
 script = ExtResource("1_rdnqu")
 
 [node name="Sprite" type="Sprite2D" parent="."]
+light_mask = 1025
 texture = ExtResource("2_43pyl")
 centered = false
 
@@ -63,6 +75,14 @@ occluder = SubResource("OccluderPolygon2D_qwdet")
 
 [node name="Ceiling_Light" parent="Sprite/Lights" instance=ExtResource("3_4bq63")]
 position = Vector2(63, 63)
+
+[node name="Communication_Light" type="PointLight2D" parent="Sprite/Lights" groups=["communication_light", "electric_light"]]
+position = Vector2(51, 96)
+scale = Vector2(0.945, 0.935)
+color = Color(0.643137, 0.709804, 0.392157, 1)
+range_item_cull_mask = 1024
+texture = SubResource("GradientTexture2D_a8e8n")
+offset = Vector2(0.5, 0.5)
 
 [node name="Interactables" type="Node2D" parent="Sprite"]
 

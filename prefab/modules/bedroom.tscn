@@ -71,7 +71,7 @@ scale = Vector2(0.247664, 0.475533)
 
 [node name="Interactables" type="Node2D" parent="Sprite"]
 
-[node name="Bed" type="Area2D" parent="Sprite/Interactables" groups=["interact_weapons"]]
+[node name="Bed" type="Area2D" parent="Sprite/Interactables" groups=["interact_bedroom"]]
 position = Vector2(83, 108)
 collision_layer = 2
 

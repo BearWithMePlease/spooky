@@ -1,4 +1,4 @@
-[gd_scene load_steps=35 format=3 uid="uid://bo6ew1t4jg2x6"]
+[gd_scene load_steps=36 format=3 uid="uid://bo6ew1t4jg2x6"]
 
 [ext_resource type="Script" path="res://scripts/main_scene.gd" id="1_0jyw0"]
 [ext_resource type="Script" path="res://scripts/light_control.gd" id="2_una4x"]
@@ -633,6 +633,11 @@ states/walk_b/position = Vector2(535.333, 258.667)
 transitions = ["Start", "facing", SubResource("AnimationNodeStateMachineTransition_s1bs7"), "facing", "walk", SubResource("AnimationNodeStateMachineTransition_xy5a8"), "walk", "sprint", SubResource("AnimationNodeStateMachineTransition_ls6v0"), "facing", "walk_b", SubResource("AnimationNodeStateMachineTransition_wrb8h"), "walk_b", "facing", SubResource("AnimationNodeStateMachineTransition_u8oec"), "walk", "facing", SubResource("AnimationNodeStateMachineTransition_snn0d"), "sprint", "walk", SubResource("AnimationNodeStateMachineTransition_1s6tq")]
 graph_offset = Vector2(-387, -2)
 
+[sub_resource type="Environment" id="Environment_38t8c"]
+background_mode = 3
+adjustment_enabled = true
+adjustment_saturation = 1.5
+
 [node name="MainScene" type="Node2D"]
 script = ExtResource("1_0jyw0")
 
@@ -647,7 +652,6 @@ blend_mode = 1
 navigation_polygon = SubResource("NavigationPolygon_ki8cn")
 
 [node name="Monster" parent="." instance=ExtResource("7_yfrkd")]
-visible = false
 position = Vector2(0, 0)
 
 [node name="Player" type="CharacterBody2D" parent="." node_paths=PackedStringArray("GUN")]
@@ -657,8 +661,7 @@ ACCELERATION = 300
 GUN = NodePath("GunParent/gun")
 
 [node name="Aura" type="PointLight2D" parent="Player"]
-position = Vector2(0, -17.4724)
-energy = 0.6
+energy = 0.3
 blend_mode = 2
 shadow_enabled = true
 texture = SubResource("GradientTexture2D_x2omx")
@@ -710,6 +713,9 @@ position = Vector2(1, 11)
 scale = Vector2(0.346, 0.346)
 
 [node name="gun" parent="Player/GunParent" instance=ExtResource("7_yae1m")]
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = SubResource("Environment_38t8c")
 
 [connection signal="finished_ready" from="." to="Light_Control" method="on_main_finished_ready"]
 [connection signal="bake_finished" from="Modules" to="Monster" method="_on_modules_bake_finished"]

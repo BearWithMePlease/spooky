@@ -41,6 +41,12 @@ interact_water=""
 interact_weapons=""
 interact_entry=""
 spawn_point=""
+communication_light=""
+interact_bedroom=""
+interact_hospital=""
+generator_light=""
+hospital_light=""
+water_light=""
 
 [input]
 

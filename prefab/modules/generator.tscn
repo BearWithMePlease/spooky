@@ -18,12 +18,12 @@ polygon = PackedVector2Array(3, -3, 4, -3, 4, 50, 3, 50)
 [sub_resource type="OccluderPolygon2D" id="OccluderPolygon2D_7x8lh"]
 polygon = PackedVector2Array(0, -3, 1, -3, 1, 50, 0, 50)
 
-[sub_resource type="Gradient" id="Gradient_yn38h"]
+[sub_resource type="Gradient" id="Gradient_fy635"]
 offsets = PackedFloat32Array(0, 0.755844)
 colors = PackedColorArray(1, 1, 1, 1, 0, 0, 0, 1)
 
 [sub_resource type="GradientTexture2D" id="GradientTexture2D_mamyw"]
-gradient = SubResource("Gradient_yn38h")
+gradient = SubResource("Gradient_fy635")
 width = 16
 height = 16
 fill = 1
@@ -81,7 +81,7 @@ position = Vector2(118, 59)
 [node name="Ceiling_Light2" parent="Sprite/Lights" instance=ExtResource("3_uedks")]
 position = Vector2(214, 67)
 
-[node name="Electric_Light" type="PointLight2D" parent="Sprite/Lights" groups=["electric_light"]]
+[node name="Electric_Light" type="PointLight2D" parent="Sprite/Lights" groups=["electric_light", "generator_light"]]
 position = Vector2(66, 92)
 range_item_cull_mask = 1024
 texture = SubResource("GradientTexture2D_mamyw")

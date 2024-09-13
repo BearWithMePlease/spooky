@@ -76,17 +76,17 @@ occluder = SubResource("OccluderPolygon2D_16s4d")
 [node name="Ceiling_Light" parent="Sprite/Lights" instance=ExtResource("3_oe547")]
 position = Vector2(151, 59)
 
-[node name="PointLight2D2" type="PointLight2D" parent="Sprite/Lights" groups=["electric_light"]]
+[node name="PointLight2D2" type="PointLight2D" parent="Sprite/Lights" groups=["electric_light", "water_light"]]
 position = Vector2(34, 62)
 energy = 0.5
 texture = SubResource("GradientTexture2D_fp0cu")
 
-[node name="PointLight2D3" type="PointLight2D" parent="Sprite/Lights" groups=["electric_light"]]
+[node name="PointLight2D3" type="PointLight2D" parent="Sprite/Lights" groups=["electric_light", "water_light"]]
 position = Vector2(64, 63)
 energy = 0.5
 texture = SubResource("GradientTexture2D_fp0cu")
 
-[node name="PointLight2D" type="PointLight2D" parent="Sprite/Lights" groups=["electric_light"]]
+[node name="PointLight2D" type="PointLight2D" parent="Sprite/Lights" groups=["electric_light", "water_light"]]
 position = Vector2(139, 103)
 energy = 0.5
 texture = SubResource("GradientTexture2D_fp0cu")
