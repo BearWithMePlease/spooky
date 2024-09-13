@@ -1,7 +1,8 @@
-[gd_scene load_steps=12 format=3 uid="uid://ogv0kj11knlg"]
+[gd_scene load_steps=13 format=3 uid="uid://ogv0kj11knlg"]
 
 [ext_resource type="Script" path="res://scripts/module.gd" id="2_2pgmg"]
 [ext_resource type="Texture2D" uid="uid://ba82qlhnxs647" path="res://imgs/modules/generator/n.png" id="2_f5htx"]
+[ext_resource type="Texture2D" uid="uid://23fct8kq14u0" path="res://imgs/modules/generator/wall.png" id="2_hvsvt"]
 [ext_resource type="PackedScene" uid="uid://dki4talhc74jp" path="res://prefab/ceiling_lamp.tscn" id="3_uedks"]
 [ext_resource type="PackedScene" uid="uid://tbs4ifkjrnhc" path="res://prefab/vent.tscn" id="5_nnwbo"]
 
@@ -96,3 +97,9 @@ position = Vector2(107, 107)
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Sprite/Interactables/Generator"]
 position = Vector2(2, -6)
 shape = SubResource("RectangleShape2D_0u251")
+
+[node name="Wall" type="Sprite2D" parent="Sprite"]
+z_index = 10
+y_sort_enabled = true
+position = Vector2(128, 64)
+texture = ExtResource("2_hvsvt")

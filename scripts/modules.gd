@@ -34,7 +34,8 @@ enum ModuleType {
 	WATER,
 	WEAPONS,
 	HOSPITAL,
-	BEDROOM
+	BEDROOM,
+	SOLID
 }
 
 # Module has base size of grid_size. Larger modules can be of n*grid_size in each direction
@@ -48,7 +49,8 @@ static var scales = {
 	ModuleType.WATER: Vector2(3,2),
 	ModuleType.WEAPONS: Vector2(2,2),
 	ModuleType.HOSPITAL: Vector2(3, 2),
-	ModuleType.BEDROOM: Vector2(2, 2)
+	ModuleType.BEDROOM: Vector2(2, 2),
+	ModuleType.SOLID: Vector2(1, 1),
 }
 
 # Module has docking slots. Add slot to array where docking a different module is possible
@@ -63,7 +65,8 @@ static var connections = {
 	ModuleType.WATER: [Vector2(1,1), Vector2(3,1)],
 	ModuleType.WEAPONS: [Vector2(1,1), Vector2(2,1)],
 	ModuleType.HOSPITAL: [Vector2(1,1), Vector2(3, 1)],
-	ModuleType.BEDROOM: [Vector2(1,1), Vector2(2,1)]
+	ModuleType.BEDROOM: [Vector2(1,1), Vector2(2,1)],
+	ModuleType.SOLID: [],
 }
 
 var module_button := preload("res://prefab/module_button.tscn")
@@ -241,13 +244,16 @@ func remove_mover():
 	mover.sprite.texture = null
 
 # Gets mouse to grid position. Only works for positive coords
-func get_grid_position(pos: Vector2):
+func get_grid_position(pos: Vector2) -> Vector2:
 	var posI: Vector2i = Vector2i(floori(pos.x + GRID_SIZE * 0.5), floori(pos.y + GRID_SIZE * 0.5))
 	var x: int = (posI.x / GRID_SIZE) if (posI.x >= 0) else ((posI.x + 1) / GRID_SIZE) - 1
 	var y: int = (posI.y / GRID_SIZE) if (posI.y >= 0) else ((posI.y + 1) / GRID_SIZE) - 1
 	return Vector2(x * GRID_SIZE, y * GRID_SIZE)
 
 func get_surroundings(grid_position: Vector2, type: ModuleType) -> Dictionary:
+	if len(connections[type]) == 0:
+		return {}
+		
 	var connection_slot_first = grid_position + GRID_SIZE * (connections[type][0]-Vector2.ONE)
 	var connection_slot_last = grid_position + GRID_SIZE * (connections[type][len(connections[type])-1]-Vector2.ONE)
 	
@@ -421,6 +427,29 @@ func on_confirm_build():
 	if not self.all_connected:
 		print("Nah uh. You need to connect everything")
 		return
+	
+	# Create outline of "solid" modules around each tile
+	const OFFSETS: Array[Vector2i] = [
+		Vector2i(1, 0),
+		Vector2i(-1, 0),
+		Vector2i(0, 1),
+		Vector2i(0, -1),
+	]
+	for gridModule : GridModule in grid.values():
+		var modPos := gridModule.node.position
+		var modScale := gridModule.scale_index
+		var modType := gridModule.node.type
+		for outlineOffset in OFFSETS:
+			for x in range(scales[modType].x):
+				for y in range(scales[modType].y):
+					var pos: Vector2i = Vector2i(modPos.x + (outlineOffset.x + x) * GRID_SIZE, modPos.y + (outlineOffset.y - y) * GRID_SIZE)
+					if not grid.keys().has(get_grid_id(pos)):
+						grid_position = pos
+						mover.vertical_direction = ModuleVerticalDirection.N
+						mover.direction = ModuleDirection.N
+						type = ModuleType.SOLID
+						on_build_module()
+	
 	
 	var nodes_dict = {}
 	for grid_module:GridModule in grid.values():

@@ -1,7 +1,8 @@
-[gd_scene load_steps=9 format=3 uid="uid://bs2ig4l31ljmw"]
+[gd_scene load_steps=10 format=3 uid="uid://bs2ig4l31ljmw"]
 
 [ext_resource type="Script" path="res://scripts/module.gd" id="1_62bet"]
 [ext_resource type="Texture2D" uid="uid://cihd2xpvdl1qr" path="res://imgs/modules/bedroom/n.png" id="2_7ufxh"]
+[ext_resource type="Texture2D" uid="uid://xikloljd3x5s" path="res://imgs/modules/bedroom/wall.png" id="2_yb4c0"]
 [ext_resource type="PackedScene" uid="uid://dki4talhc74jp" path="res://prefab/ceiling_lamp.tscn" id="3_12nir"]
 
 [sub_resource type="OccluderPolygon2D" id="OccluderPolygon2D_le7af"]
@@ -72,7 +73,14 @@ scale = Vector2(0.247664, 0.475533)
 
 [node name="Bed" type="Area2D" parent="Sprite/Interactables" groups=["interact_weapons"]]
 position = Vector2(83, 108)
+collision_layer = 2
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Sprite/Interactables/Bed"]
 position = Vector2(-35.5, -2)
 shape = SubResource("RectangleShape2D_6erjm")
+
+[node name="Wall" type="Sprite2D" parent="Sprite"]
+z_index = 10
+y_sort_enabled = true
+position = Vector2(64, 64)
+texture = ExtResource("2_yb4c0")

@@ -21,7 +21,8 @@ var _isPlayerVisible: bool = false
 # Used in physics_process:
 var _center := Vector2(0, 0)
 var _input: Vector2 = Vector2(0, 0)
-const WALL_COLLISION_MASK = 0b10
+const WALL_COLLISION_MASK = 0b01
+var _isNavigationMapBaked := false
 
 func _ready() -> void:
 	_center = global_position
@@ -75,24 +76,25 @@ func _process(delta: float) -> void:
 		allPoints.append_array(leg.getAllUnlockedPoints())
 	particles.emission_points = allPoints
 	
-	navigationAgent.target_position = get_global_mouse_position()
+	if _isNavigationMapBaked:
+		navigationAgent.target_position = get_global_mouse_position()
 
 func _physics_process(delta):
-	# Monster AI input
-	var aiInput: Vector2 = (navigationAgent.get_next_path_position() - global_position).normalized()
+	if _isNavigationMapBaked:
+		var aiInput: Vector2 = (navigationAgent.get_next_path_position() - global_position).normalized()
 	
-	# Monster rigidbody movement
-	var newCenter := Vector2.ZERO
-	for faceIndex in _faces.size():
-		var rigidbody := _faces[faceIndex] as RigidBody2D
-		if rigidbody != null:
-			# Lerp position of heads towards monster center
-			rigidbody.global_position = lerp(rigidbody.global_position, _center, delta)
-			newCenter += rigidbody.global_position
-			rigidbody.linear_velocity = aiInput * monsterSpeed
-	newCenter /= _faces.size()
-	_center = newCenter
-	global_position = _center
+		# Monster rigidbody movement
+		var newCenter := Vector2.ZERO
+		for faceIndex in _faces.size():
+			var rigidbody := _faces[faceIndex] as RigidBody2D
+			if rigidbody != null:
+				# Lerp position of heads towards monster center
+				rigidbody.global_position = lerp(rigidbody.global_position, _center, delta)
+				newCenter += rigidbody.global_position
+				rigidbody.linear_velocity = aiInput * monsterSpeed
+		newCenter /= _faces.size()
+		_center = newCenter
+		global_position = _center
 	
 	# Raycasting player
 	if player != null:
@@ -128,6 +130,7 @@ func _physics_process(delta):
 			var rayTarget: Vector2 = raySource + randomDirection * _legs[legIndex].getLegLength()
 			var query = PhysicsRayQueryParameters2D.create(raySource, rayTarget)
 			query.collide_with_bodies = true
+			query.collide_with_areas = false
 			query.collision_mask = WALL_COLLISION_MASK
 			var space_state = get_world_2d().direct_space_state
 			var result = space_state.intersect_ray(query)
@@ -136,3 +139,6 @@ func _physics_process(delta):
 				_legGroundPos[legIndex] = result.position
 				_legIsOnGround[legIndex] = true
 				break
+
+func _on_modules_bake_finished() -> void:
+	_isNavigationMapBaked = true

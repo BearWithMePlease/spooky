@@ -1,0 +1,33 @@
+[gd_scene load_steps=4 format=3 uid="uid://betx6m81e680d"]
+
+[ext_resource type="Script" path="res://scripts/monster/monster.gd" id="1_l81ko"]
+[ext_resource type="PackedScene" uid="uid://3h6eguht44i6" path="res://prefab/monster/monsterLeg.tscn" id="2_yj3md"]
+[ext_resource type="PackedScene" uid="uid://mb1u0vbty7ft" path="res://prefab/monster/monsterFace.tscn" id="3_ux430"]
+
+[node name="Monster" type="Node2D" node_paths=PackedStringArray("particles", "navigationAgent")]
+z_index = 1
+y_sort_enabled = true
+position = Vector2(276, 367)
+script = ExtResource("1_l81ko")
+monsterSpeed = 2.0
+legsCount = 15
+legRadius = 6.0
+monsterLegScene = ExtResource("2_yj3md")
+monsterFaceScene = ExtResource("3_ux430")
+particles = NodePath("CPUParticles2D")
+navigationAgent = NodePath("NavigationAgent2D")
+
+[node name="CPUParticles2D" type="CPUParticles2D" parent="."]
+amount = 25
+lifetime = 3.0
+emission_shape = 4
+emission_points = PackedVector2Array()
+emission_colors = PackedColorArray()
+direction = Vector2(0, 0)
+spread = 180.0
+gravity = Vector2(0, 2)
+initial_velocity_min = 2.0
+initial_velocity_max = 15.0
+color = Color(0.00784314, 0.00784314, 0.14902, 1)
+
+[node name="NavigationAgent2D" type="NavigationAgent2D" parent="."]

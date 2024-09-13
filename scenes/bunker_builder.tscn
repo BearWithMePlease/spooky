@@ -4,12 +4,12 @@
 [ext_resource type="Script" path="res://scripts/builder_camera.gd" id="1_omeyi"]
 [ext_resource type="PackedScene" uid="uid://c8k2daifrhtu" path="res://prefab/modules/default.tscn" id="2_6atq6"]
 
-[sub_resource type="Gradient" id="Gradient_0yq7r"]
+[sub_resource type="Gradient" id="Gradient_w1qyx"]
 offsets = PackedFloat32Array(0.442257)
 colors = PackedColorArray(0.196078, 0.196078, 0.196078, 1)
 
 [sub_resource type="GradientTexture1D" id="GradientTexture1D_a51lf"]
-gradient = SubResource("Gradient_0yq7r")
+gradient = SubResource("Gradient_w1qyx")
 
 [node name="BunkerBuilder" type="Node2D"]
 

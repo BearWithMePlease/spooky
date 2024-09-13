@@ -52,9 +52,8 @@ occluder = SubResource("OccluderPolygon2D_rs0by")
 occluder_light_mask = 1025
 
 [node name="Vertical_Ceiling_Left" type="CollisionPolygon2D" parent="Sprite/Borders"]
-visible = false
 position = Vector2(0, -64)
-polygon = PackedVector2Array(-128, 13, -123, 13, -123, 11, -112, 0, -128, 0)
+polygon = PackedVector2Array(-128, 13, -123, 13, -123, 11, -111, 0, -128, 0)
 
 [node name="LightOccluder2D" type="LightOccluder2D" parent="Sprite/Borders/Vertical_Ceiling_Left"]
 position = Vector2(-128, 13)
@@ -62,9 +61,8 @@ occluder = SubResource("OccluderPolygon2D_h4q6q")
 occluder_light_mask = 1025
 
 [node name="Vertical_Ceiling_Right" type="CollisionPolygon2D" parent="Sprite/Borders"]
-visible = false
 position = Vector2(0, -64)
-polygon = PackedVector2Array(-69, 13, -69, 11, -80, 0, -64, 0, -64, 13)
+polygon = PackedVector2Array(-69, 13, -69, 11, -81, 0, -64, 0, -64, 13)
 
 [node name="LightOccluder2D" type="LightOccluder2D" parent="Sprite/Borders/Vertical_Ceiling_Right"]
 position = Vector2(-128, 13)
@@ -120,7 +118,6 @@ occluder = SubResource("OccluderPolygon2D_pxh4c")
 occluder_light_mask = 1025
 
 [node name="Vertical_Connection_Left" type="CollisionPolygon2D" parent="Sprite/Borders"]
-visible = false
 position = Vector2(0, -64)
 polygon = PackedVector2Array(-128, 0, -128, 64, -111, 64, -111, 0)
 
@@ -130,7 +127,6 @@ occluder = SubResource("OccluderPolygon2D_gtnv1")
 occluder_light_mask = 1025
 
 [node name="Vertical_Connection_Right" type="CollisionPolygon2D" parent="Sprite/Borders"]
-visible = false
 position = Vector2(-193, -64)
 polygon = PackedVector2Array(112, 0, 112, 64, 129, 64, 129, 0)
 

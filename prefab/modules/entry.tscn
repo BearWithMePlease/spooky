@@ -1,7 +1,8 @@
-[gd_scene load_steps=10 format=3 uid="uid://bfybpjp7cy6px"]
+[gd_scene load_steps=11 format=3 uid="uid://bfybpjp7cy6px"]
 
 [ext_resource type="Script" path="res://scripts/module.gd" id="1_5fn1d"]
 [ext_resource type="Texture2D" uid="uid://6nxjctjk3yyh" path="res://imgs/modules/entry/n.png" id="2_byjog"]
+[ext_resource type="Texture2D" uid="uid://djwdy4xu0n8vb" path="res://imgs/modules/entry/wall.png" id="2_jx87d"]
 [ext_resource type="PackedScene" uid="uid://dki4talhc74jp" path="res://prefab/ceiling_lamp.tscn" id="3_607tg"]
 [ext_resource type="PackedScene" uid="uid://tbs4ifkjrnhc" path="res://prefab/vent.tscn" id="4_yww76"]
 
@@ -11,7 +12,7 @@ polygon = PackedVector2Array(0, 0, 5, 0, 5, -35, 187, -35, 187, 0, 192, 0, 192, 
 [sub_resource type="OccluderPolygon2D" id="OccluderPolygon2D_fy17q"]
 polygon = PackedVector2Array(0, 51, 0, 48, 47, 48, 61, 34, 131, 34, 145, 48, 192, 48, 192, 51)
 
-[sub_resource type="OccluderPolygon2D" id="OccluderPolygon2D_2fw73"]
+[sub_resource type="OccluderPolygon2D" id="OccluderPolygon2D_va43h"]
 polygon = PackedVector2Array(0, 0, 0, 0, 5, 0, 5, 48, 0, 48)
 
 [sub_resource type="OccluderPolygon2D" id="OccluderPolygon2D_7pg3w"]
@@ -50,7 +51,7 @@ polygon = PackedVector2Array(-128, 13, -128, 61, -123, 61, -123, 13)
 
 [node name="LightOccluder2D" type="LightOccluder2D" parent="Sprite/Borders/Connection_Left"]
 position = Vector2(-128, 13)
-occluder = SubResource("OccluderPolygon2D_2fw73")
+occluder = SubResource("OccluderPolygon2D_va43h")
 occluder_light_mask = 1025
 
 [node name="Connection_Right" type="CollisionPolygon2D" parent="Sprite/Borders"]
@@ -77,10 +78,18 @@ position = Vector2(97, 78)
 
 [node name="Vent" parent="Sprite/Interactables" instance=ExtResource("4_yww76")]
 position = Vector2(158, 112)
+collision_layer = 2
 
 [node name="Entry" type="Area2D" parent="Sprite/Interactables" groups=["interact_entry"]]
 position = Vector2(97, 82)
+collision_layer = 2
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Sprite/Interactables/Entry"]
 position = Vector2(-0.5, -2.5)
 shape = SubResource("RectangleShape2D_2xmmm")
+
+[node name="Wall" type="Sprite2D" parent="Sprite"]
+z_index = 10
+y_sort_enabled = true
+position = Vector2(96, 64)
+texture = ExtResource("2_jx87d")
