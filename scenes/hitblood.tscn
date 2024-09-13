@@ -1,0 +1,88 @@
+[gd_scene load_steps=13 format=3 uid="uid://cke36x8xi3ecc"]
+
+[ext_resource type="Texture2D" uid="uid://ckpxjfelwuw6a" path="res://images/hit/bloodsplatter.png" id="1_vgvg2"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_jtnkc"]
+atlas = ExtResource("1_vgvg2")
+region = Rect2(0, 0, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_80wfl"]
+atlas = ExtResource("1_vgvg2")
+region = Rect2(32, 0, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_5kblf"]
+atlas = ExtResource("1_vgvg2")
+region = Rect2(64, 0, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_btjad"]
+atlas = ExtResource("1_vgvg2")
+region = Rect2(96, 0, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_d5no0"]
+atlas = ExtResource("1_vgvg2")
+region = Rect2(128, 0, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_54gcm"]
+atlas = ExtResource("1_vgvg2")
+region = Rect2(160, 0, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_ywiot"]
+atlas = ExtResource("1_vgvg2")
+region = Rect2(192, 0, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_82sgw"]
+atlas = ExtResource("1_vgvg2")
+region = Rect2(224, 0, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_ig6fw"]
+atlas = ExtResource("1_vgvg2")
+region = Rect2(256, 0, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_kqy5m"]
+atlas = ExtResource("1_vgvg2")
+region = Rect2(288, 0, 32, 32)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_1qhu8"]
+animations = [{
+"frames": [{
+"duration": 0.2,
+"texture": SubResource("AtlasTexture_jtnkc")
+}, {
+"duration": 0.2,
+"texture": SubResource("AtlasTexture_80wfl")
+}, {
+"duration": 0.2,
+"texture": SubResource("AtlasTexture_5kblf")
+}, {
+"duration": 0.2,
+"texture": SubResource("AtlasTexture_btjad")
+}, {
+"duration": 0.2,
+"texture": SubResource("AtlasTexture_d5no0")
+}, {
+"duration": 0.2,
+"texture": SubResource("AtlasTexture_54gcm")
+}, {
+"duration": 0.2,
+"texture": SubResource("AtlasTexture_ywiot")
+}, {
+"duration": 0.2,
+"texture": SubResource("AtlasTexture_82sgw")
+}, {
+"duration": 0.2,
+"texture": SubResource("AtlasTexture_ig6fw")
+}, {
+"duration": 0.2,
+"texture": SubResource("AtlasTexture_kqy5m")
+}],
+"loop": false,
+"name": &"default",
+"speed": 5.0
+}]
+
+[node name="hitblood" type="AnimatedSprite2D"]
+scale = Vector2(2, 2)
+sprite_frames = SubResource("SpriteFrames_1qhu8")
+autoplay = "default"
+frame_progress = 0.135176
+offset = Vector2(-10, 0)
