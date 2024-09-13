@@ -66,6 +66,18 @@ static var connections = {
 	ModuleType.BEDROOM: [Vector2(1,1), Vector2(2,1)],
 }
 
+static var max_module_count = {
+	ModuleType.NONE: 0,
+	ModuleType.CORRIDOR: 64,
+	ModuleType.GENERATOR: 1,
+	ModuleType.COMMUNICATION: 1,
+	ModuleType.ENTRY: 1,
+	ModuleType.WATER: 2,
+	ModuleType.WEAPONS: 2,
+	ModuleType.HOSPITAL: 1,
+	ModuleType.BEDROOM: 3
+}
+
 var module_button := preload("res://prefab/module_button.tscn")
 
 @export var color_valid_spot: Color
@@ -74,16 +86,23 @@ var module_button := preload("res://prefab/module_button.tscn")
 @export var color_invalid_hover_spot: Color
 @export var animation_duration: float = 0.5
 @export var entry_position: Vector2 = Vector2(3,3)
+@export var message_place_modules: String = "Place all rooms to start"
+@export var message_connect_path: String = "Connect all modules to start"
+@export var message_need_deselect: String = "You can edit/place with left-click and delete with right-click"
+
 
 var grid: Dictionary = {}
 
 @onready var mover = %Module_Mover # Unique Name
+@onready var confirm_build_button: Button = $"../Confirm_Button"
+@onready var help_label: Label = $"../Help_Label"
 var moving = false
 var grid_position: Vector2
 var type: ModuleType = ModuleType.NONE
 var mouse_over_gui = false
 var force_update = false
 var all_connected = false
+var module_buttons = {}
 
 var animation_running = false
 var animation_old_position: Vector2 = Vector2.ZERO
@@ -105,12 +124,14 @@ func _ready() -> void:
 		
 		var button = module_button.instantiate()
 		button.module_type = type
+		module_buttons[type] = button
 		self.add_child(button)
 		
 	# Add Entry
 	on_module_type_select(ModuleType.ENTRY)
 	grid_position = GRID_SIZE * entry_position
 	on_build_module()
+	check_finished_building(0.01)
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta: float) -> void:
@@ -146,6 +167,11 @@ func _process(delta: float) -> void:
 				# Remove mover module
 				adjust_surroundings(grid_position, true)
 				
+				var module_button = module_buttons.get(self.type) as ModuleButton
+				if module_button != null:
+					module_button.add_to_placeable_count(+1)
+				
+				# Cleanup
 				self.type = ModuleType.NONE
 				moving = false
 				force_update = true
@@ -157,6 +183,10 @@ func _process(delta: float) -> void:
 			Input.set_default_cursor_shape(Input.CURSOR_FORBIDDEN)
 			
 			if Input.is_action_just_pressed("right_click"):
+				var module_button = module_buttons.get(self.type) as ModuleButton
+				if module_button != null:
+					module_button.add_to_placeable_count(+1)
+				
 				# Remove mover module
 				self.type = ModuleType.NONE
 				moving = false
@@ -183,6 +213,14 @@ func _process(delta: float) -> void:
 			on_undo_build_module(true)
 		elif Input.is_action_just_pressed("right_click"):
 			on_undo_build_module(false) # Will undo but not grab item
+			
+			var module_button = module_buttons.get(self.type) as ModuleButton
+			if module_button != null:
+				module_button.add_to_placeable_count(+1)
+	
+	# Might be checked a few more times then necessary, but it works!
+	check_finished_building()
+
 
 func mouse_gui_status(mouse_over_gui:bool):
 	if self.mouse_over_gui == mouse_over_gui:
@@ -224,6 +262,7 @@ func move_to_cursor(delta: float):
 
 func on_module_type_select(type: ModuleType, new_position = null):
 	self.type = type
+	
 	moving = true
 	mover.z_index = 1
 	
@@ -232,6 +271,10 @@ func on_module_type_select(type: ModuleType, new_position = null):
 		mover.init(grid_position, type, ModuleDirection.N)
 		mover.position.y -= GRID_SIZE
 		force_update = true
+		
+		var module_button = module_buttons.get(self.type) as ModuleButton
+		if module_button != null:
+			module_button.add_to_placeable_count(-1)
 	else:
 		animation_new_position = new_position
 		mover.init(new_position, type, ModuleDirection.N)
@@ -273,10 +316,10 @@ func can_build_module(grid_position: Vector2, ignore_gui: bool = false):
 				return false
 	
 	# only allow connected modules to be buildable
-	var surrounding_check = adjust_surroundings(grid_position, false, true)
-	if surrounding_check & (ModuleDirection.H | ModuleVerticalDirection.V) == 0:
+	#var surrounding_check = adjust_surroundings(grid_position, false, true)
+	#if surrounding_check & (ModuleDirection.H | ModuleVerticalDirection.V) == 0:
 		# module not connected with anything
-		return false
+		#return false
 	
 	return true
 
@@ -327,12 +370,17 @@ func on_build_module():
 	
 	check_all_connected()
 	
-	# Clean up
-	moving = false
-	mover.sprite.texture = null
-	type = ModuleType.NONE
-	grid_position = Vector2(-1, -1)
-	Input.set_default_cursor_shape(Input.CURSOR_ARROW)
+	if self.type != ModuleType.CORRIDOR or module_buttons.get(ModuleType.CORRIDOR)._placeable_count == 0:
+		# Clean up
+		moving = false
+		mover.sprite.texture = null
+		type = ModuleType.NONE
+		grid_position = Vector2(-1, -1)
+		Input.set_default_cursor_shape(Input.CURSOR_ARROW)
+	else:
+		# Grab second corridor and move it to lower grid spot
+		on_module_type_select(ModuleType.CORRIDOR)
+		mover.position.y += 2 * GRID_SIZE
 
 func on_undo_build_module(grab_item:bool):
 	# Instantiate module prefab
@@ -420,9 +468,42 @@ func check_all_connected():
 	
 	self.all_connected = len(total_nodes_count.values()) == connected_node_count
 
+func check_finished_building(timing:float = 0.5):
+	var placed_all_rooms: bool = true
+	for module_button:ModuleButton in module_buttons.values():
+		if module_button.module_type != ModuleType.CORRIDOR and module_button._placeable_count != 0:
+			placed_all_rooms = false
+			break
+
+	self.help_label.text = ""
+	if not placed_all_rooms:
+		self.help_label.text = self.message_place_modules
+	elif not self.all_connected:
+		self.help_label.text = self.message_connect_path
+	elif self.moving:
+		self.help_label.text = self.message_need_deselect
+
+	# Can not click button if: not connected or not all rooms placed (except Corridor) or moving module
+	var can_finish = not self.all_connected or not placed_all_rooms or self.moving
+	if can_finish == self.confirm_build_button.disabled:
+		return
+	
+	self.confirm_build_button.disabled = can_finish
+
+	var new_position: Vector2
+	if self.confirm_build_button.disabled:
+		# Can not build bunker
+		new_position = Vector2(self.confirm_build_button.position.x, -self.confirm_build_button.size.y) # Move outside screen
+	else:
+		# Can build bunker
+		new_position = Vector2(self.confirm_build_button.position.x, 0)
+	
+	var tween = get_tree().create_tween()
+	tween.tween_property(self.confirm_build_button, "position", new_position, timing).set_trans(Tween.TRANS_LINEAR)
+	
 func on_confirm_build():
-	if not self.all_connected:
-		print("Nah uh. You need to connect everything")
+	check_finished_building()
+	if self.confirm_build_button.disabled:
 		return
 	
 	var nodes_dict = {}
