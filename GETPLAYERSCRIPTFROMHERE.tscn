@@ -1,13 +1,12 @@
-[gd_scene load_steps=31 format=3 uid="uid://dbh7dg5maj6s5"]
+[gd_scene load_steps=30 format=3 uid="uid://dbh7dg5maj6s5"]
 
 [ext_resource type="Texture2D" uid="uid://bsfoxkgqdmhpf" path="res://images/wall.png" id="1_teqsy"]
 [ext_resource type="Script" path="res://scripts/player/player_char.gd" id="2_wk836"]
-[ext_resource type="Texture2D" uid="uid://bqmsjetxbhhxj" path="res://images/player/hazmat.png" id="3_y7i1a"]
+[ext_resource type="Texture2D" uid="uid://cdhkjlqvj2iq8" path="res://images/player/hazmat.png" id="3_y7i1a"]
 [ext_resource type="Texture2D" uid="uid://cdl3wg5u1x0i" path="res://images/player/hazmat_with_hands.png" id="4_e52vu"]
-[ext_resource type="Texture2D" uid="uid://cdhkjlqvj2iq8" path="res://images/player/hazmatt.png" id="5_frdv1"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_y38ng"]
-size = Vector2(98.7465, 88.6354)
+size = Vector2(98.7465, 122.946)
 
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_pm5mo"]
 radius = 3.66667
@@ -366,7 +365,7 @@ tracks/1/keys = {
 "times": PackedFloat32Array(0),
 "transitions": PackedFloat32Array(1),
 "update": 1,
-"values": [ExtResource("5_frdv1")]
+"values": [ExtResource("3_y7i1a")]
 }
 tracks/2/type = "value"
 tracks/2/imported = false
@@ -661,10 +660,11 @@ scale = Vector2(7.88889, 0.699495)
 texture = ExtResource("1_teqsy")
 
 [node name="StaticBody2D" type="StaticBody2D" parent="Walls/Wall4"]
-collision_layer = 2147483779
+collision_layer = 2147483777
 collision_mask = 2147483777
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Walls/Wall4/StaticBody2D"]
+scale = Vector2(1, 1)
 shape = SubResource("RectangleShape2D_y38ng")
 
 [node name="Wall5" type="Sprite2D" parent="Walls"]

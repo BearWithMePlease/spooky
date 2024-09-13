@@ -12,7 +12,11 @@ texture = ExtResource("1_0ssl8")
 script = ExtResource("1_vd67m")
 
 [node name="Area2D" type="Area2D" parent="."]
+collision_layer = 129
+collision_mask = 129
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Area2D"]
 position = Vector2(-5.68434e-14, 0)
 shape = SubResource("RectangleShape2D_7bvyv")
+
+[connection signal="body_entered" from="Area2D" to="." method="_on_area_2d_body_entered"]

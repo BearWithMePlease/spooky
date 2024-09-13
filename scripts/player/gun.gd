@@ -19,9 +19,7 @@ var casingEmpty = preload("res://scenes/casing.tscn")
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta: float) -> void:
-	
-	var mouse_position = get_viewport().get_mouse_position()
-	var direction = mouse_position - self.global_position
+	var direction = get_global_mouse_position() - self.global_position
 	
 	
 	
@@ -84,11 +82,9 @@ func manageShot(direction_angle, delta):
 			bump = min(0.1, bump)
 		if bump < 0:
 			bump = max(-0.1, bump)
-		print(bump)
 			
 		self.rotation = self.rotation + bump
 		last_shot_time = Time.get_ticks_msec()
-		
 		
 		#SPRAY CONTROL
 		var target_angle = direction_angle		

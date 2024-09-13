@@ -28,10 +28,7 @@ var inInventory = false
 
 
 func update_animation_tree_param():
-	
 	#v2
-	
-	
 	#states
 	if !inInventory:
 		
@@ -84,10 +81,6 @@ func update_animation_tree_param():
 			animation_tree["parameters/conditions/isBackstep"] = true # blocks return to frontstep
 			animation_tree["parameters/conditions/isIdleB"] = false # remains in backstep
 
-
-
-	
-	
 	#v1
 	#if velocity == Vector2.ZERO: # standing still
 		#animation_tree["parameters/conditions/isIdle"] = true
@@ -95,9 +88,6 @@ func update_animation_tree_param():
 		#animation_tree["parameters/conditions/isSprint"] = false
 		#animation_tree["parameters/conditions/stopSprint"] = true
 		#animation_tree["parameters/conditions/isBackstep"] = false
-#
-#
-		##print("true")
 	#elif (direction == -1 && $body2.flip_h) || (direction == 1 && !$body2.flip_h): # movement in direction of gun
 		#animation_tree["parameters/conditions/isIdle"] = false
 		#
@@ -114,9 +104,6 @@ func update_animation_tree_param():
 		#animation_tree["parameters/conditions/isFrontstep"] = false
 		#animation_tree["parameters/conditions/isIdle"] = false
 		#animation_tree["parameters/conditions/isBackstep"] = true
-
-
-
 		
 	#elif accel == ACCELERATION*2: # sprint
 		
@@ -124,7 +111,6 @@ var gunEmpty = preload("res://scenes/gun.tscn")
 var gun = gunEmpty.instantiate()
 
 func _ready():
-	
 	gun.position = Vector2(0,0)
 	gun.world = world
 	gun.spawner = $body2
@@ -132,14 +118,10 @@ func _ready():
 	$body2.flip_h = true
 	self.add_child(gun)
 	
-	# flip_v of gun true == left, false == right
-	
 	animation_tree.active = true
 
 func _process(delta):
 	update_animation_tree_param()
-
-
 
 func _physics_process(delta: float) -> void:
 	if !inInventory: # no movement in inventory
@@ -150,14 +132,12 @@ func _physics_process(delta: float) -> void:
 			velocity += get_gravity() * delta
 			velocity.x = move_toward(velocity.x, 0, 20*delta)
 
-
 		# Handle jump.
 		if Input.is_action_just_pressed("ui_accept") and is_on_floor(): # worthless, no jump
 			velocity.y = JUMP_VELOCITY
 
 		# Get the input direction and handle the movement/deceleration.
 		# As good practice, you should replace UI actions with custom gameplay actions.
-		
 		if is_on_floor():
 			direction = 0
 
@@ -166,25 +146,16 @@ func _physics_process(delta: float) -> void:
 			if Input.is_action_pressed("Right"):
 				direction += 1	
 			
-			
-			
 			if Input.is_action_pressed("sprint") && ((direction == -1 && $body2.flip_h) || (direction == 1 && !$body2.flip_h)):
 				accel = ACCELERATION*2
 				speedcap = MAX_SPEED*1.3
-		
-			#print(direction)	
-		
-			
+	
 			if direction != 0:
 				velocity.x += direction * accel * delta
-				
 				if velocity.x > 0:
 					velocity.x = min(velocity.x, speedcap)
 				if velocity.x < 0:
 					velocity.x = max(velocity.x, -speedcap)
-
 			else:
 				velocity.x = move_toward(velocity.x, 0, delta*1000)
-		
-		#print(velocity.x)
 		move_and_slide()

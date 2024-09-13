@@ -138,7 +138,6 @@ func update_animation_tree_param():
 		#animation_tree["parameters/conditions/isBackstep"] = false
 #
 #
-		##print("true")
 	#elif (direction == -1 && $body2.flip_h) || (direction == 1 && !$body2.flip_h): # movement in direction of gun
 		#animation_tree["parameters/conditions/isIdle"] = false
 		#
@@ -169,7 +168,6 @@ func _ready():
 	position.y = 200
 	
 	gun.position = Vector2(0,0)
-	print(world)
 	gun.world = world
 	gun.spawner = $body3
 	
@@ -209,15 +207,10 @@ func _physics_process(delta: float) -> void:
 				direction -= 1
 			if Input.is_action_pressed("Right"):
 				direction += 1	
-			
-			
-			
+
 			if Input.is_action_pressed("sprint") && ((direction == -1 && $body3.flip_h) || (direction == 1 && !$body3.flip_h)):
 				accel = ACCELERATION*2
 				speedcap = MAX_SPEED*1.3
-		
-			#print(direction)	
-		
 			
 			if direction != 0:
 				velocity.x += direction * accel * delta
@@ -230,5 +223,4 @@ func _physics_process(delta: float) -> void:
 			else:
 				velocity.x = move_toward(velocity.x, 0, delta*1000)
 		
-		#print(velocity.x)
 		move_and_slide()
