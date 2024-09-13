@@ -15,16 +15,15 @@ func _process(delta: float) -> void:
 
 
 
-var hitEmpty = preload("res://scenes/hit.tscn") #wall
-var hitBloodEmpty = preload("res://scenes/hitblood.tscn") #wall
+static var hitEmpty = preload("res://scenes/hit.tscn") #wall
+static var hitBloodEmpty = preload("res://scenes/hitblood.tscn") #wall
 
 
 func _on_area_2d_body_entered(body: Node2D) -> void:
-	print(body.get_class())
-	if body.get_class() != "Bullet" && body.get_class() != "CharacterBody2D":
+	if not body is Bullet and not body is CharacterBody2D:
 		hide()
 		
-		if body.get_class() == "StaticBody2D": #wall
+		if body is StaticBody2D: #wall
 			var hit = hitEmpty.instantiate()
 			hit.position = position
 			hit.rotation = rotation
@@ -36,6 +35,3 @@ func _on_area_2d_body_entered(body: Node2D) -> void:
 			get_parent().add_child(hit)
 		
 		queue_free()
-	else:
-		print("fuckoff")
-	pass # Replace with function body.

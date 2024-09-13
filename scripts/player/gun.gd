@@ -1,5 +1,5 @@
 extends Sprite2D
-
+class_name Gun
 
 var spawner
 var world
@@ -41,7 +41,6 @@ func _process(delta: float) -> void:
 		manageShot(direction.angle(), delta)
 		
 
-	#print(rotation)
 	if rotation > 0.5*PI || rotation < -0.5*PI :
 		#flip_v = true
 		
