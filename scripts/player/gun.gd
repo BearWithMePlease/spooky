@@ -7,11 +7,13 @@ var world
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
+	randomize()
 	var shots_per_second = rpm / 60.0
 	interval = 1 / shots_per_second
 	pass # Replace with function body.
 
 var bulletEmpty = preload("res://scenes/bullet.tscn")
+var casingEmpty = preload("res://scenes/casing.tscn")
 
 
 
@@ -110,10 +112,8 @@ func manageShot(direction_angle, delta):
 func shoot():
 	var bullet = bulletEmpty.instantiate()
 	bullet.rotation = self.rotation
-	if !flip_v: 
-		bullet.global_position = self.global_position + Vector2(100, 0).rotated(self.rotation)
-	else:
-		bullet.global_position = self.global_position + Vector2(100, 0).rotated(self.rotation)
+	bullet.global_position = self.global_position + Vector2(55, 0).rotated(self.rotation) # redundant
+	
 	
 	
 	if rapidShotCounter == 0:
@@ -123,3 +123,16 @@ func shoot():
 
 	world.add_child(bullet)
 	ammunition -= 1
+	
+	var casing = casingEmpty.instantiate()
+	casing.angular_velocity = -40 - randi_range(0, 10)
+
+	if !spawner.flip_h: 
+		casing.global_position = self.global_position + Vector2(23, -2.2).rotated(self.rotation) 
+		casing.initial_velocity = Vector2(-150+randi_range(-20, 20), -300+randi_range(-20, 20)).rotated(self.rotation)
+	else:
+		casing.global_position = self.global_position + Vector2(23, 2.2).rotated(self.rotation) 
+		casing.initial_velocity = Vector2(-150+randi_range(-20, 20), 300+randi_range(-20, 20)).rotated(self.rotation)
+
+	
+	world.add_child(casing)

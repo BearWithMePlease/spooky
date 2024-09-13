@@ -1,0 +1,41 @@
+[gd_scene load_steps=7 format=3 uid="uid://dfnlxo6ki2nyl"]
+
+[ext_resource type="Texture2D" uid="uid://dqp31up6j880e" path="res://images/hit/wallbang placeholder.png" id="1_g0dkm"]
+[ext_resource type="Script" path="res://scenes/hit.gd" id="2_5p5nu"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_ejxlc"]
+atlas = ExtResource("1_g0dkm")
+region = Rect2(0, 0, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_p1ik4"]
+atlas = ExtResource("1_g0dkm")
+region = Rect2(32, 0, 32, 32)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_xc12u"]
+atlas = ExtResource("1_g0dkm")
+region = Rect2(64, 0, 32, 32)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_18fch"]
+animations = [{
+"frames": [{
+"duration": 0.2,
+"texture": SubResource("AtlasTexture_ejxlc")
+}, {
+"duration": 0.2,
+"texture": SubResource("AtlasTexture_p1ik4")
+}, {
+"duration": 0.2,
+"texture": SubResource("AtlasTexture_xc12u")
+}],
+"loop": false,
+"name": &"default",
+"speed": 5.0
+}]
+
+[node name="hit" type="AnimatedSprite2D"]
+scale = Vector2(2, 2)
+sprite_frames = SubResource("SpriteFrames_18fch")
+autoplay = "default"
+frame = 2
+frame_progress = 1.0
+script = ExtResource("2_5p5nu")

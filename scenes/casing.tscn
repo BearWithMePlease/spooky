@@ -1,0 +1,26 @@
+[gd_scene load_steps=5 format=3 uid="uid://b3pwwad2k2xaq"]
+
+[ext_resource type="Script" path="res://casing.gd" id="1_b8sgg"]
+[ext_resource type="Texture2D" uid="uid://o1prwr1jldk2" path="res://images/gun/casing.png" id="2_gaoii"]
+
+[sub_resource type="PhysicsMaterial" id="PhysicsMaterial_k0ymi"]
+friction = 0.29
+bounce = 0.36
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_nukq6"]
+size = Vector2(0.5, 0.25)
+
+[node name="casing" type="RigidBody2D"]
+collision_layer = 2147483648
+collision_mask = 2147483648
+mass = 0.01
+physics_material_override = SubResource("PhysicsMaterial_k0ymi")
+center_of_mass_mode = 1
+script = ExtResource("1_b8sgg")
+
+[node name="Casing" type="Sprite2D" parent="."]
+texture = ExtResource("2_gaoii")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+scale = Vector2(8, 8)
+shape = SubResource("RectangleShape2D_nukq6")
