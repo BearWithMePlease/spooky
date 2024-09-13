@@ -1,4 +1,4 @@
-[gd_scene load_steps=12 format=3 uid="uid://bqlqfiprg6fyq"]
+[gd_scene load_steps=12 format=3 uid="uid://cwb17pwgb6wa6"]
 
 [ext_resource type="Script" path="res://scripts/module.gd" id="1_q3d5o"]
 [ext_resource type="Texture2D" uid="uid://bef4wmbeudiv1" path="res://imgs/modules/hospital/wall.png" id="2_bgywv"]
@@ -6,16 +6,16 @@
 [ext_resource type="PackedScene" uid="uid://dki4talhc74jp" path="res://prefab/ceiling_lamp.tscn" id="3_cwk3e"]
 
 [sub_resource type="OccluderPolygon2D" id="OccluderPolygon2D_ixtf7"]
-polygon = PackedVector2Array(5, 0, 0, 0, 0, -39, 192, -39, 192, 0, 187, 0, 187, -35, 5, -35)
+polygon = PackedVector2Array(1, -3, 0, -3, 0, -50, 192, -49, 192, -3, 191, -3, 191, -48, 1, -49)
 
 [sub_resource type="OccluderPolygon2D" id="OccluderPolygon2D_uhtxo"]
-polygon = PackedVector2Array(0, 51, 0, 48, 192, 48, 192, 51)
+polygon = PackedVector2Array(0, 51, 0, 50, 192, 50, 192, 51)
 
 [sub_resource type="OccluderPolygon2D" id="OccluderPolygon2D_2fw73"]
-polygon = PackedVector2Array(0, 0, 5, 0, 5, 48, 0, 48)
+polygon = PackedVector2Array(0, -3, 1, -3, 1, 50, 0, 50)
 
 [sub_resource type="OccluderPolygon2D" id="OccluderPolygon2D_16s4d"]
-polygon = PackedVector2Array(-1, 0, 4, 0, 4, 48, -1, 48)
+polygon = PackedVector2Array(3, -3, 4, -3, 4, 50, 3, 50)
 
 [sub_resource type="Gradient" id="Gradient_nv86c"]
 interpolation_mode = 2

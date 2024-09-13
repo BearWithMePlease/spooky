@@ -140,7 +140,7 @@ func _process(delta: float) -> void:
 	
 	# move module to cursor with animation
 	move_to_cursor(delta) 
-
+	
 	# only process if grid_position has changed or click action
 	if grid_position == old_grid_position and not Input.is_action_just_pressed("click") and not Input.is_action_just_pressed("right_click") and not force_update:
 		return
@@ -262,9 +262,7 @@ func move_to_cursor(delta: float):
 
 func on_module_type_select(type: ModuleType, new_position = null):
 	self.type = type
-	
 	moving = true
-	mover.z_index = 1
 	
 	if new_position == null:
 		animation_new_position = grid_position
@@ -358,7 +356,6 @@ func on_build_module():
 	# Instantiate module prefab
 	var node = Globals.module_prefabs[type].instantiate() as Module
 	node.init(grid_position, type, mover.direction, mover.vertical_direction)
-	node.z_index = -1
 	mover.get_parent().add_child(node)
 	
 	# Add module to each grid slot it occupies

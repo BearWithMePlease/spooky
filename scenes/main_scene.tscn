@@ -1,21 +1,26 @@
 [gd_scene load_steps=34 format=3 uid="uid://bo6ew1t4jg2x6"]
 
 [ext_resource type="Script" path="res://scripts/main_scene.gd" id="1_0jyw0"]
+[ext_resource type="Script" path="res://scripts/light_control.gd" id="2_una4x"]
 [ext_resource type="Script" path="res://scripts/player/player_char.gd" id="4_blcld"]
 [ext_resource type="Texture2D" uid="uid://cdhkjlqvj2iq8" path="res://images/player/hazmat.png" id="5_4o6dv"]
 [ext_resource type="Texture2D" uid="uid://cdl3wg5u1x0i" path="res://images/player/hazmat_with_hands.png" id="6_qws5h"]
 [ext_resource type="PackedScene" uid="uid://betx6m81e680d" path="res://prefab/monster/monster.tscn" id="7_yfrkd"]
-[ext_resource type="Script" path="res://scripts/builder_camera.gd" id="8_m2gle"]
-
-[sub_resource type="Gradient" id="Gradient_0yq7r"]
-offsets = PackedFloat32Array(0.442257)
-colors = PackedColorArray(0.196078, 0.196078, 0.196078, 1)
-
-[sub_resource type="GradientTexture1D" id="GradientTexture1D_bajml"]
-gradient = SubResource("Gradient_0yq7r")
 
 [sub_resource type="NavigationPolygon" id="NavigationPolygon_ki8cn"]
 agent_radius = 8.0
+
+[sub_resource type="Gradient" id="Gradient_6josf"]
+interpolation_mode = 2
+offsets = PackedFloat32Array(0, 0.5)
+colors = PackedColorArray(1, 1, 1, 1, 0.0354537, 0.0354537, 0.0354537, 1)
+
+[sub_resource type="GradientTexture2D" id="GradientTexture2D_x2omx"]
+gradient = SubResource("Gradient_6josf")
+width = 1024
+height = 1024
+fill = 1
+fill_from = Vector2(0.5, 0.5)
 
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_byxxa"]
 radius = 3.66667
@@ -630,26 +635,48 @@ graph_offset = Vector2(-387, -2)
 [node name="MainScene" type="Node2D"]
 script = ExtResource("1_0jyw0")
 
-[node name="Camera" type="Camera2D" parent="."]
-position = Vector2(576, 324)
-script = ExtResource("8_m2gle")
+[node name="Light_Control" type="Node2D" parent="."]
+script = ExtResource("2_una4x")
 
-[node name="Background" type="Sprite2D" parent="Camera"]
-visible = false
-texture = SubResource("GradientTexture1D_bajml")
-region_enabled = true
-region_rect = Rect2(100, 100, 100, 100)
+[node name="Global_Light" type="DirectionalLight2D" parent="Light_Control"]
+energy = 3.0
+blend_mode = 1
 
 [node name="Modules" type="NavigationRegion2D" parent="."]
 navigation_polygon = SubResource("NavigationPolygon_ki8cn")
 
 [node name="Monster" parent="." instance=ExtResource("7_yfrkd")]
+visible = false
 position = Vector2(0, 0)
 
 [node name="Player" type="CharacterBody2D" parent="."]
+scale = Vector2(0.347453, 0.3434)
 script = ExtResource("4_blcld")
 MAX_SPEED = 100
 ACCELERATION = 300
+
+[node name="Aura" type="PointLight2D" parent="Player"]
+position = Vector2(0, -17.4724)
+energy = 0.6
+blend_mode = 2
+shadow_enabled = true
+texture = SubResource("GradientTexture2D_x2omx")
+
+[node name="Camera" type="Camera2D" parent="Player"]
+scale = Vector2(0.987829, 0.884354)
+offset = Vector2(0, -15)
+zoom = Vector2(5, 5)
+
+[node name="Background" type="CanvasLayer" parent="Player/Camera"]
+layer = -1
+
+[node name="ColorRect" type="ColorRect" parent="Player/Camera/Background"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0, 0, 0, 1)
 
 [node name="CollisionShape2D3" type="CollisionShape2D" parent="Player"]
 position = Vector2(2, 19)
@@ -678,4 +705,5 @@ parameters/conditions/isSprint = false
 parameters/conditions/isWalk = false
 parameters/conditions/isWalkB = false
 
+[connection signal="finished_ready" from="." to="Light_Control" method="on_main_finished_ready"]
 [connection signal="bake_finished" from="Modules" to="Monster" method="_on_modules_bake_finished"]

@@ -26,6 +26,7 @@ texture = SubResource("GradientTexture1D_a51lf")
 
 [node name="Module_Mover" parent="Building_Space" instance=ExtResource("2_6atq6")]
 unique_name_in_owner = true
+z_index = -1
 
 [node name="GUI" type="CanvasLayer" parent="."]
 

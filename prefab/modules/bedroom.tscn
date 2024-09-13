@@ -1,4 +1,4 @@
-[gd_scene load_steps=10 format=3 uid="uid://bs2ig4l31ljmw"]
+[gd_scene load_steps=10 format=3 uid="uid://bcd6wiga1p4j8"]
 
 [ext_resource type="Script" path="res://scripts/module.gd" id="1_62bet"]
 [ext_resource type="Texture2D" uid="uid://cihd2xpvdl1qr" path="res://imgs/modules/bedroom/n.png" id="2_7ufxh"]
@@ -6,16 +6,16 @@
 [ext_resource type="PackedScene" uid="uid://dki4talhc74jp" path="res://prefab/ceiling_lamp.tscn" id="3_12nir"]
 
 [sub_resource type="OccluderPolygon2D" id="OccluderPolygon2D_le7af"]
-polygon = PackedVector2Array(0, 0, 5, 0, 5, -35, 123, -35, 123, 0, 128, 0, 128, -40, 0, -40)
+polygon = PackedVector2Array(0, -3, 1, -3, 1, -49, 127, -49, 127, -3, 128, -3, 128, -50, 0, -50)
 
 [sub_resource type="OccluderPolygon2D" id="OccluderPolygon2D_w0ors"]
-polygon = PackedVector2Array(0, 51, 128, 51, 128, 48, 0, 48)
+polygon = PackedVector2Array(0, 51, 128, 51, 128, 50, 0, 50)
 
 [sub_resource type="OccluderPolygon2D" id="OccluderPolygon2D_2fw73"]
-polygon = PackedVector2Array(0, 0, 0, 0, 5, 0, 5, 48, 0, 48)
+polygon = PackedVector2Array(0, -3, 1, -3, 1, 50, 0, 50)
 
 [sub_resource type="OccluderPolygon2D" id="OccluderPolygon2D_08mp2"]
-polygon = PackedVector2Array(0, 0, 0, 0, 5, 0, 5, 48, 0, 48)
+polygon = PackedVector2Array(4, -3, 5, -3, 5, 50, 4, 50)
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_6erjm"]
 size = Vector2(53, 34)
