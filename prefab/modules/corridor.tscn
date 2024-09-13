@@ -1,9 +1,8 @@
-[gd_scene load_steps=17 format=3 uid="uid://dmfpfr5xhngv5"]
+[gd_scene load_steps=13 format=3 uid="uid://dmfpfr5xhngv5"]
 
 [ext_resource type="Script" path="res://scripts/module.gd" id="1_uf4wc"]
-[ext_resource type="Texture2D" uid="uid://5wlwtklsepp0" path="res://imgs/modules/corridor/h_v.png" id="2_cwfe1"]
+[ext_resource type="Texture2D" uid="uid://bt4efv435r3h4" path="res://imgs/modules/corridor/n_n.png" id="2_0vfcj"]
 [ext_resource type="PackedScene" uid="uid://dki4talhc74jp" path="res://prefab/ceiling_lamp.tscn" id="3_nm2i0"]
-[ext_resource type="Script" path="res://TEST_CAN_BE_REMOVED.gd" id="4_wvf3n"]
 
 [sub_resource type="OccluderPolygon2D" id="OccluderPolygon2D_rs0by"]
 polygon = PackedVector2Array(0, 0, 0, -13, 64, -13, 64, 0)
@@ -32,20 +31,11 @@ polygon = PackedVector2Array(0, -13, 17, -13, 17, 51, 0, 51)
 [sub_resource type="OccluderPolygon2D" id="OccluderPolygon2D_m7aet"]
 polygon = PackedVector2Array(-12, -13, 5, -13, 5, 51, -12, 51)
 
-[sub_resource type="RectangleShape2D" id="RectangleShape2D_8absm"]
-
-[sub_resource type="Gradient" id="Gradient_u3fny"]
-offsets = PackedFloat32Array(0)
-colors = PackedColorArray(0.464286, 0.356402, 0.111952, 1)
-
-[sub_resource type="GradientTexture2D" id="GradientTexture2D_7m1uf"]
-gradient = SubResource("Gradient_u3fny")
-
 [node name="Corridor" type="Node2D"]
 script = ExtResource("1_uf4wc")
 
 [node name="Sprite" type="Sprite2D" parent="."]
-texture = ExtResource("2_cwfe1")
+texture = ExtResource("2_0vfcj")
 centered = false
 
 [node name="Borders" type="StaticBody2D" parent="Sprite"]
@@ -155,22 +145,3 @@ occluder_light_mask = 1025
 position = Vector2(32, 20)
 
 [node name="Interactables" type="Node2D" parent="Sprite"]
-
-[node name="RigidBody2D" type="CharacterBody2D" parent="Sprite"]
-visible = false
-position = Vector2(32, 40)
-script = ExtResource("4_wvf3n")
-
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Sprite/RigidBody2D"]
-shape = SubResource("RectangleShape2D_8absm")
-
-[node name="Sprite2D" type="Sprite2D" parent="Sprite/RigidBody2D"]
-light_mask = 2
-scale = Vector2(0.3125, 0.3125)
-texture = SubResource("GradientTexture2D_7m1uf")
-
-[node name="Camera2D" type="Camera2D" parent="."]
-visible = false
-scale = Vector2(0.226466, 9.84)
-offset = Vector2(43.91, 32.72)
-zoom = Vector2(4.16, 4.16)

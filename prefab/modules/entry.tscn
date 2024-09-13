@@ -72,6 +72,9 @@ position = Vector2(156, 74)
 
 [node name="Interactables" type="Node2D" parent="Sprite"]
 
+[node name="SpawnPoint" type="Node2D" parent="Sprite/Interactables" groups=["spawn_point"]]
+position = Vector2(97, 78)
+
 [node name="Vent" parent="Sprite/Interactables" instance=ExtResource("4_yww76")]
 position = Vector2(158, 112)
 
