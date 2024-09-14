@@ -1,7 +1,7 @@
 [gd_scene load_steps=16 format=3 uid="uid://dmfpfr5xhngv5"]
 
 [ext_resource type="Script" path="res://scripts/module.gd" id="1_uf4wc"]
-[ext_resource type="Texture2D" uid="uid://c2hbwjrkxdpl7" path="res://imgs/modules/corridor/l_u.png" id="2_k2fv2"]
+[ext_resource type="Texture2D" uid="uid://bt4efv435r3h4" path="res://imgs/modules/corridor/n_n.png" id="2_0vfcj"]
 [ext_resource type="PackedScene" uid="uid://dki4talhc74jp" path="res://prefab/ceiling_lamp.tscn" id="3_nm2i0"]
 
 [sub_resource type="OccluderPolygon2D" id="OccluderPolygon2D_rs0by"]
@@ -44,7 +44,7 @@ size = Vector2(16, 60)
 script = ExtResource("1_uf4wc")
 
 [node name="Sprite" type="Sprite2D" parent="."]
-texture = ExtResource("2_k2fv2")
+texture = ExtResource("2_0vfcj")
 centered = false
 
 [node name="Borders" type="StaticBody2D" parent="Sprite"]

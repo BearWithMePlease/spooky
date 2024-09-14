@@ -1,4 +1,4 @@
-[gd_scene load_steps=63 format=3 uid="uid://bo6ew1t4jg2x6"]
+[gd_scene load_steps=57 format=3 uid="uid://bo6ew1t4jg2x6"]
 
 [ext_resource type="Script" path="res://scripts/main_scene.gd" id="1_0jyw0"]
 [ext_resource type="Script" path="res://scripts/light_control.gd" id="2_una4x"]
@@ -7,18 +7,12 @@
 [ext_resource type="Texture2D" uid="uid://843kfwxv80ts" path="res://images/player/hazmat.png" id="5_4o6dv"]
 [ext_resource type="AudioStream" uid="uid://ckeqab8exdk7q" path="res://audio/sfx/light_off.mp3" id="5_76aoe"]
 [ext_resource type="Script" path="res://scripts/audio_control.gd" id="5_wrx4j"]
-[ext_resource type="AudioStream" uid="uid://cedmjxxqnpqpy" path="res://audio/sfx/footsteps/footsteps-1.mp3" id="6_kbj1v"]
+[ext_resource type="AudioStream" uid="uid://575ctgwolnlu" path="res://audio/sfx/footsteps/footsteps-1.mp3" id="6_kbj1v"]
 [ext_resource type="Texture2D" uid="uid://bahc3spqbwwxl" path="res://images/player/hazmat_with_hands.png" id="6_qws5h"]
 [ext_resource type="FontFile" uid="uid://gosmfve4h532" path="res://imgs/PressStart2P-Regular.ttf" id="7_5wvvi"]
-[ext_resource type="AudioStream" uid="uid://be62gfc1nvc07" path="res://audio/sfx/footsteps/footsteps-2.mp3" id="7_ndd1u"]
+[ext_resource type="AudioStream" uid="uid://bu0dig14lpa7p" path="res://audio/sfx/footsteps/footsteps-2.mp3" id="7_ndd1u"]
 [ext_resource type="PackedScene" uid="uid://betx6m81e680d" path="res://prefab/monster/monster.tscn" id="7_yfrkd"]
-[ext_resource type="AudioStream" uid="uid://da2qdiqee6jvq" path="res://audio/sfx/footsteps/footsteps-3.mp3" id="8_01px5"]
-[ext_resource type="AudioStream" uid="uid://oaivvndflsnd" path="res://audio/sfx/footsteps/footsteps-4.mp3" id="9_igb8x"]
-[ext_resource type="AudioStream" uid="uid://dpk8jtf88ue36" path="res://audio/sfx/footsteps/footsteps-5.mp3" id="10_nncqf"]
-[ext_resource type="AudioStream" uid="uid://dujohafgqeag5" path="res://audio/sfx/footsteps/footsteps-6.mp3" id="11_4s113"]
-[ext_resource type="AudioStream" uid="uid://c8t6dqtku2qvm" path="res://audio/sfx/footsteps/footsteps-7.mp3" id="12_rh8bm"]
-[ext_resource type="AudioStream" uid="uid://0qbjq8bt2nod" path="res://audio/sfx/footsteps/footsteps-8.mp3" id="13_n4g3t"]
-[ext_resource type="AudioStream" uid="uid://l1ukey07yihq" path="res://audio/sfx/footsteps/footsteps-9.mp3" id="14_4o2oy"]
+[ext_resource type="AudioStream" uid="uid://b4pduwy2heitf" path="res://audio/sfx/footsteps/footsteps-3.mp3" id="8_01px5"]
 
 [sub_resource type="NavigationPolygon" id="NavigationPolygon_ki8cn"]
 agent_radius = 8.0
@@ -673,9 +667,10 @@ blend_mode = 1
 script = ExtResource("5_wrx4j")
 sound_light_on = ExtResource("4_ch04v")
 sound_light_off = ExtResource("5_76aoe")
-sound_foot_steps = Array[AudioStreamMP3]([ExtResource("6_kbj1v"), ExtResource("7_ndd1u"), ExtResource("8_01px5"), ExtResource("9_igb8x"), ExtResource("10_nncqf"), ExtResource("11_4s113"), ExtResource("12_rh8bm"), ExtResource("13_n4g3t"), ExtResource("14_4o2oy")])
+sound_foot_steps = Array[AudioStreamMP3]([ExtResource("6_kbj1v"), ExtResource("7_ndd1u"), ExtResource("8_01px5")])
 
 [node name="Foot_Steps" type="AudioStreamPlayer" parent="Audio_Control"]
+volume_db = 20.0
 
 [node name="Modules" type="NavigationRegion2D" parent="."]
 navigation_polygon = SubResource("NavigationPolygon_ki8cn")
@@ -724,7 +719,7 @@ z_index = 2
 position = Vector2(0, 4.666)
 texture = ExtResource("6_qws5h")
 hframes = 23
-frame = 9
+frame = 10
 
 [node name="AnimationPlayer2" type="AnimationPlayer" parent="Player"]
 libraries = {
@@ -771,7 +766,7 @@ theme_override_fonts/font = ExtResource("7_5wvvi")
 text = "press E to interact"
 
 [connection signal="finished_ready" from="." to="Light_Control" method="on_main_finished_ready"]
-[connection signal="finished_ready" from="." to="Audio_Control" method="on_main_finished_ready"]
+[connection signal="finished_ready" from="." to="Player/Audio_Listener" method="on_main_finished_ready"]
 [connection signal="bake_finished" from="Modules" to="Monster" method="_on_modules_bake_finished"]
 [connection signal="area_entered" from="Player/Area2D" to="Player" method="_on_area_2d_area_entered"]
 [connection signal="area_exited" from="Player/Area2D" to="Player" method="_on_area_2d_area_exited"]

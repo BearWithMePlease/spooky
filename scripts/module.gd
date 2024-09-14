@@ -14,6 +14,7 @@ var connection_right: CollisionPolygon2D
 
 # Only used if type is corridor
 var ceiling_light: PointLight2D
+var ceiling_light_sound: AudioStreamPlayer2D
 var connection_ceiling: CollisionPolygon2D
 var connection_floor: CollisionPolygon2D
 var vertical_connection_left: CollisionPolygon2D
@@ -66,6 +67,7 @@ func fetch_nodes():
 	# Only used if type is corridor
 	if self.type == Modules.ModuleType.CORRIDOR:
 		self.ceiling_light = get_node_or_null(^"Sprite/Lights/Ceiling_Light")
+		self.ceiling_light_sound = get_node_or_null(^"Sprite/Lights/Ceiling_Light/Sound")
 		self.connection_ceiling = get_node_or_null(^"Sprite/Borders/Ceiling")
 		self.connection_floor = get_node_or_null(^"Sprite/Borders/Floor")
 		self.vertical_connection_left = get_node_or_null(^"Sprite/Borders/Vertical_Connection_Left")
@@ -107,6 +109,7 @@ func handle_doors():
 	else:
 		# Handle vertical corridor direction
 		self.ceiling_light.visible = false
+		self.ceiling_light_sound.volume_db = -100 # Turn off sound
 		self.connection_left.disabled = true
 		self.connection_right.disabled = true
 		
