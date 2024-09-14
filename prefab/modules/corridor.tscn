@@ -1,7 +1,7 @@
 [gd_scene load_steps=16 format=3 uid="uid://dmfpfr5xhngv5"]
 
 [ext_resource type="Script" path="res://scripts/module.gd" id="1_uf4wc"]
-[ext_resource type="Texture2D" uid="uid://crp5sk801ree8" path="res://imgs/modules/corridor/h_d.png" id="2_5fwbu"]
+[ext_resource type="Texture2D" uid="uid://c2hbwjrkxdpl7" path="res://imgs/modules/corridor/l_u.png" id="2_k2fv2"]
 [ext_resource type="PackedScene" uid="uid://dki4talhc74jp" path="res://prefab/ceiling_lamp.tscn" id="3_nm2i0"]
 
 [sub_resource type="OccluderPolygon2D" id="OccluderPolygon2D_rs0by"]
@@ -44,7 +44,7 @@ size = Vector2(16, 60)
 script = ExtResource("1_uf4wc")
 
 [node name="Sprite" type="Sprite2D" parent="."]
-texture = ExtResource("2_5fwbu")
+texture = ExtResource("2_k2fv2")
 centered = false
 
 [node name="Borders" type="StaticBody2D" parent="Sprite"]
@@ -151,6 +151,7 @@ occluder_light_mask = 1025
 position = Vector2(32, 20)
 
 [node name="Interactables" type="Node2D" parent="Sprite"]
+visible = false
 
 [node name="Ladder" type="Area2D" parent="Sprite/Interactables" groups=["ladder"]]
 

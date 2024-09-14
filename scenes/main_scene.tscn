@@ -1,9 +1,10 @@
-[gd_scene load_steps=51 format=3 uid="uid://bo6ew1t4jg2x6"]
+[gd_scene load_steps=52 format=3 uid="uid://bo6ew1t4jg2x6"]
 
 [ext_resource type="Script" path="res://scripts/main_scene.gd" id="1_0jyw0"]
 [ext_resource type="Script" path="res://scripts/light_control.gd" id="2_una4x"]
 [ext_resource type="Script" path="res://scripts/player/player_char.gd" id="4_blcld"]
 [ext_resource type="Texture2D" uid="uid://843kfwxv80ts" path="res://images/player/hazmat.png" id="5_4o6dv"]
+[ext_resource type="Script" path="res://scripts/audio_control.gd" id="5_wrx4j"]
 [ext_resource type="Texture2D" uid="uid://bahc3spqbwwxl" path="res://images/player/hazmat_with_hands.png" id="6_qws5h"]
 [ext_resource type="FontFile" uid="uid://gosmfve4h532" path="res://imgs/PressStart2P-Regular.ttf" id="7_5wvvi"]
 [ext_resource type="PackedScene" uid="uid://betx6m81e680d" path="res://prefab/monster/monster.tscn" id="7_yfrkd"]
@@ -661,6 +662,7 @@ blend_mode = 1
 navigation_polygon = SubResource("NavigationPolygon_ki8cn")
 
 [node name="Monster" parent="." instance=ExtResource("7_yfrkd")]
+visible = false
 position = Vector2(0, 0)
 
 [node name="Player" type="CharacterBody2D" parent="."]
@@ -674,6 +676,10 @@ energy = 0.3
 blend_mode = 2
 shadow_enabled = true
 texture = SubResource("GradientTexture2D_x2omx")
+
+[node name="Audio_Control" type="AudioListener2D" parent="Player"]
+current = true
+script = ExtResource("5_wrx4j")
 
 [node name="Camera" type="Camera2D" parent="Player"]
 scale = Vector2(0.987829, 0.884354)
@@ -697,10 +703,10 @@ shape = SubResource("CapsuleShape2D_byxxa")
 
 [node name="body3" type="Sprite2D" parent="Player"]
 z_index = 2
-position = Vector2(0.333, 4.666)
+position = Vector2(0, 4.666)
 texture = ExtResource("6_qws5h")
 hframes = 23
-frame = 18
+frame = 10
 
 [node name="AnimationPlayer2" type="AnimationPlayer" parent="Player"]
 libraries = {
@@ -747,6 +753,7 @@ theme_override_fonts/font = ExtResource("7_5wvvi")
 text = "press E to interact"
 
 [connection signal="finished_ready" from="." to="Light_Control" method="on_main_finished_ready"]
+[connection signal="finished_ready" from="." to="Player/Audio_Control" method="on_main_finished_ready"]
 [connection signal="bake_finished" from="Modules" to="Monster" method="_on_modules_bake_finished"]
 [connection signal="area_entered" from="Player/Area2D" to="Player" method="_on_area_2d_area_entered"]
 [connection signal="area_exited" from="Player/Area2D" to="Player" method="_on_area_2d_area_exited"]

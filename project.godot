@@ -48,6 +48,10 @@ generator_light=""
 hospital_light=""
 water_light=""
 ladder=""
+sound_effects=""
+sound_water=""
+sound_generator=""
+sound_communication=""
 
 [input]
 
