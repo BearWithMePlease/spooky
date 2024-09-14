@@ -1,17 +1,16 @@
 extends Node2D
 
-class_name Monster
+class_name MonsterBody
 
 # Inspired by The Rain World https://youtu.be/sVntwsrjNe4
-@export var monsterSpeed: float = 300.0
 @export var facesCount: int = 4
 @export var legsCount: int = 16
 @export var legRadius: float = 30.0
 @export var monsterLegScene: PackedScene = null
 @export var monsterFaceScene: PackedScene = null
 @export var particles: CPUParticles2D = null
-@export var player: Node2D = null
-@export var navigationAgent: NavigationAgent2D = null
+@export var player: Player = null
+var _isPlayerSeen := false
 var _legPosition: Array[Vector2] = []
 var _legGroundPos: Array[Vector2] = []
 var _legIsOnGround: Array[bool] = []
@@ -19,9 +18,33 @@ var _legs: Array[MonsterLeg] = []
 var _faces: Array[RigidBody2D] = []
 # Used in physics_process:
 var _center := Vector2(0, 0)
-var _input: Vector2 = Vector2(0, 0)
 const WALL_COLLISION_MASK = 0b01
-var _isNavigationMapBaked := false
+var _moveDirection: Vector2 = Vector2.ZERO
+var _grabPlayer := false;
+var _health: int = 100;
+
+func move(direction: Vector2) -> void:
+	_moveDirection = direction;
+
+func canSeePlayer() -> bool:
+	return _isPlayerSeen;
+
+func getHealth() -> int:
+	return _health;
+	
+func setHealth(value: int) -> void:
+	if _health > 0 and value <= 0:
+		for leg in _legs:
+			leg.detachLeg();
+	_health = value;
+
+""" returns distance of leg to player"""
+func grabPlayer(state: bool) -> float:
+	_grabPlayer = state;
+	var pos = _legs[0].getPosOfLastPoint();
+	if pos.x != 0 || pos.y != 0:
+		return pos.distance_to(player.global_position);
+	return -1;
 
 func _ready() -> void:
 	_center = global_position
@@ -53,59 +76,51 @@ func _ready() -> void:
 		angle += 2.0 * PI / float(_legs.size())
 		
 func _process(_delta: float) -> void:
-	_input = Vector2.ZERO
-	if(Input.is_action_pressed("Forward")):
-		_input.y -= 1
-	if(Input.is_action_pressed("Back")):
-		_input.y += 1
-	if(Input.is_action_pressed("Right")):
-		_input.x += 1
-	if(Input.is_action_pressed("Left")):
-		_input.x -= 1
-	_input = _input.normalized()
-
+	if _health <= 0:
+		return;
+	
 	# Update ground positions of legs
 	for legIndex in _legs.size():
 		var raySource: Vector2 = global_position + _legPosition[legIndex]
-		_legs[legIndex].updateLeg(raySource, _legGroundPos[legIndex], _legIsOnGround[legIndex])
+		if legIndex == 0 and _grabPlayer:
+			_legs[0].updateLeg(raySource, player.global_position, true, true)
+		else:
+			_legs[legIndex].updateLeg(raySource, _legGroundPos[legIndex], _legIsOnGround[legIndex])		
 	
 	# Make particles spawn at legs
 	var allPoints: Array[Vector2] = []
 	for leg in _legs:
 		allPoints.append_array(leg.getAllUnlockedPoints())
 	particles.emission_points = allPoints
-	
-	if _isNavigationMapBaked:
-		navigationAgent.target_position = get_global_mouse_position()
 
 func _physics_process(delta):
-	if _isNavigationMapBaked:
-		var aiInput: Vector2 = (navigationAgent.get_next_path_position() - global_position).normalized()
 	
-		# Monster rigidbody movement
-		var newCenter := Vector2.ZERO
-		for faceIndex in _faces.size():
-			var rigidbody := _faces[faceIndex] as RigidBody2D
-			if rigidbody != null:
+		
+	# Raycasting player
+	if player != null:
+		var playerTarget := player.global_position + Vector2.DOWN * 10.0
+		var query = PhysicsRayQueryParameters2D.create(global_position, playerTarget)
+		query.collide_with_bodies = true
+		query.collision_mask = player.collision_layer | WALL_COLLISION_MASK
+		var space_state = get_world_2d().direct_space_state
+		var result = space_state.intersect_ray(query)
+		_isPlayerSeen = result and result.collider is Player
+			
+	# Monster rigidbody movement
+	var newCenter := Vector2.ZERO
+	for faceIndex in _faces.size():
+		var rigidbody := _faces[faceIndex] as RigidBody2D
+		if rigidbody != null:
+			if _health <= 0:
+				rigidbody.gravity_scale = 0.25;
+			else:
 				# Lerp position of heads towards monster center
 				rigidbody.global_position = lerp(rigidbody.global_position, _center, delta)
 				newCenter += rigidbody.global_position
-				rigidbody.linear_velocity = aiInput * monsterSpeed
-		newCenter /= _faces.size()
-		_center = newCenter
-		global_position = _center
-	
-	# Raycasting player
-	if player != null:
-		var playerTarget := self.global_position + (player.global_position - global_position).normalized() * 1000.0
-		var query = PhysicsRayQueryParameters2D.create(global_position, playerTarget)
-		query.collide_with_bodies = true
-		query.collision_mask = player.collision_layer
-		var space_state = get_world_2d().direct_space_state
-		var result = space_state.intersect_ray(query)
-		if result and result.collider is Player:
-			pass # See player
-	
+				rigidbody.linear_velocity = _moveDirection # NOTE: they mean, not to use it in _process....
+	newCenter /= _faces.size()
+	_center = newCenter
+	get_parent().global_position = newCenter
 	
 	for legIndex in _legs.size():
 		# Check if position of legs is valid
@@ -135,9 +150,6 @@ func _physics_process(delta):
 			var result = space_state.intersect_ray(query)
 			# If found, store it
 			if result:
-				_legGroundPos[legIndex] = result.position
+				_legGroundPos[legIndex] = result.position + randomDirection * 7.5
 				_legIsOnGround[legIndex] = true
 				break
-
-func _on_modules_bake_finished() -> void:
-	_isNavigationMapBaked = true

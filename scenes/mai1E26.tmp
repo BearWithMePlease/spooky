@@ -1,28 +1,13 @@
-[gd_scene load_steps=63 format=3 uid="uid://bo6ew1t4jg2x6"]
+[gd_scene load_steps=52 format=3 uid="uid://bo6ew1t4jg2x6"]
 
 [ext_resource type="Script" path="res://scripts/main_scene.gd" id="1_0jyw0"]
 [ext_resource type="Script" path="res://scripts/light_control.gd" id="2_una4x"]
-[ext_resource type="Script" path="res://scripts/monster/monsterBody.gd" id="3_ccd75"]
 [ext_resource type="Script" path="res://scripts/player/player_char.gd" id="4_blcld"]
-[ext_resource type="PackedScene" uid="uid://3h6eguht44i6" path="res://prefab/monster/monsterLeg.tscn" id="4_mj277"]
-[ext_resource type="AudioStream" uid="uid://d0sc8vvf4rlv0" path="res://audio/sfx/light_on.mp3" id="4_ch04v"]
 [ext_resource type="Texture2D" uid="uid://843kfwxv80ts" path="res://images/player/hazmat.png" id="5_4o6dv"]
-[ext_resource type="PackedScene" uid="uid://mb1u0vbty7ft" path="res://prefab/monster/monsterFace.tscn" id="5_p2plt"]
-[ext_resource type="AudioStream" uid="uid://ckeqab8exdk7q" path="res://audio/sfx/light_off.mp3" id="5_76aoe"]
 [ext_resource type="Script" path="res://scripts/audio_control.gd" id="5_wrx4j"]
-[ext_resource type="AudioStream" uid="uid://cedmjxxqnpqpy" path="res://audio/sfx/footsteps/footsteps-1.mp3" id="6_kbj1v"]
 [ext_resource type="Texture2D" uid="uid://bahc3spqbwwxl" path="res://images/player/hazmat_with_hands.png" id="6_qws5h"]
 [ext_resource type="FontFile" uid="uid://gosmfve4h532" path="res://imgs/PressStart2P-Regular.ttf" id="7_5wvvi"]
 [ext_resource type="Script" path="res://scenes/monster.gd" id="7_r0p8v"]
-[ext_resource type="AudioStream" uid="uid://be62gfc1nvc07" path="res://audio/sfx/footsteps/footsteps-2.mp3" id="7_ndd1u"]
-[ext_resource type="PackedScene" uid="uid://bdrk0gvju1eis" path="res://scenes/gun.tscn" id="7_yae1m"]
-[ext_resource type="AudioStream" uid="uid://da2qdiqee6jvq" path="res://audio/sfx/footsteps/footsteps-3.mp3" id="8_01px5"]
-[ext_resource type="AudioStream" uid="uid://oaivvndflsnd" path="res://audio/sfx/footsteps/footsteps-4.mp3" id="9_igb8x"]
-[ext_resource type="AudioStream" uid="uid://dpk8jtf88ue36" path="res://audio/sfx/footsteps/footsteps-5.mp3" id="10_nncqf"]
-[ext_resource type="AudioStream" uid="uid://dujohafgqeag5" path="res://audio/sfx/footsteps/footsteps-6.mp3" id="11_4s113"]
-[ext_resource type="AudioStream" uid="uid://c8t6dqtku2qvm" path="res://audio/sfx/footsteps/footsteps-7.mp3" id="12_rh8bm"]
-[ext_resource type="AudioStream" uid="uid://0qbjq8bt2nod" path="res://audio/sfx/footsteps/footsteps-8.mp3" id="13_n4g3t"]
-[ext_resource type="AudioStream" uid="uid://l1ukey07yihq" path="res://audio/sfx/footsteps/footsteps-9.mp3" id="14_4o2oy"]
 
 [sub_resource type="NavigationPolygon" id="NavigationPolygon_ki8cn"]
 agent_radius = 8.0
@@ -48,9 +33,8 @@ length = 0.001
 
 [sub_resource type="Animation" id="Animation_m56v4"]
 resource_name = "a_climbing_2"
-length = 0.45
-loop_mode = 1
-step = 0.01
+length = 0.5
+step = 0.15
 tracks/0/type = "value"
 tracks/0/imported = false
 tracks/0/enabled = true
@@ -658,34 +642,31 @@ states/walk/position = Vector2(498, 52.4445)
 states/walk_b/node = SubResource("AnimationNodeAnimation_nhh5h")
 states/walk_b/position = Vector2(535.333, 258.667)
 transitions = ["facing", "walk", SubResource("AnimationNodeStateMachineTransition_xy5a8"), "walk", "sprint", SubResource("AnimationNodeStateMachineTransition_ls6v0"), "facing", "walk_b", SubResource("AnimationNodeStateMachineTransition_wrb8h"), "walk_b", "facing", SubResource("AnimationNodeStateMachineTransition_u8oec"), "walk", "facing", SubResource("AnimationNodeStateMachineTransition_snn0d"), "sprint", "walk", SubResource("AnimationNodeStateMachineTransition_1s6tq"), "Start", "a_facing_2", SubResource("AnimationNodeStateMachineTransition_a3l4m"), "a_facing_2", "a_walk_2", SubResource("AnimationNodeStateMachineTransition_o0hev"), "a_facing_2", "a_walk_b", SubResource("AnimationNodeStateMachineTransition_k06ch"), "a_walk_2", "a_facing_2", SubResource("AnimationNodeStateMachineTransition_ctg4l"), "a_walk_2", "a_sprint_2", SubResource("AnimationNodeStateMachineTransition_xbyde"), "a_sprint_2", "a_walk_2", SubResource("AnimationNodeStateMachineTransition_dekcx"), "a_walk_b", "a_facing_2", SubResource("AnimationNodeStateMachineTransition_3iy75"), "a_facing_2", "a_climbing_2", SubResource("AnimationNodeStateMachineTransition_ykfro"), "a_climbing_2", "a_facing_2", SubResource("AnimationNodeStateMachineTransition_iycsj"), "a_facing_2", "facing", SubResource("AnimationNodeStateMachineTransition_pf3ul"), "facing", "a_facing_2", SubResource("AnimationNodeStateMachineTransition_a0lv3")]
-graph_offset = Vector2(-256, 295)
+graph_offset = Vector2(-251, 356)
 
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_fcb8y"]
 radius = 4.0
 height = 28.0
 
-[node name="MainScene" type="Node2D" node_paths=PackedStringArray("monster")]
+[node name="MainScene" type="Node2D"]
 script = ExtResource("1_0jyw0")
-monster = NodePath("Monster")
 
-[node name="Monster" type="Node2D" parent="." node_paths=PackedStringArray("monsterBody", "player", "navigationAgent", "modules")]
-script = ExtResource("7_r0p8v")
-monsterBody = NodePath("MonsterBody")
-player = NodePath("../Player")
-navigationAgent = NodePath("NavigationAgent2D")
-modules = NodePath("../Modules")
+[node name="Light_Control" type="Node2D" parent="."]
+script = ExtResource("2_una4x")
 
-[node name="MonsterBody" type="Node2D" parent="Monster" node_paths=PackedStringArray("particles", "player")]
+[node name="Global_Light" type="DirectionalLight2D" parent="Light_Control"]
+energy = 3.0
+blend_mode = 1
+
+[node name="Modules" type="NavigationRegion2D" parent="."]
+navigation_polygon = SubResource("NavigationPolygon_ki8cn")
+
+[node name="Monster" type="Node2D" parent="."]
 z_index = 1
 y_sort_enabled = true
-script = ExtResource("3_ccd75")
-legRadius = 6.0
-monsterLegScene = ExtResource("4_mj277")
-monsterFaceScene = ExtResource("5_p2plt")
-particles = NodePath("CPUParticles2D")
-player = NodePath("../../Player")
+script = ExtResource("7_r0p8v")
 
-[node name="CPUParticles2D" type="CPUParticles2D" parent="Monster/MonsterBody"]
+[node name="CPUParticles2D" type="CPUParticles2D" parent="Monster"]
 amount = 25
 lifetime = 3.0
 emission_shape = 4
@@ -700,35 +681,11 @@ color = Color(0.00784314, 0.00784314, 0.14902, 1)
 
 [node name="NavigationAgent2D" type="NavigationAgent2D" parent="Monster"]
 
-[node name="Light_Control" type="Node2D" parent="."]
-script = ExtResource("2_una4x")
-
-[node name="Global_Light" type="DirectionalLight2D" parent="Light_Control"]
-energy = 3.0
-blend_mode = 1
-
-[node name="Audio_Control" type="Node2D" parent="."]
-script = ExtResource("5_wrx4j")
-sound_light_on = ExtResource("4_ch04v")
-sound_light_off = ExtResource("5_76aoe")
-sound_foot_steps = Array[AudioStreamMP3]([ExtResource("6_kbj1v"), ExtResource("7_ndd1u"), ExtResource("8_01px5"), ExtResource("9_igb8x"), ExtResource("10_nncqf"), ExtResource("11_4s113"), ExtResource("12_rh8bm"), ExtResource("13_n4g3t"), ExtResource("14_4o2oy")])
-
-[node name="Foot_Steps" type="AudioStreamPlayer" parent="Audio_Control"]
-
-[node name="Modules" type="NavigationRegion2D" parent="."]
-navigation_polygon = SubResource("NavigationPolygon_ki8cn")
-
-[node name="Player" type="CharacterBody2D" parent="." node_paths=PackedStringArray("GUN")]
+[node name="Player" type="CharacterBody2D" parent="."]
 position = Vector2(0, -2)
-collision_layer = 2
-collision_mask = 3
 script = ExtResource("4_blcld")
 MAX_SPEED = 100
 ACCELERATION = 300
-GUN = NodePath("gun")
-
-[node name="gun" parent="Player" node_paths=PackedStringArray("monster") instance=ExtResource("7_yae1m")]
-monster = NodePath("../../Monster")
 
 [node name="Aura" type="PointLight2D" parent="Player"]
 energy = 0.3
@@ -736,8 +693,9 @@ blend_mode = 2
 shadow_enabled = true
 texture = SubResource("GradientTexture2D_x2omx")
 
-[node name="Audio_Listener" type="AudioListener2D" parent="Player"]
+[node name="Audio_Control" type="AudioListener2D" parent="Player"]
 current = true
+script = ExtResource("5_wrx4j")
 
 [node name="Camera" type="Camera2D" parent="Player"]
 scale = Vector2(0.987829, 0.884354)
@@ -756,7 +714,7 @@ grow_vertical = 2
 color = Color(0, 0, 0, 1)
 
 [node name="CollisionShape2D3" type="CollisionShape2D" parent="Player"]
-position = Vector2(0, 7)
+position = Vector2(0, 6)
 shape = SubResource("CapsuleShape2D_byxxa")
 
 [node name="body3" type="Sprite2D" parent="Player"]
@@ -796,6 +754,7 @@ collision_layer = 4194304
 collision_mask = 4194304
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Player/Area2D"]
+visible = false
 position = Vector2(0, 6)
 shape = SubResource("CapsuleShape2D_fcb8y")
 
@@ -810,7 +769,7 @@ theme_override_fonts/font = ExtResource("7_5wvvi")
 text = "press E to interact"
 
 [connection signal="finished_ready" from="." to="Light_Control" method="on_main_finished_ready"]
-[connection signal="finished_ready" from="." to="Audio_Control" method="on_main_finished_ready"]
+[connection signal="finished_ready" from="." to="Player/Audio_Control" method="on_main_finished_ready"]
 [connection signal="bake_finished" from="Modules" to="Monster" method="_on_modules_bake_finished"]
 [connection signal="area_entered" from="Player/Area2D" to="Player" method="_on_area_2d_area_entered"]
 [connection signal="area_exited" from="Player/Area2D" to="Player" method="_on_area_2d_area_exited"]

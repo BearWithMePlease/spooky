@@ -1,9 +1,11 @@
-[gd_scene load_steps=12 format=3 uid="uid://bwisoomk8helm"]
+[gd_scene load_steps=14 format=3 uid="uid://bwisoomk8helm"]
 
 [ext_resource type="Script" path="res://scripts/module.gd" id="1_rdnqu"]
 [ext_resource type="Texture2D" uid="uid://b64wfhxrqbnmr" path="res://imgs/modules/communication/n.png" id="2_43pyl"]
 [ext_resource type="Texture2D" uid="uid://d0o40bd2267b" path="res://imgs/modules/communication/wall.png" id="2_p30nr"]
 [ext_resource type="PackedScene" uid="uid://dki4talhc74jp" path="res://prefab/ceiling_lamp.tscn" id="3_4bq63"]
+[ext_resource type="PackedScene" uid="uid://bospy2knasfaj" path="res://prefab/sound_effect.tscn" id="5_5ia4q"]
+[ext_resource type="AudioStream" uid="uid://dlogiyt4kskmo" path="res://audio/sfx/communication_running.mp3" id="6_vqa0v"]
 
 [sub_resource type="OccluderPolygon2D" id="OccluderPolygon2D_j4v7c"]
 polygon = PackedVector2Array(0, -3, 0, -50, 128, -50, 128, -3, 127, -3, 127, -49, 1, -49, 1, -3)
@@ -101,3 +103,8 @@ z_index = 10
 y_sort_enabled = true
 position = Vector2(64, 64)
 texture = ExtResource("2_p30nr")
+
+[node name="Sound" parent="Sprite" groups=["sound_communication"] instance=ExtResource("5_5ia4q")]
+position = Vector2(112, 107)
+stream = ExtResource("6_vqa0v")
+volume_db = -5.0

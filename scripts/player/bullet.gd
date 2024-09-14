@@ -4,11 +4,17 @@ class_name Bullet
 
 
 @onready var ray_cast = $RayCast2D
+
+var _gun: Gun = null;
+func initialize(gun: Gun, rot: float, pos: Vector2) -> void:
+	_gun = gun;
+	self.rotation = rot;
+	self.global_position = pos;
+
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
 	ray_cast.enabled = true
 	$Area2D.monitoring = false
-	pass # Replace with function body.
 
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
@@ -30,13 +36,15 @@ func _process(delta: float) -> void:
 				hit.position = ray_cast.get_collision_point()
 				hit.rotation = rotation
 				get_parent().add_child(hit)
-			else:
-				print(body.get_parent())
+			elif body is MonsterFace:
+				print("hello")
 				var hit = hitBloodEmpty.instantiate()
 				hit.position = ray_cast.get_collision_point()
 				hit.rotation = rotation
 				get_parent().add_child(hit)
-			
+				if _gun != null:
+					_gun.damageMonster();
+		
 			queue_free()
 		else:
 			print("fuckoff")

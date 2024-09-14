@@ -4,7 +4,6 @@
 [ext_resource type="Texture2D" uid="uid://bw6olo6fvsbaj" path="res://images/monster/legTexture.png" id="1_suxkp"]
 
 [node name="Leg" type="Line2D"]
-z_index = -1
 y_sort_enabled = true
 texture_filter = 1
 texture_repeat = 2

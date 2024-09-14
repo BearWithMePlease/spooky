@@ -34,29 +34,29 @@ var _sticks: Array[Stick] = []
 var _isInited: bool = false
 var _isOnGround: bool = false
 var _changeTargetTimer: float = 0.0
-var _allRects: Array[Rect2] = [] # buffer to hold all rectangles
 
 func _ready() -> void:
 	width = randf_range(minWidth, maxWidth)
-	_allRects = []
-	if len(_allRects) == 0:
-		for child in get_all_children(get_tree().root):
-			if child is CollisionShape2D:
-				var rect := (child as CollisionShape2D).shape.get_rect()
-				if rect != null:
-					_allRects.append(Rect2(child.global_position - rect.size * child.global_scale * 0.5, rect.size * child.global_scale))
-	
+
+func detachLeg() -> void:
+	_points[0].locked = false;
+
 """from and to must be points in GLOBAL SPACE"""
-func updateLeg(from: Vector2, to: Vector2, isOnGround: bool) -> void:
+func updateLeg(from: Vector2, to: Vector2, isOnGround: bool, forceNewPoint: bool = false) -> void:
 	_sourceGlobalPoint = from
 	if not _isInited:
 		_initialize(from, to)
 	const DST_NEW_POINT := 0.1
-	if (_targetGlobalPoint - to).length() > DST_NEW_POINT:
-		_oldTargetGlobalPoint = _points[_points.size() - 1].position
+	if (_targetGlobalPoint - to).length() > DST_NEW_POINT or forceNewPoint:
+		_oldTargetGlobalPoint = getPosOfLastPoint()
 		_targetGlobalPoint = to
-		_changeTargetTimer = 0.0
+		_changeTargetTimer = 1.0 if forceNewPoint else 0.0
 	_isOnGround = isOnGround
+	
+func getPosOfLastPoint() -> Vector2:
+	if(len(_points) > 0):
+		return _points[len(_points) - 1].position;
+	return Vector2.ZERO;
 
 func getLegLength() -> float:
 	return lineLength
@@ -105,10 +105,9 @@ func _physics_process(delta: float) -> void:
 		return
 	
 	# Update first point
-	_points[0].position = _sourceGlobalPoint
+	if _points[0].locked:
+		_points[0].position = _sourceGlobalPoint
 	
-	# It locks some if the points in the end of the line to make it more stretched,
-	# but looks kinda bad...
 	_points[pointCount - 1].locked = _isOnGround
 	if _points[pointCount - 1].locked:
 		# Transition between old position and new using easing function
@@ -130,64 +129,13 @@ func _ease_in_out_back(x: float) -> float:
 	else:
 		return (pow(2 * x - 2, 2) * ((c2 + 1) * (2 * x - 2) + c2) + 2) / 2
 
-# https://forum.godotengine.org/t/how-to-get-all-children-from-a-node/18587/3
-func get_all_children(in_node,arr:=[]):
-	arr.push_back(in_node)
-	for child in in_node.get_children():
-		arr = get_all_children(child,arr)
-	return arr
-
-func isPointInRect(point: Vector2, rect: Rect2) -> bool:
-	return point.x > rect.position.x && point.x < rect.position.x + rect.size.x && point.y > rect.position.y && point.y < rect.position.y + rect.size.y
-
-# Hello darkness, my old friend (part of my C++ physics engine)
-const BIG_DST: float = 1e8
-func findCollisionSolution(point: Rect2, rect: Rect2) -> CollisionResult:
-	var minDepth := BIG_DST
-	var normal := Vector2.ZERO
-
-	if point.position.x < rect.position.x:
-		var depth = point.position.x + point.size.x - rect.position.x
-		if(depth < minDepth):
-			minDepth = depth
-			normal = Vector2(-1, 0)
-
-	if point.position.x + point.size.x > rect.position.x + rect.size.x:
-		var depth = rect.position.x + rect.size.x - point.position.x
-		if(depth < minDepth):
-			minDepth = depth
-			normal = Vector2(1, 0)
-
-	if point.position.y < rect.position.y:
-		var depth = point.position.y + point.size.y - rect.position.y
-		if depth < minDepth:
-			minDepth = depth
-			normal = Vector2(0, 1)
-
-	if point.position.y + point.size.y > rect.position.y + rect.size.y: 
-		var depth = rect.position.y + rect.size.y - point.position.y
-		if depth < minDepth:
-			minDepth = depth
-			normal = Vector2(0, -1)
-	
-	var result := CollisionResult.new()
-	result.depth = minDepth
-	result.normal = normal
-	return result
-
 # Verlet Intergation https://youtu.be/PGk0rnyTa1U
 func _simulate(delta: float) -> void:
-	const POINT_COLLISION_BOX_SIZE := Vector2(15, 15)
 	for p in _points:
 		if not p.locked:
 			var positionBeforeUpdate := Vector2(p.position.x, p.position.y)
 			p.position += (p.position - p.prevPosition) * verletSmoothness
 			p.position += Vector2.DOWN * gravity * delta * delta
-			for rect in _allRects:
-				if isPointInRect(p.position, rect):
-					var solution := findCollisionSolution(Rect2(p.position, POINT_COLLISION_BOX_SIZE), rect)
-					if(solution.depth <= BIG_DST):
-						p.position += solution.normal * abs(solution.depth)
 			p.prevPosition = positionBeforeUpdate
 	
 	# this loop is really performance heavy, and not because of sqrt in normalize.

@@ -1,10 +1,12 @@
-[gd_scene load_steps=13 format=3 uid="uid://ogv0kj11knlg"]
+[gd_scene load_steps=15 format=3 uid="uid://ogv0kj11knlg"]
 
 [ext_resource type="Script" path="res://scripts/module.gd" id="2_2pgmg"]
 [ext_resource type="Texture2D" uid="uid://ba82qlhnxs647" path="res://imgs/modules/generator/n.png" id="2_f5htx"]
 [ext_resource type="Texture2D" uid="uid://23fct8kq14u0" path="res://imgs/modules/generator/wall.png" id="2_hvsvt"]
 [ext_resource type="PackedScene" uid="uid://dki4talhc74jp" path="res://prefab/ceiling_lamp.tscn" id="3_uedks"]
 [ext_resource type="PackedScene" uid="uid://tbs4ifkjrnhc" path="res://prefab/vent.tscn" id="5_nnwbo"]
+[ext_resource type="AudioStream" uid="uid://cn3njy7bpuo3h" path="res://audio/sfx/generator_running.mp3" id="6_e7xe1"]
+[ext_resource type="PackedScene" uid="uid://bospy2knasfaj" path="res://prefab/sound_effect.tscn" id="6_f2cux"]
 
 [sub_resource type="OccluderPolygon2D" id="OccluderPolygon2D_5q2ex"]
 polygon = PackedVector2Array(-128, -37, 128, -36, 128, 10, 127, 10, 127, -35, -127, -36, -127, 10, -128, 10)
@@ -109,3 +111,6 @@ z_index = 10
 y_sort_enabled = true
 position = Vector2(128, 64)
 texture = ExtResource("2_hvsvt")
+
+[node name="Sound" parent="Sprite" groups=["sound_generator"] instance=ExtResource("6_f2cux")]
+stream = ExtResource("6_e7xe1")
