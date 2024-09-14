@@ -434,8 +434,10 @@ class MonsterBT extends BehaviorTree:
 				Sequence.new([
 					CheckPlayerInFOVRange.new(_monsterBody, _player),
 					TaskGoToPlayer.new(_monsterBody, _navigationAgent),
-					TaskGrabPlayer.new(_monsterBody, _player), # TODO: Enable this line
-					TaskThrowPlayer.new(_monsterBody, _player) # TODO: Enable this line
+					Sequence.new([
+						TaskGrabPlayer.new(_monsterBody, _player), 
+						TaskThrowPlayer.new(_monsterBody, _player) 
+					])
 				]),
 				TaskSearchPlayer.new(_monsterBody, _navigationAgent),
 				TaskWander.new(_monsterBody, _modules, _navigationAgent)
@@ -470,6 +472,7 @@ func _draw() -> void:
 	pass
 	
 func takeDamage() -> void:
+	print("hit on monster")
 	monsterBody.setHealth(max(0, monsterBody.getHealth() - DAMAGE));
 
 func _on_modules_bake_finished() -> void:

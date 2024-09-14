@@ -28,9 +28,13 @@
 [ext_resource type="AudioStream" uid="uid://drewawapbdp4w" path="res://audio/sfx/random_noise/sound_5.mp3" id="23_2opvi"]
 [ext_resource type="AudioStream" uid="uid://27yx3pked2kp" path="res://audio/sfx/random_noise/sound_6.mp3" id="24_eal8t"]
 [ext_resource type="AudioStream" uid="uid://ccynk1hjmewto" path="res://audio/sfx/random_noise/sound_7.mp3" id="25_4k2ct"]
+[ext_resource type="AudioStream" uid="uid://bwa4q3uu7bxl2" path="res://audio/sfx/random_noise/monster_close/monster_close_1.mp3" id="26_0lfmj"]
 [ext_resource type="AudioStream" uid="uid://u6brqy6vxytv" path="res://audio/sfx/random_noise/sound_8.mp3" id="26_8fepu"]
 [ext_resource type="AudioStream" uid="uid://0t1l64nksl6q" path="res://audio/sfx/random_noise/sound_9.mp3" id="27_2xppg"]
+[ext_resource type="AudioStream" uid="uid://ttq2xd7ypj7w" path="res://audio/sfx/random_noise/monster_close/monster_close_2.mp3" id="27_g7mrr"]
+[ext_resource type="AudioStream" uid="uid://cu02un1sdut4u" path="res://audio/sfx/random_noise/monster_close/monster_close_3.mp3" id="28_cvbbk"]
 [ext_resource type="AudioStream" uid="uid://dgplj62jo2m88" path="res://audio/sfx/random_noise/sound_10.mp3" id="29_256ve"]
+[ext_resource type="AudioStream" uid="uid://c5nau1045ak6b" path="res://audio/sfx/gun_shoot.mp3" id="29_wxeml"]
 [ext_resource type="AudioStream" uid="uid://cihfhgsuq7wif" path="res://audio/sfx/random_noise/sound_11.mp3" id="30_22bms"]
 [ext_resource type="Script" path="res://scripts/player/player.gd" id="30_bvicb"]
 [ext_resource type="Texture2D" uid="uid://b3e3v3taxxg8v" path="res://images/gun/ak.png" id="31_8hqon"]
@@ -44,6 +48,11 @@
 [ext_resource type="Texture2D" uid="uid://b4g2q1mld7p8w" path="res://images/gun/v2/ak reload right.png" id="36_1fp4h"]
 [ext_resource type="Texture2D" uid="uid://c0efri2wx0voy" path="res://images/gun/v2/ak reload left.png" id="37_urg5e"]
 [ext_resource type="Texture2D" uid="uid://k0mcls2j0vos" path="res://images/gun/v2/flashtype2.png" id="38_15ojg"]
+[ext_resource type="AudioStream" uid="uid://br38s62ld0s8p" path="res://audio/sfx/screaming/scream1.wav" id="36_5chg8"]
+[ext_resource type="AudioStream" uid="uid://bm45xq2ktdury" path="res://audio/sfx/screaming/scream2.wav" id="37_8gsgm"]
+[ext_resource type="Script" path="res://scripts/ingame_menus.gd" id="38_ptr41"]
+[ext_resource type="AudioStream" uid="uid://bxn117kypjhnw" path="res://audio/sfx/screaming/scream3.wav" id="38_tu37q"]
+[ext_resource type="AudioStream" uid="uid://mptvaa6xl0w" path="res://audio/sfx/screaming/my ears are bleeding.wav" id="39_homny"]
 
 [sub_resource type="NavigationPolygon" id="NavigationPolygon_ki8cn"]
 agent_radius = 8.0
@@ -1178,7 +1187,7 @@ states/walk/position = Vector2(498, 52.4445)
 states/walk_b/node = SubResource("AnimationNodeAnimation_nhh5h")
 states/walk_b/position = Vector2(535.333, 258.667)
 transitions = ["facing", "walk", SubResource("AnimationNodeStateMachineTransition_xy5a8"), "walk", "sprint", SubResource("AnimationNodeStateMachineTransition_ls6v0"), "facing", "walk_b", SubResource("AnimationNodeStateMachineTransition_wrb8h"), "walk_b", "facing", SubResource("AnimationNodeStateMachineTransition_u8oec"), "walk", "facing", SubResource("AnimationNodeStateMachineTransition_snn0d"), "sprint", "walk", SubResource("AnimationNodeStateMachineTransition_1s6tq"), "Start", "a_facing_2", SubResource("AnimationNodeStateMachineTransition_a3l4m"), "a_facing_2", "a_walk_2", SubResource("AnimationNodeStateMachineTransition_o0hev"), "a_facing_2", "a_walk_b", SubResource("AnimationNodeStateMachineTransition_k06ch"), "a_walk_2", "a_facing_2", SubResource("AnimationNodeStateMachineTransition_ctg4l"), "a_walk_2", "a_sprint_2", SubResource("AnimationNodeStateMachineTransition_xbyde"), "a_sprint_2", "a_walk_2", SubResource("AnimationNodeStateMachineTransition_dekcx"), "a_walk_b", "a_facing_2", SubResource("AnimationNodeStateMachineTransition_3iy75"), "a_facing_2", "a_climbing_2", SubResource("AnimationNodeStateMachineTransition_ykfro"), "a_climbing_2", "a_facing_2", SubResource("AnimationNodeStateMachineTransition_iycsj"), "a_facing_2", "facing", SubResource("AnimationNodeStateMachineTransition_pf3ul"), "facing", "a_facing_2", SubResource("AnimationNodeStateMachineTransition_a0lv3")]
-graph_offset = Vector2(-251, 356)
+graph_offset = Vector2(116, -30)
 
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_fcb8y"]
 radius = 4.0
@@ -1204,11 +1213,16 @@ sound_light_on = ExtResource("4_ch04v")
 sound_light_off = ExtResource("5_76aoe")
 sound_foot_steps = Array[AudioStreamMP3]([ExtResource("6_kbj1v"), ExtResource("7_ndd1u"), ExtResource("8_01px5"), ExtResource("9_igb8x"), ExtResource("10_nncqf"), ExtResource("11_4s113"), ExtResource("12_rh8bm"), ExtResource("13_n4g3t"), ExtResource("14_4o2oy")])
 sound_random = Array[AudioStreamMP3]([ExtResource("19_fdaxv"), ExtResource("20_1lwuc"), ExtResource("21_nq4b5"), ExtResource("22_d6db7"), ExtResource("23_2opvi"), ExtResource("24_eal8t"), ExtResource("25_4k2ct"), ExtResource("26_8fepu"), ExtResource("27_2xppg"), ExtResource("29_256ve"), ExtResource("30_22bms")])
+sound_random_very_close = Array[AudioStreamMP3]([ExtResource("26_0lfmj"), ExtResource("27_g7mrr"), ExtResource("28_cvbbk")])
 
 [node name="Foot_Steps" type="AudioStreamPlayer" parent="Audio_Control"]
 bus = &"SFX"
 
 [node name="Random_Sounds" type="AudioStreamPlayer" parent="Audio_Control"]
+bus = &"SFX"
+
+[node name="Gun_Shot" type="AudioStreamPlayer" parent="Audio_Control"]
+stream = ExtResource("29_wxeml")
 bus = &"SFX"
 
 [node name="Modules" type="NavigationRegion2D" parent="."]
@@ -1264,7 +1278,8 @@ debug_color = Color(0, 0.6, 0.701961, 0)
 
 [node name="NavigationAgent2D" type="NavigationAgent2D" parent="Monster"]
 
-[node name="Player" type="CharacterBody2D" parent="." node_paths=PackedStringArray("GUN")]
+[node name="Player" type="CharacterBody2D" parent="."]
+z_index = 2
 position = Vector2(0, -2)
 collision_layer = 2
 collision_mask = 3
@@ -1347,7 +1362,23 @@ z_index = 2
 position = Vector2(0, 4.666)
 texture = ExtResource("6_qws5h")
 hframes = 23
-frame = 10
+frame = 9
+
+[node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="Player/body3"]
+stream = ExtResource("36_5chg8")
+volume_db = -28.0
+
+[node name="AudioStreamPlayer2" type="AudioStreamPlayer" parent="Player/body3"]
+stream = ExtResource("37_8gsgm")
+volume_db = -32.0
+
+[node name="AudioStreamPlayer3" type="AudioStreamPlayer" parent="Player/body3"]
+stream = ExtResource("38_tu37q")
+volume_db = -32.0
+
+[node name="AudioStreamPlayer4" type="AudioStreamPlayer" parent="Player/body3"]
+stream = ExtResource("39_homny")
+volume_db = -32.0
 
 [node name="AnimationPlayer2" type="AnimationPlayer" parent="Player"]
 libraries = {
@@ -1394,6 +1425,240 @@ theme_override_fonts/font = ExtResource("7_5wvvi")
 text = "press E to interact"
 
 [node name="GUI" type="CanvasLayer" parent="."]
+layer = 99
+
+[node name="Menus" type="Control" parent="GUI"]
+process_mode = 3
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("38_ptr41")
+
+[node name="Pause" type="Control" parent="GUI/Menus"]
+visible = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Background" type="ColorRect" parent="GUI/Menus/Pause"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0, 0, 0, 0.588235)
+
+[node name="RichTextLabel" type="RichTextLabel" parent="GUI/Menus/Pause"]
+layout_mode = 1
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -276.0
+offset_top = 100.0
+offset_right = 277.0
+offset_bottom = 146.0
+grow_horizontal = 2
+theme_override_fonts/normal_font = ExtResource("7_5wvvi")
+theme_override_font_sizes/normal_font_size = 30
+bbcode_enabled = true
+text = "[center][color=ccc]STATUS: [color=888]PAUSED"
+
+[node name="VolumeSlider" type="HSlider" parent="GUI/Menus/Pause"]
+layout_mode = 1
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -225.0
+offset_top = 300.0
+offset_right = 225.0
+offset_bottom = 350.0
+grow_horizontal = 2
+mouse_default_cursor_shape = 2
+value = 50.0
+
+[node name="Label" type="Label" parent="GUI/Menus/Pause/VolumeSlider"]
+layout_mode = 0
+offset_top = -15.0
+offset_right = 126.0
+offset_bottom = 8.0
+theme_override_fonts/font = ExtResource("7_5wvvi")
+theme_override_font_sizes/font_size = 18
+text = "Volume:"
+
+[node name="ResumeButton" type="Button" parent="GUI/Menus/Pause"]
+layout_mode = 1
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -225.0
+offset_top = 400.0
+offset_right = 225.0
+offset_bottom = 450.0
+grow_horizontal = 2
+mouse_default_cursor_shape = 2
+theme_override_fonts/font = ExtResource("7_5wvvi")
+text = "Resume"
+
+[node name="QuitToMenuButton" type="Button" parent="GUI/Menus/Pause"]
+layout_mode = 1
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -225.0
+offset_top = 475.0
+offset_right = 225.0
+offset_bottom = 525.0
+grow_horizontal = 2
+mouse_default_cursor_shape = 2
+theme_override_fonts/font = ExtResource("7_5wvvi")
+text = "Quit to Menu"
+
+[node name="Victory" type="Control" parent="GUI/Menus"]
+visible = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Background" type="ColorRect" parent="GUI/Menus/Victory"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0, 0, 0, 0.588235)
+
+[node name="RichTextLabel" type="RichTextLabel" parent="GUI/Menus/Victory"]
+layout_mode = 1
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -276.0
+offset_top = 100.0
+offset_right = 277.0
+offset_bottom = 146.0
+grow_horizontal = 2
+theme_override_fonts/normal_font = ExtResource("7_5wvvi")
+theme_override_font_sizes/normal_font_size = 30
+bbcode_enabled = true
+text = "[center][color=ccc]STATUS: [color=32ac32]SURVIVED"
+
+[node name="VolumeSlider" type="HSlider" parent="GUI/Menus/Victory"]
+layout_mode = 1
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -225.0
+offset_top = 300.0
+offset_right = 225.0
+offset_bottom = 350.0
+grow_horizontal = 2
+mouse_default_cursor_shape = 2
+value = 50.0
+
+[node name="Label" type="Label" parent="GUI/Menus/Victory/VolumeSlider"]
+layout_mode = 0
+offset_top = -15.0
+offset_right = 126.0
+offset_bottom = 8.0
+theme_override_fonts/font = ExtResource("7_5wvvi")
+theme_override_font_sizes/font_size = 18
+text = "Volume:"
+
+[node name="QuitToMenuButton" type="Button" parent="GUI/Menus/Victory"]
+layout_mode = 1
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -225.0
+offset_top = 400.0
+offset_right = 225.0
+offset_bottom = 450.0
+grow_horizontal = 2
+mouse_default_cursor_shape = 2
+theme_override_fonts/font = ExtResource("7_5wvvi")
+text = "Back to Menu"
+
+[node name="Defeat" type="Control" parent="GUI/Menus"]
+visible = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Background" type="ColorRect" parent="GUI/Menus/Defeat"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0, 0, 0, 0.588235)
+
+[node name="RichTextLabel" type="RichTextLabel" parent="GUI/Menus/Defeat"]
+layout_mode = 1
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -276.0
+offset_top = 100.0
+offset_right = 277.0
+offset_bottom = 146.0
+grow_horizontal = 2
+theme_override_fonts/normal_font = ExtResource("7_5wvvi")
+theme_override_font_sizes/normal_font_size = 30
+bbcode_enabled = true
+text = "[center][color=ccc]STATUS: [color=ac3232]YOU DIED"
+
+[node name="VolumeSlider" type="HSlider" parent="GUI/Menus/Defeat"]
+layout_mode = 1
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -225.0
+offset_top = 300.0
+offset_right = 225.0
+offset_bottom = 350.0
+grow_horizontal = 2
+mouse_default_cursor_shape = 2
+value = 50.0
+
+[node name="Label" type="Label" parent="GUI/Menus/Defeat/VolumeSlider"]
+layout_mode = 0
+offset_top = -15.0
+offset_right = 126.0
+offset_bottom = 8.0
+theme_override_fonts/font = ExtResource("7_5wvvi")
+theme_override_font_sizes/font_size = 18
+text = "Volume:"
+
+[node name="QuitToMenuButton" type="Button" parent="GUI/Menus/Defeat"]
+layout_mode = 1
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -225.0
+offset_top = 400.0
+offset_right = 225.0
+offset_bottom = 450.0
+grow_horizontal = 2
+mouse_default_cursor_shape = 2
+theme_override_fonts/font = ExtResource("7_5wvvi")
+text = "Back to Menu"
+
+[node name="GUI" type="CanvasLayer" parent="."]
 
 [node name="Timer" type="Label" parent="GUI"]
 texture_filter = 1
@@ -1424,3 +1689,10 @@ timeDisplay = NodePath("../GUI/Timer")
 [connection signal="bake_finished" from="Modules" to="Monster" method="_on_modules_bake_finished"]
 [connection signal="area_entered" from="Player/Collision" to="Player" method="_on_area_2d_area_entered"]
 [connection signal="area_exited" from="Player/Collision" to="Player" method="_on_area_2d_area_exited"]
+[connection signal="value_changed" from="GUI/Menus/Pause/VolumeSlider" to="Audio_Control" method="_on_volume_slider_value_changed"]
+[connection signal="pressed" from="GUI/Menus/Pause/ResumeButton" to="GUI/Menus" method="_on_resume_button_pressed"]
+[connection signal="pressed" from="GUI/Menus/Pause/QuitToMenuButton" to="GUI/Menus" method="_on_quit_to_menu_button_pressed"]
+[connection signal="value_changed" from="GUI/Menus/Victory/VolumeSlider" to="Audio_Control" method="_on_volume_slider_value_changed"]
+[connection signal="pressed" from="GUI/Menus/Victory/QuitToMenuButton" to="GUI/Menus" method="_on_quit_to_menu_button_pressed"]
+[connection signal="value_changed" from="GUI/Menus/Defeat/VolumeSlider" to="Audio_Control" method="_on_volume_slider_value_changed"]
+[connection signal="pressed" from="GUI/Menus/Defeat/QuitToMenuButton" to="GUI/Menus" method="_on_quit_to_menu_button_pressed"]

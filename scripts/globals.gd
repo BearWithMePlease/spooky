@@ -1,11 +1,13 @@
 extends Node
 
 enum SceneType {
+	START_MENU,
 	BUNKER_BUILD,
 	MAIN_SCENE
 }
 
 var packed_scenes := {
+	SceneType.START_MENU: preload("res://scenes/start_menu.tscn"),
 	SceneType.BUNKER_BUILD: preload("res://scenes/bunker_builder.tscn"),
 	SceneType.MAIN_SCENE: preload("res://scenes/main_scene.tscn")
 }
@@ -33,3 +35,4 @@ func switch_scene(from_scene: SceneType, to_scene: SceneType, addidtional = null
 			builder_modules.append(module)
 	
 	get_tree().change_scene_to_packed(packed_scenes[to_scene])
+	self.get_tree().paused = false

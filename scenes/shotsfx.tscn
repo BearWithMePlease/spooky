@@ -1,0 +1,9 @@
+[gd_scene load_steps=3 format=3 uid="uid://cofotdqg6thij"]
+
+[ext_resource type="AudioStream" uid="uid://ctwxy4nbfgntk" path="res://audio/sfx/bullet/9mm-pistol-shot-6349.wav" id="1_fhrnt"]
+[ext_resource type="Script" path="res://shotsfx.gd" id="2_56vv7"]
+
+[node name="shotsfx" type="AudioStreamPlayer"]
+stream = ExtResource("1_fhrnt")
+volume_db = -28.0
+script = ExtResource("2_56vv7")

@@ -4,13 +4,14 @@ class_name Player
 @export var MAX_SPEED := 300
 @export var ACCELERATION := 1500
 @export var FRICITON := 1200
-@export var JUMP_VELOCITY := -200.0
+@export var JUMP_VELOCITY := -100.0
 @export var GRAVITY := 98.0
-@export var GUN: Gun = null
+#@export var GUN: Gun = null
 @onready var axis = Vector2.ZERO
 @export var HP = 100
 @export var falldmg_multiplier = 10
 
+@onready var audio_control :=  $"../Audio_Control"
 
 var accel
 var speedcap
@@ -102,14 +103,14 @@ func checkClimbInput():
 func checkGun():
 	if Input.is_action_just_pressed("equip gun") && !weaponswitchCooldown && !gun.isReloading && !gunsAreGo && !isClimbing: # worthless, no jump
 		gunsAreGo = true
-		GUN.visible = gunsAreGo
+		gun.visible = gunsAreGo
 		weaponswitchCooldown = true
 		await get_tree().create_timer(weaponswitchCooltime).timeout
 		weaponswitchCooldown = false
 
 	if Input.is_action_just_pressed("equip hands") && !weaponswitchCooldown && !gun.isReloading && gunsAreGo && !isClimbing:
 		gunsAreGo = false
-		GUN.visible = gunsAreGo
+		gun.visible = gunsAreGo
 		weaponswitchCooldown = true
 		await get_tree().create_timer(weaponswitchCooltime).timeout
 		weaponswitchCooldown = false
@@ -128,6 +129,7 @@ func update_animation_tree_param():
 		animation_tree["parameters/conditions/isWalkBA"] = false
 
 		if velocity == Vector2.ZERO: # standing still
+			audio_control.play_footsteps(false, 0.1)
 			animation_tree["parameters/conditions/isNotSprint"] = true
 			animation_tree["parameters/conditions/isNotWalk"] = true
 			animation_tree["parameters/conditions/isNotWalkB"] = true
@@ -137,6 +139,7 @@ func update_animation_tree_param():
 			animation_tree["parameters/conditions/isWalkB"] = false
 		
 		elif (direction == -1 && $body3.flip_h) || (direction == 1 && !$body3.flip_h): # movement towards mouse (forward and sprint)
+			audio_control.play_footsteps(true, 0.1)
 			animation_tree["parameters/conditions/isNotSprint"] = true
 			animation_tree["parameters/conditions/isNotWalk"] = false # walking state
 			animation_tree["parameters/conditions/isNotWalkB"] = true
@@ -146,6 +149,7 @@ func update_animation_tree_param():
 			animation_tree["parameters/conditions/isWalkB"] = false
 			
 			if accel == ACCELERATION*2:
+				audio_control.play_footsteps(true, 0.0)
 				# other states do not get edited since we do not return to facing state
 				animation_tree["parameters/conditions/isNotSprint"] = false # sprinting state		
 				animation_tree["parameters/conditions/isSprint"] = true # sprinting state
@@ -153,6 +157,7 @@ func update_animation_tree_param():
 			
 			
 		elif (direction == -1 && !$body3.flip_h) || (direction == 1 && $body3.flip_h):
+			audio_control.play_footsteps(true, 0.1)
 			animation_tree["parameters/conditions/isNotSprint"] = true
 			animation_tree["parameters/conditions/isNotWalk"] = true 
 			animation_tree["parameters/conditions/isNotWalkB"] = false # back walking state
@@ -174,6 +179,7 @@ func update_animation_tree_param():
 		animation_tree["parameters/conditions/isWalkB"] = false
 		
 		if velocity == Vector2.ZERO: # standing still
+			audio_control.play_footsteps(false, 0.1)
 			animation_tree["parameters/conditions/isNotSprintA"] = true
 			animation_tree["parameters/conditions/isNotWalkA"] = true
 			animation_tree["parameters/conditions/isNotWalkBA"] = true
@@ -183,6 +189,7 @@ func update_animation_tree_param():
 			animation_tree["parameters/conditions/isWalkBA"] = false
 		
 		elif (direction == -1 && $body3.flip_h) || (direction == 1 && !$body3.flip_h): # movement towards mouse (forward and sprint)
+			audio_control.play_footsteps(true, 0.1)
 			animation_tree["parameters/conditions/isNotSprintA"] = true
 			animation_tree["parameters/conditions/isNotWalkA"] = false # walking state
 			animation_tree["parameters/conditions/isNotWalkBA"] = true
@@ -192,6 +199,7 @@ func update_animation_tree_param():
 			animation_tree["parameters/conditions/isWalkBA"] = false
 			
 			if accel == ACCELERATION*2:
+				audio_control.play_footsteps(true, 0.0)
 				# other states do not get edited since we do not return to facing state
 				animation_tree["parameters/conditions/isNotSprintA"] = false # sprinting state		
 				animation_tree["parameters/conditions/isSprintA"] = true # sprinting state
@@ -199,6 +207,7 @@ func update_animation_tree_param():
 			
 			
 		elif (direction == -1 && !$body3.flip_h) || (direction == 1 && $body3.flip_h):
+			audio_control.play_footsteps(true, 0.1)
 			animation_tree["parameters/conditions/isNotSprintA"] = true
 			animation_tree["parameters/conditions/isNotWalkA"] = true 
 			animation_tree["parameters/conditions/isNotWalkBA"] = false # back walking state
@@ -207,10 +216,14 @@ func update_animation_tree_param():
 			animation_tree["parameters/conditions/isWalkA"] = false 
 			animation_tree["parameters/conditions/isWalkBA"] = true # back walking state
 			
-		
+	
 # Makes player ignore input for some time
 var _deafenTimer: float = 0.0;
 func deafen(time: float):
+	isClimbing = false
+	gun.isClimbing = isClimbing
+	$AnimationTree2.active = true
+	airtime += 1
 	_deafenTimer = time;
 
 
@@ -222,14 +235,14 @@ var maxHP
 
 
 func _ready():
+	randomize()
 	maxHP = HP
 	position.x = 200
 	position.y = 200
 	
-	GUN.position = Vector2(0,0)
-	GUN.world = world
-	GUN.spawner = $body3
-	GUN.visible = gunsAreGo
+	gun.world = world
+	gun.spawner = $body3
+	gun.visible = gunsAreGo
 	
 	$body3.flip_h = true
 	
@@ -237,14 +250,19 @@ func _ready():
 	
 	animation_tree.active = true
 
+	self.add_child(gun)
+
+	
 func _process(delta):
 	_deafenTimer = max(0, _deafenTimer - delta);
-	checkClimbInput()
-	if !isClimbing:
-		update_animation_tree_param()
-	else:
-		climb(delta)
-	interact()
+	
+	if _deafenTimer <= 0:
+		checkClimbInput()
+		if !isClimbing:
+			update_animation_tree_param()
+		else:
+			climb(delta)
+		interact()
 
 
 var airtime = 0
@@ -266,6 +284,17 @@ func _physics_process(delta: float) -> void:
 		else:
 			if airtime > airtimeforDMG:
 				HP -= ceil(airtime*falldmg_multiplier)
+				
+				var pain = randi_range(0,3)
+				if pain == 0:
+					$body3/AudioStreamPlayer.play()
+				if pain == 1:
+					$body3/AudioStreamPlayer2.play()
+				if pain == 2:
+					$body3/AudioStreamPlayer3.play()
+				if pain == 3:
+					$body3/AudioStreamPlayer4.play()
+				
 				print(HP)
 			airtime = 0
 
@@ -378,7 +407,6 @@ func _on_area_2d_area_entered(area: Area2D) -> void:
 
 
 
-	print(isInWeapons)
 	
 func _on_area_2d_area_exited(area: Area2D) -> void:
 	if area.name == "Weapons":
@@ -425,7 +453,7 @@ func _on_area_2d_area_exited(area: Area2D) -> void:
 	
 func interact():
 	if isInWeapons && Input.is_action_just_pressed("interact"):
-		GUN.ammunition_pool_total = 200
+		gun.ammunition_pool_total = 200
 	
 	if isInHospital && Input.is_action_just_pressed("interact"):
 		if HP < maxHP:

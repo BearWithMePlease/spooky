@@ -13,16 +13,16 @@ func _ready() -> void:
 	var shots_per_second = rpm / 60.0
 	interval = 1 / shots_per_second
 	ray_cast.enabled = true
+	
 
 
 var bulletEmpty = preload("res://scenes/bullet.tscn")
 var casingEmpty = preload("res://scenes/casing.tscn")
 var isReloading = false
 
-
+var isFailing = false
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta: float) -> void:
-	
 	if !isClimbing:
 		var direction = get_global_mouse_position() - self.global_position
 		var direction_angle = direction.angle()
@@ -60,6 +60,14 @@ func _process(delta: float) -> void:
 			
 			if ammunition > 0:
 				manageShot(direction_angle, delta)
+			elif !isReloading && Input.is_action_pressed("click") && !isFailing:
+				isFailing = true
+				$AudioStreamPlayer.play()
+				await get_tree().create_timer(0.5).timeout
+				isFailing = false
+
+
+
 		else:
 			if !isReloading:
 				self.rotation = direction_angle
@@ -101,8 +109,8 @@ func manageShot(direction_angle, delta):
 	var time_between_shot = (Time.get_ticks_msec() - last_shot_time) / 1000.0
 	ray_cast.force_raycast_update()
 	var ray_cast_collison = !ray_cast.is_colliding()
+	
 	if Input.is_action_pressed("click") && time_between_shot >= interval:
-		
 		if ray_cast_collison:
 			if time_between_shot < interval+0.1:
 				rapidShotCounter += 0.5
@@ -152,6 +160,7 @@ func shoot():
 		$AnimationPlayer.play("fire_new")
 
 	world.add_child(bullet)
+	
 	ammunition -= 1
 	
 	var casing = casingEmpty.instantiate()

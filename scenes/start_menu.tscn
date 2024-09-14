@@ -1,0 +1,31 @@
+[gd_scene load_steps=2 format=3 uid="uid://7v4330h5f84m"]
+
+[ext_resource type="PackedScene" uid="uid://dmfpfr5xhngv5" path="res://prefab/modules/corridor.tscn" id="1_kloau"]
+
+[node name="StartMenu" type="Node2D"]
+
+[node name="Modules" type="Node2D" parent="."]
+
+[node name="Corridor" parent="Modules" instance=ExtResource("1_kloau")]
+
+[node name="Borders" parent="Modules/Corridor/Sprite" index="0"]
+visible = false
+
+[node name="Lights" parent="Modules/Corridor/Sprite" index="1"]
+visible = false
+
+[node name="Interactables" parent="Modules/Corridor/Sprite" index="2"]
+visible = false
+
+[node name="Background" type="CanvasLayer" parent="."]
+layer = -1
+
+[node name="ColorRect" type="ColorRect" parent="Background"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.0431373, 0.0627451, 0.0862745, 1)
+
+[editable path="Modules/Corridor"]
