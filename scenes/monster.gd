@@ -361,8 +361,8 @@ class MonsterBT extends BehaviorTree:
 					CheckPlayerInFOVRange.new(_monsterBody, _player),
 					TaskGoToPlayer.new(_monsterBody, _navigationAgent),
 					Sequence.new([
-						#TaskGrabPlayer.new(_monsterBody, _player), # TODO: Enable this line
-						#TaskThrowPlayer.new(_monsterBody, _player) # TODO: Enable this line
+						TaskGrabPlayer.new(_monsterBody, _player), # TODO: Enable this line
+						TaskThrowPlayer.new(_monsterBody, _player) # TODO: Enable this line
 					])
 				]),
 				TaskSearchPlayer.new(_monsterBody, _navigationAgent),

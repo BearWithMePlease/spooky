@@ -1,4 +1,4 @@
-[gd_scene load_steps=66 format=3 uid="uid://bo6ew1t4jg2x6"]
+[gd_scene load_steps=79 format=3 uid="uid://bo6ew1t4jg2x6"]
 
 [ext_resource type="Script" path="res://scripts/main_scene.gd" id="1_0jyw0"]
 [ext_resource type="Script" path="res://scripts/light_control.gd" id="2_una4x"]
@@ -15,7 +15,6 @@
 [ext_resource type="FontFile" uid="uid://gosmfve4h532" path="res://imgs/PressStart2P-Regular.ttf" id="7_5wvvi"]
 [ext_resource type="AudioStream" uid="uid://be62gfc1nvc07" path="res://audio/sfx/footsteps/footsteps-2.mp3" id="7_ndd1u"]
 [ext_resource type="Script" path="res://scenes/monster.gd" id="7_r0p8v"]
-[ext_resource type="PackedScene" path="res://scenes/gun.tscn" id="7_yae1m"]
 [ext_resource type="AudioStream" uid="uid://da2qdiqee6jvq" path="res://audio/sfx/footsteps/footsteps-3.mp3" id="8_01px5"]
 [ext_resource type="AudioStream" uid="uid://oaivvndflsnd" path="res://audio/sfx/footsteps/footsteps-4.mp3" id="9_igb8x"]
 [ext_resource type="AudioStream" uid="uid://dpk8jtf88ue36" path="res://audio/sfx/footsteps/footsteps-5.mp3" id="10_nncqf"]
@@ -802,7 +801,7 @@ z_index = 2
 position = Vector2(0, 4.666)
 texture = ExtResource("6_qws5h")
 hframes = 23
-frame = 10
+frame = 9
 
 [node name="AnimationPlayer2" type="AnimationPlayer" parent="Player"]
 libraries = {

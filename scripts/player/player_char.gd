@@ -211,6 +211,9 @@ func update_animation_tree_param():
 # Makes player ignore input for some time
 var _deafenTimer: float = 0.0;
 func deafen(time: float):
+	isClimbing = false
+	gun.isClimbing = isClimbing
+	$AnimationTree2.active = true
 	_deafenTimer = time;
 
 
@@ -241,12 +244,14 @@ func _ready():
 	
 func _process(delta):
 	_deafenTimer = max(0, _deafenTimer - delta);
-	checkClimbInput()
-	if !isClimbing:
-		update_animation_tree_param()
-	else:
-		climb(delta)
-	interact()
+	
+	if _deafenTimer <= 0:
+		checkClimbInput()
+		if !isClimbing:
+			update_animation_tree_param()
+		else:
+			climb(delta)
+		interact()
 
 
 var airtime = 0
