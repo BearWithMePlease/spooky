@@ -1,8 +1,9 @@
-[gd_scene load_steps=97 format=3 uid="uid://bo6ew1t4jg2x6"]
+[gd_scene load_steps=83 format=3 uid="uid://bo6ew1t4jg2x6"]
 
 [ext_resource type="Script" path="res://scripts/main_scene.gd" id="1_0jyw0"]
 [ext_resource type="Script" path="res://scripts/light_control.gd" id="2_una4x"]
 [ext_resource type="Script" path="res://scripts/monster/monsterBody.gd" id="3_ccd75"]
+[ext_resource type="Script" path="res://scripts/player/player_char.gd" id="4_blcld"]
 [ext_resource type="AudioStream" uid="uid://d0sc8vvf4rlv0" path="res://audio/sfx/light_on.mp3" id="4_ch04v"]
 [ext_resource type="PackedScene" uid="uid://3h6eguht44i6" path="res://prefab/monster/monsterLeg.tscn" id="4_mj277"]
 [ext_resource type="Texture2D" uid="uid://843kfwxv80ts" path="res://images/player/hazmat.png" id="5_4o6dv"]
@@ -14,6 +15,7 @@
 [ext_resource type="FontFile" uid="uid://gosmfve4h532" path="res://imgs/PressStart2P-Regular.ttf" id="7_5wvvi"]
 [ext_resource type="AudioStream" uid="uid://be62gfc1nvc07" path="res://audio/sfx/footsteps/footsteps-2.mp3" id="7_ndd1u"]
 [ext_resource type="Script" path="res://scenes/monster.gd" id="7_r0p8v"]
+[ext_resource type="PackedScene" uid="uid://bdrk0gvju1eis" path="res://scenes/gun.tscn" id="7_yae1m"]
 [ext_resource type="AudioStream" uid="uid://da2qdiqee6jvq" path="res://audio/sfx/footsteps/footsteps-3.mp3" id="8_01px5"]
 [ext_resource type="AudioStream" uid="uid://oaivvndflsnd" path="res://audio/sfx/footsteps/footsteps-4.mp3" id="9_igb8x"]
 [ext_resource type="AudioStream" uid="uid://dpk8jtf88ue36" path="res://audio/sfx/footsteps/footsteps-5.mp3" id="10_nncqf"]
@@ -32,18 +34,7 @@
 [ext_resource type="AudioStream" uid="uid://0t1l64nksl6q" path="res://audio/sfx/random_noise/sound_9.mp3" id="27_2xppg"]
 [ext_resource type="AudioStream" uid="uid://dgplj62jo2m88" path="res://audio/sfx/random_noise/sound_10.mp3" id="29_256ve"]
 [ext_resource type="AudioStream" uid="uid://cihfhgsuq7wif" path="res://audio/sfx/random_noise/sound_11.mp3" id="30_22bms"]
-[ext_resource type="Script" path="res://scripts/player/player.gd" id="30_bvicb"]
-[ext_resource type="Texture2D" uid="uid://b3e3v3taxxg8v" path="res://images/gun/ak.png" id="31_8hqon"]
-[ext_resource type="Script" path="res://scripts/player/gun.gd" id="31_nqbuf"]
-[ext_resource type="Texture2D" uid="uid://cbpv8jr0o0ir" path="res://images/gun/v2/ak spray left.png" id="32_xcxjv"]
-[ext_resource type="Texture2D" uid="uid://bp0qsbbj7gfde" path="res://images/gun/v2/ak spray right.png" id="33_jp5ll"]
-[ext_resource type="Texture2D" uid="uid://ctkqk1gw3yow0" path="res://images/gun/v2/ak2 right hand.png" id="34_wfjw5"]
 [ext_resource type="Shader" path="res://scripts/aberration.gdshader" id="35_eawox"]
-[ext_resource type="Texture2D" uid="uid://cvxh2ac8ljlap" path="res://images/gun/v2/ak2 left hand.png" id="35_ltys0"]
-[ext_resource type="Script" path="res://scenes/storm.gd" id="35_ui06t"]
-[ext_resource type="Texture2D" uid="uid://b4g2q1mld7p8w" path="res://images/gun/v2/ak reload right.png" id="36_1fp4h"]
-[ext_resource type="Texture2D" uid="uid://c0efri2wx0voy" path="res://images/gun/v2/ak reload left.png" id="37_urg5e"]
-[ext_resource type="Texture2D" uid="uid://k0mcls2j0vos" path="res://images/gun/v2/flashtype2.png" id="38_15ojg"]
 
 [sub_resource type="NavigationPolygon" id="NavigationPolygon_ki8cn"]
 agent_radius = 8.0
@@ -53,500 +44,6 @@ size = Vector2(1000, 500)
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_hny0f"]
 size = Vector2(400, 200)
-
-[sub_resource type="Resource" id="Resource_l0wrd"]
-metadata/__load_path__ = "res://arms.png"
-
-[sub_resource type="Animation" id="Animation_a43th"]
-length = 0.001
-tracks/0/type = "value"
-tracks/0/imported = false
-tracks/0/enabled = true
-tracks/0/path = NodePath(".:texture")
-tracks/0/interp = 1
-tracks/0/loop_wrap = true
-tracks/0/keys = {
-"times": PackedFloat32Array(0),
-"transitions": PackedFloat32Array(1),
-"update": 1,
-"values": [SubResource("Resource_l0wrd")]
-}
-tracks/1/type = "value"
-tracks/1/imported = false
-tracks/1/enabled = true
-tracks/1/path = NodePath(".:position")
-tracks/1/interp = 1
-tracks/1/loop_wrap = true
-tracks/1/keys = {
-"times": PackedFloat32Array(0),
-"transitions": PackedFloat32Array(1),
-"update": 0,
-"values": [Vector2(0, 0)]
-}
-tracks/2/type = "value"
-tracks/2/imported = false
-tracks/2/enabled = true
-tracks/2/path = NodePath("graphix:hframes")
-tracks/2/interp = 1
-tracks/2/loop_wrap = true
-tracks/2/keys = {
-"times": PackedFloat32Array(0),
-"transitions": PackedFloat32Array(1),
-"update": 1,
-"values": [5]
-}
-tracks/3/type = "value"
-tracks/3/imported = false
-tracks/3/enabled = true
-tracks/3/path = NodePath("graphix:texture")
-tracks/3/interp = 1
-tracks/3/loop_wrap = true
-tracks/3/keys = {
-"times": PackedFloat32Array(0),
-"transitions": PackedFloat32Array(1),
-"update": 1,
-"values": [ExtResource("31_8hqon")]
-}
-tracks/4/type = "value"
-tracks/4/imported = false
-tracks/4/enabled = true
-tracks/4/path = NodePath("graphix:frame")
-tracks/4/interp = 1
-tracks/4/loop_wrap = true
-tracks/4/keys = {
-"times": PackedFloat32Array(0),
-"transitions": PackedFloat32Array(1),
-"update": 1,
-"values": [0]
-}
-tracks/5/type = "value"
-tracks/5/imported = false
-tracks/5/enabled = true
-tracks/5/path = NodePath("graphix:offset")
-tracks/5/interp = 1
-tracks/5/loop_wrap = true
-tracks/5/keys = {
-"times": PackedFloat32Array(0),
-"transitions": PackedFloat32Array(1),
-"update": 0,
-"values": [Vector2(35, 20)]
-}
-tracks/6/type = "value"
-tracks/6/imported = false
-tracks/6/enabled = true
-tracks/6/path = NodePath("graphix:position")
-tracks/6/interp = 1
-tracks/6/loop_wrap = true
-tracks/6/keys = {
-"times": PackedFloat32Array(0),
-"transitions": PackedFloat32Array(1),
-"update": 0,
-"values": [Vector2(0, 0)]
-}
-tracks/7/type = "value"
-tracks/7/imported = false
-tracks/7/enabled = true
-tracks/7/path = NodePath("graphix2:offset")
-tracks/7/interp = 1
-tracks/7/loop_wrap = true
-tracks/7/keys = {
-"times": PackedFloat32Array(0),
-"transitions": PackedFloat32Array(1),
-"update": 0,
-"values": [Vector2(35, 20)]
-}
-tracks/8/type = "value"
-tracks/8/imported = false
-tracks/8/enabled = true
-tracks/8/path = NodePath("graphix2:texture")
-tracks/8/interp = 1
-tracks/8/loop_wrap = true
-tracks/8/keys = {
-"times": PackedFloat32Array(0),
-"transitions": PackedFloat32Array(1),
-"update": 1,
-"values": [ExtResource("32_xcxjv")]
-}
-tracks/9/type = "value"
-tracks/9/imported = false
-tracks/9/enabled = true
-tracks/9/path = NodePath("graphix2:hframes")
-tracks/9/interp = 1
-tracks/9/loop_wrap = true
-tracks/9/keys = {
-"times": PackedFloat32Array(0),
-"transitions": PackedFloat32Array(1),
-"update": 1,
-"values": [5]
-}
-tracks/10/type = "value"
-tracks/10/imported = false
-tracks/10/enabled = true
-tracks/10/path = NodePath("graphix2:frame")
-tracks/10/interp = 1
-tracks/10/loop_wrap = true
-tracks/10/keys = {
-"times": PackedFloat32Array(0),
-"transitions": PackedFloat32Array(1),
-"update": 1,
-"values": [0]
-}
-tracks/11/type = "value"
-tracks/11/imported = false
-tracks/11/enabled = true
-tracks/11/path = NodePath("PointLight2D:energy")
-tracks/11/interp = 1
-tracks/11/loop_wrap = true
-tracks/11/keys = {
-"times": PackedFloat32Array(0),
-"transitions": PackedFloat32Array(1),
-"update": 0,
-"values": [0.0]
-}
-
-[sub_resource type="Animation" id="Animation_nh7c6"]
-resource_name = "fire_new"
-length = 0.14
-tracks/0/type = "value"
-tracks/0/imported = false
-tracks/0/enabled = true
-tracks/0/path = NodePath("graphix:texture")
-tracks/0/interp = 1
-tracks/0/loop_wrap = true
-tracks/0/keys = {
-"times": PackedFloat32Array(0),
-"transitions": PackedFloat32Array(1),
-"update": 1,
-"values": [ExtResource("33_jp5ll")]
-}
-tracks/1/type = "value"
-tracks/1/imported = false
-tracks/1/enabled = true
-tracks/1/path = NodePath("graphix:hframes")
-tracks/1/interp = 1
-tracks/1/loop_wrap = true
-tracks/1/keys = {
-"times": PackedFloat32Array(0),
-"transitions": PackedFloat32Array(1),
-"update": 1,
-"values": [5]
-}
-tracks/2/type = "value"
-tracks/2/imported = false
-tracks/2/enabled = true
-tracks/2/path = NodePath("graphix:offset")
-tracks/2/interp = 1
-tracks/2/loop_wrap = true
-tracks/2/keys = {
-"times": PackedFloat32Array(0),
-"transitions": PackedFloat32Array(1),
-"update": 0,
-"values": [Vector2(35, 20)]
-}
-tracks/3/type = "value"
-tracks/3/imported = false
-tracks/3/enabled = true
-tracks/3/path = NodePath("graphix:position")
-tracks/3/interp = 1
-tracks/3/loop_wrap = true
-tracks/3/keys = {
-"times": PackedFloat32Array(0),
-"transitions": PackedFloat32Array(1),
-"update": 0,
-"values": [Vector2(0, 0)]
-}
-tracks/4/type = "value"
-tracks/4/imported = false
-tracks/4/enabled = true
-tracks/4/path = NodePath("graphix:frame")
-tracks/4/interp = 1
-tracks/4/loop_wrap = true
-tracks/4/keys = {
-"times": PackedFloat32Array(0, 0.0333333, 0.0666667, 0.1, 0.133333),
-"transitions": PackedFloat32Array(1, 1, 1, 1, 1),
-"update": 1,
-"values": [0, 1, 2, 3, 4]
-}
-tracks/5/type = "value"
-tracks/5/imported = false
-tracks/5/enabled = true
-tracks/5/path = NodePath("graphix2:offset")
-tracks/5/interp = 1
-tracks/5/loop_wrap = true
-tracks/5/keys = {
-"times": PackedFloat32Array(0),
-"transitions": PackedFloat32Array(1),
-"update": 0,
-"values": [Vector2(35, 20)]
-}
-tracks/6/type = "value"
-tracks/6/imported = false
-tracks/6/enabled = true
-tracks/6/path = NodePath("graphix2:texture")
-tracks/6/interp = 1
-tracks/6/loop_wrap = true
-tracks/6/keys = {
-"times": PackedFloat32Array(0),
-"transitions": PackedFloat32Array(1),
-"update": 1,
-"values": [ExtResource("32_xcxjv")]
-}
-tracks/7/type = "value"
-tracks/7/imported = false
-tracks/7/enabled = true
-tracks/7/path = NodePath("graphix2:hframes")
-tracks/7/interp = 1
-tracks/7/loop_wrap = true
-tracks/7/keys = {
-"times": PackedFloat32Array(0),
-"transitions": PackedFloat32Array(1),
-"update": 1,
-"values": [5]
-}
-tracks/8/type = "value"
-tracks/8/imported = false
-tracks/8/enabled = true
-tracks/8/path = NodePath("graphix2:frame")
-tracks/8/interp = 1
-tracks/8/loop_wrap = true
-tracks/8/keys = {
-"times": PackedFloat32Array(0, 0.0333333, 0.0666667, 0.1, 0.133333),
-"transitions": PackedFloat32Array(1, 1, 1, 1, 1),
-"update": 1,
-"values": [0, 1, 2, 3, 4]
-}
-tracks/9/type = "value"
-tracks/9/imported = false
-tracks/9/enabled = true
-tracks/9/path = NodePath("PointLight2D:energy")
-tracks/9/interp = 1
-tracks/9/loop_wrap = true
-tracks/9/keys = {
-"times": PackedFloat32Array(0, 0.0333333, 0.0666667, 0.1, 0.133333),
-"transitions": PackedFloat32Array(1, 1, 1, 1, 1),
-"update": 0,
-"values": [0.0, 0.25, 1.5, 0.27, 0.0]
-}
-
-[sub_resource type="Animation" id="Animation_hr6wd"]
-resource_name = "fire_new_2"
-length = 0.14
-tracks/0/type = "value"
-tracks/0/imported = false
-tracks/0/enabled = true
-tracks/0/path = NodePath("graphix:texture")
-tracks/0/interp = 1
-tracks/0/loop_wrap = true
-tracks/0/keys = {
-"times": PackedFloat32Array(0),
-"transitions": PackedFloat32Array(1),
-"update": 1,
-"values": [ExtResource("34_wfjw5")]
-}
-tracks/1/type = "value"
-tracks/1/imported = false
-tracks/1/enabled = true
-tracks/1/path = NodePath("graphix:hframes")
-tracks/1/interp = 1
-tracks/1/loop_wrap = true
-tracks/1/keys = {
-"times": PackedFloat32Array(0),
-"transitions": PackedFloat32Array(1),
-"update": 1,
-"values": [5]
-}
-tracks/2/type = "value"
-tracks/2/imported = false
-tracks/2/enabled = true
-tracks/2/path = NodePath("graphix:offset")
-tracks/2/interp = 1
-tracks/2/loop_wrap = true
-tracks/2/keys = {
-"times": PackedFloat32Array(0),
-"transitions": PackedFloat32Array(1),
-"update": 0,
-"values": [Vector2(35, 20)]
-}
-tracks/3/type = "value"
-tracks/3/imported = false
-tracks/3/enabled = true
-tracks/3/path = NodePath("graphix:position")
-tracks/3/interp = 1
-tracks/3/loop_wrap = true
-tracks/3/keys = {
-"times": PackedFloat32Array(0),
-"transitions": PackedFloat32Array(1),
-"update": 0,
-"values": [Vector2(0, 0)]
-}
-tracks/4/type = "value"
-tracks/4/imported = false
-tracks/4/enabled = true
-tracks/4/path = NodePath("graphix:frame")
-tracks/4/interp = 1
-tracks/4/loop_wrap = true
-tracks/4/keys = {
-"times": PackedFloat32Array(0, 0.0333333, 0.0666667, 0.1, 0.133333),
-"transitions": PackedFloat32Array(1, 1, 1, 1, 1),
-"update": 1,
-"values": [0, 1, 2, 3, 4]
-}
-tracks/5/type = "value"
-tracks/5/imported = false
-tracks/5/enabled = true
-tracks/5/path = NodePath("graphix2:texture")
-tracks/5/interp = 1
-tracks/5/loop_wrap = true
-tracks/5/keys = {
-"times": PackedFloat32Array(0),
-"transitions": PackedFloat32Array(1),
-"update": 1,
-"values": [ExtResource("35_ltys0")]
-}
-tracks/6/type = "value"
-tracks/6/imported = false
-tracks/6/enabled = true
-tracks/6/path = NodePath("graphix2:offset")
-tracks/6/interp = 1
-tracks/6/loop_wrap = true
-tracks/6/keys = {
-"times": PackedFloat32Array(0),
-"transitions": PackedFloat32Array(1),
-"update": 0,
-"values": [Vector2(35, 20)]
-}
-tracks/7/type = "value"
-tracks/7/imported = false
-tracks/7/enabled = true
-tracks/7/path = NodePath("graphix2:hframes")
-tracks/7/interp = 1
-tracks/7/loop_wrap = true
-tracks/7/keys = {
-"times": PackedFloat32Array(0),
-"transitions": PackedFloat32Array(1),
-"update": 1,
-"values": [5]
-}
-tracks/8/type = "value"
-tracks/8/imported = false
-tracks/8/enabled = true
-tracks/8/path = NodePath("graphix2:frame")
-tracks/8/interp = 1
-tracks/8/loop_wrap = true
-tracks/8/keys = {
-"times": PackedFloat32Array(0, 0.0333333, 0.0666667, 0.1, 0.133333),
-"transitions": PackedFloat32Array(1, 1, 1, 1, 1),
-"update": 1,
-"values": [0, 1, 2, 3, 4]
-}
-tracks/9/type = "value"
-tracks/9/imported = false
-tracks/9/enabled = true
-tracks/9/path = NodePath("PointLight2D:energy")
-tracks/9/interp = 1
-tracks/9/loop_wrap = true
-tracks/9/keys = {
-"times": PackedFloat32Array(0, 0.0333333, 0.0667, 0.1),
-"transitions": PackedFloat32Array(1, 1, 1, 1),
-"update": 0,
-"values": [0.0, 0.25, 1.5, 0.25]
-}
-
-[sub_resource type="Animation" id="Animation_xhtob"]
-resource_name = "reload_new"
-length = 2.5
-tracks/0/type = "value"
-tracks/0/imported = false
-tracks/0/enabled = true
-tracks/0/path = NodePath("graphix:texture")
-tracks/0/interp = 1
-tracks/0/loop_wrap = true
-tracks/0/keys = {
-"times": PackedFloat32Array(0),
-"transitions": PackedFloat32Array(1),
-"update": 1,
-"values": [ExtResource("36_1fp4h")]
-}
-tracks/1/type = "value"
-tracks/1/imported = false
-tracks/1/enabled = true
-tracks/1/path = NodePath("graphix:offset")
-tracks/1/interp = 1
-tracks/1/loop_wrap = true
-tracks/1/keys = {
-"times": PackedFloat32Array(0),
-"transitions": PackedFloat32Array(1),
-"update": 0,
-"values": [Vector2(35, 20)]
-}
-tracks/2/type = "value"
-tracks/2/imported = false
-tracks/2/enabled = true
-tracks/2/path = NodePath("graphix:hframes")
-tracks/2/interp = 1
-tracks/2/loop_wrap = true
-tracks/2/keys = {
-"times": PackedFloat32Array(0),
-"transitions": PackedFloat32Array(1),
-"update": 1,
-"values": [12]
-}
-tracks/3/type = "value"
-tracks/3/imported = false
-tracks/3/enabled = true
-tracks/3/path = NodePath("graphix:frame")
-tracks/3/interp = 1
-tracks/3/loop_wrap = true
-tracks/3/keys = {
-"times": PackedFloat32Array(0, 0.0333333, 0.0666667, 0.1, 0.133333, 0.2, 0.3, 0.333333, 0.366667, 0.4, 0.433333, 0.466667, 2, 2.03333, 2.06666, 2.1, 2.13333, 2.2, 2.3, 2.33333, 2.36666, 2.4, 2.43333, 2.46667),
-"transitions": PackedFloat32Array(1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1),
-"update": 1,
-"values": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 11, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1, 0]
-}
-tracks/4/type = "value"
-tracks/4/imported = false
-tracks/4/enabled = true
-tracks/4/path = NodePath("graphix2:texture")
-tracks/4/interp = 1
-tracks/4/loop_wrap = true
-tracks/4/keys = {
-"times": PackedFloat32Array(0),
-"transitions": PackedFloat32Array(1),
-"update": 1,
-"values": [ExtResource("37_urg5e")]
-}
-tracks/5/type = "value"
-tracks/5/imported = false
-tracks/5/enabled = true
-tracks/5/path = NodePath("graphix2:hframes")
-tracks/5/interp = 1
-tracks/5/loop_wrap = true
-tracks/5/keys = {
-"times": PackedFloat32Array(0),
-"transitions": PackedFloat32Array(1),
-"update": 1,
-"values": [12]
-}
-tracks/6/type = "value"
-tracks/6/imported = false
-tracks/6/enabled = true
-tracks/6/path = NodePath("graphix2:frame")
-tracks/6/interp = 1
-tracks/6/loop_wrap = true
-tracks/6/keys = {
-"times": PackedFloat32Array(0, 0.0333333, 0.0666667, 0.1, 0.133333, 0.2, 0.3, 0.333333, 0.366667, 0.4, 0.433333, 0.466667, 2, 2.03333, 2.06666, 2.1, 2.13333, 2.2, 2.3, 2.33333, 2.36667, 2.4, 2.43333, 2.46667),
-"transitions": PackedFloat32Array(1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1),
-"update": 1,
-"values": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 11, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1, 0]
-}
-
-[sub_resource type="AnimationLibrary" id="AnimationLibrary_nmn3a"]
-_data = {
-"RESET": SubResource("Animation_a43th"),
-"fire_new": SubResource("Animation_nh7c6"),
-"fire_new_2": SubResource("Animation_hr6wd"),
-"reload_new": SubResource("Animation_xhtob")
-}
 
 [sub_resource type="Gradient" id="Gradient_6josf"]
 interpolation_mode = 2
@@ -1187,6 +684,55 @@ height = 28.0
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_kee38"]
 shader = ExtResource("35_eawox")
 
+[sub_resource type="GDScript" id="GDScript_24ehv"]
+script/source = "extends Node2D
+#class_name Storm
+
+const IRL_SECONDS_TO_INGAME_HOURS := 1.0 / 2.0;
+@export var timeDisplay: Label = null;
+var _time: DateTime;
+var _currentAberration := 0.0;
+const ABERRATION_TRANSITION := 0.5;
+
+class DateTime:
+	var irlSeconds: float; # irl seconds
+	
+	func _init(startTime: float = 0.0) -> void:
+		irlSeconds = startTime;
+		
+	func getInGameHours() -> float:
+		return irlSeconds * IRL_SECONDS_TO_INGAME_HOURS;
+		
+	func getDay() -> int:
+		return int(getInGameHours() / 24.0);
+		
+	func getHours() -> int:
+		return int(getInGameHours()) % 24
+	
+	func getMinutes() -> int:
+		var gameHours := getInGameHours();
+		return int((gameHours - getHours() - getDay() * 24.0) * 60.0);
+
+func _ready() -> void:
+	_time = DateTime.new(36.0 / IRL_SECONDS_TO_INGAME_HOURS);
+	
+func isStorm() -> bool:
+	return _time.getHours() < 12;
+
+func _process(delta: float) -> void:
+	_time.irlSeconds += delta;
+	timeDisplay.add_theme_color_override(\"font_color\", Color(\"562923\") if isStorm() else Color(\"3b6d62\"));
+	timeDisplay.text = \"Day \" + str(_time.getDay()) + \": \";
+	timeDisplay.text += (\"0\" if _time.getHours() < 10 else \"\") + str(_time.getHours()) + \":\";
+	timeDisplay.text += (\"0\" if _time.getMinutes() < 10 else \"\") + str(_time.getMinutes());
+
+	var targetAberration := (1.0 if isStorm() else 0.0);
+	_currentAberration = lerp(_currentAberration, targetAberration, ABERRATION_TRANSITION * delta);
+	RenderingServer.global_shader_parameter_set(\"aberrationStrength\", _currentAberration);
+	
+	
+"
+
 [node name="MainScene" type="Node2D" node_paths=PackedStringArray("monster")]
 script = ExtResource("1_0jyw0")
 monster = NodePath("Monster")
@@ -1226,6 +772,7 @@ storm = NodePath("../Storm")
 z_index = 1
 y_sort_enabled = true
 script = ExtResource("3_ccd75")
+legRadius = 6.0
 monsterLegScene = ExtResource("4_mj277")
 monsterFaceScene = ExtResource("5_p2plt")
 particles = NodePath("CPUParticles2D")
@@ -1268,50 +815,13 @@ debug_color = Color(0, 0.6, 0.701961, 0)
 position = Vector2(0, -2)
 collision_layer = 2
 collision_mask = 3
-script = ExtResource("30_bvicb")
+script = ExtResource("4_blcld")
 MAX_SPEED = 100
 ACCELERATION = 300
-JUMP_VELOCITY = -120.0
-GRAVITY = 500.0
 GUN = NodePath("gun")
 
-[node name="gun" type="Sprite2D" parent="Player" node_paths=PackedStringArray("monster")]
-scale = Vector2(0.3, 0.3)
-offset = Vector2(35, 20)
-hframes = 5
-script = ExtResource("31_nqbuf")
+[node name="gun" parent="Player" node_paths=PackedStringArray("monster") instance=ExtResource("7_yae1m")]
 monster = NodePath("../../Monster")
-
-[node name="graphix" type="Sprite2D" parent="Player/gun"]
-z_index = 3
-texture = ExtResource("31_8hqon")
-offset = Vector2(35, 20)
-hframes = 5
-
-[node name="graphix2" type="Sprite2D" parent="Player/gun"]
-z_index = 1
-texture = ExtResource("32_xcxjv")
-offset = Vector2(35, 20)
-hframes = 5
-
-[node name="AnimationPlayer" type="AnimationPlayer" parent="Player/gun"]
-libraries = {
-"": SubResource("AnimationLibrary_nmn3a")
-}
-
-[node name="RayCast2D" type="RayCast2D" parent="Player/gun"]
-target_position = Vector2(70, 0)
-collision_mask = 524288
-collide_with_areas = true
-
-[node name="PointLight2D" type="PointLight2D" parent="Player/gun"]
-position = Vector2(66.667, -1.333)
-scale = Vector2(1.3, 1.13)
-color = Color(1, 0.596078, 0.309804, 1)
-energy = 0.0
-shadow_enabled = true
-shadow_item_cull_mask = 3073
-texture = ExtResource("38_15ojg")
 
 [node name="Aura" type="PointLight2D" parent="Player"]
 energy = 0.3
@@ -1416,7 +926,7 @@ grow_horizontal = 2
 grow_vertical = 2
 
 [node name="Storm" type="Node2D" parent="." node_paths=PackedStringArray("timeDisplay")]
-script = ExtResource("35_ui06t")
+script = SubResource("GDScript_24ehv")
 timeDisplay = NodePath("../GUI/Timer")
 
 [connection signal="finished_ready" from="." to="Light_Control" method="on_main_finished_ready"]

@@ -16,7 +16,7 @@ func _ready() -> void:
 	var spawn_point = get_tree().get_first_node_in_group("spawn_point") as Node2D
 	if spawn_point != null:
 		player.global_position = spawn_point.global_position
-		monster.global_position = spawn_point.global_position
+		#monster.global_position = spawn_point.global_position
 		
 	# Calculate boundries of bunker to bake navigation polygons
 	var boundries := _getAllModuleBoundingBoxes()

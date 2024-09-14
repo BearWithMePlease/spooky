@@ -5,7 +5,7 @@ class_name MonsterBody
 # Inspired by The Rain World https://youtu.be/sVntwsrjNe4
 @export var facesCount: int = 4
 @export var legsCount: int = 16
-@export var legRadius: float = 30.0
+@export var legRadius: float = 8.0
 @export var monsterLegScene: PackedScene = null
 @export var monsterFaceScene: PackedScene = null
 @export var particles: CPUParticles2D = null
@@ -22,6 +22,10 @@ const WALL_COLLISION_MASK = 0b01
 var _moveDirection: Vector2 = Vector2.ZERO
 var _grabPlayer := false;
 var _health: int = 100;
+
+func resetLegs() -> void:
+	for leg in _legs:
+		leg._isInited = false;
 
 func move(direction: Vector2) -> void:
 	_moveDirection = direction;
