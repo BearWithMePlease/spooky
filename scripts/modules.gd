@@ -226,6 +226,8 @@ func mouse_gui_status(mouse_over_gui:bool):
 	if self.mouse_over_gui == mouse_over_gui:
 		return
 	
+	adjust_surroundings(grid_position, mouse_over_gui)
+	
 	self.mouse_over_gui = mouse_over_gui
 	self.force_update = true
 	mover.visible = not mouse_over_gui
@@ -261,6 +263,12 @@ func move_to_cursor(delta: float):
 		animation_weight = 0
 
 func on_module_type_select(type: ModuleType, new_position = null):
+	if moving:
+		# Deselect module. Increase placable count
+		var module_button = module_buttons.get(self.type) as ModuleButton
+		if module_button != null:
+			module_button.add_to_placeable_count(+1)
+	
 	self.type = type
 	moving = true
 	
