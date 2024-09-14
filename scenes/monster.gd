@@ -397,6 +397,7 @@ func _draw() -> void:
 	pass
 	
 func takeDamage() -> void:
+	print("hit on monster")
 	monsterBody.setHealth(max(0, monsterBody.getHealth() - DAMAGE));
 
 func _on_modules_bake_finished() -> void:

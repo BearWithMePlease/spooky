@@ -4,9 +4,9 @@ class_name Player
 @export var MAX_SPEED := 300
 @export var ACCELERATION := 1500
 @export var FRICITON := 1200
-@export var JUMP_VELOCITY := -200.0
+@export var JUMP_VELOCITY := -100.0
 @export var GRAVITY := 98.0
-@export var GUN: Gun = null
+#@export var GUN: Gun = null
 @onready var axis = Vector2.ZERO
 @export var HP = 100
 @export var falldmg_multiplier = 10
@@ -102,14 +102,14 @@ func checkClimbInput():
 func checkGun():
 	if Input.is_action_just_pressed("equip gun") && !weaponswitchCooldown && !gun.isReloading && !gunsAreGo && !isClimbing: # worthless, no jump
 		gunsAreGo = true
-		GUN.visible = gunsAreGo
+		gun.visible = gunsAreGo
 		weaponswitchCooldown = true
 		await get_tree().create_timer(weaponswitchCooltime).timeout
 		weaponswitchCooldown = false
 
 	if Input.is_action_just_pressed("equip hands") && !weaponswitchCooldown && !gun.isReloading && gunsAreGo && !isClimbing:
 		gunsAreGo = false
-		GUN.visible = gunsAreGo
+		gun.visible = gunsAreGo
 		weaponswitchCooldown = true
 		await get_tree().create_timer(weaponswitchCooltime).timeout
 		weaponswitchCooldown = false
@@ -226,10 +226,9 @@ func _ready():
 	position.x = 200
 	position.y = 200
 	
-	GUN.position = Vector2(0,0)
-	GUN.world = world
-	GUN.spawner = $body3
-	GUN.visible = gunsAreGo
+	gun.world = world
+	gun.spawner = $body3
+	gun.visible = gunsAreGo
 	
 	$body3.flip_h = true
 	
@@ -237,6 +236,9 @@ func _ready():
 	
 	animation_tree.active = true
 
+	self.add_child(gun)
+
+	
 func _process(delta):
 	_deafenTimer = max(0, _deafenTimer - delta);
 	checkClimbInput()
@@ -378,7 +380,6 @@ func _on_area_2d_area_entered(area: Area2D) -> void:
 
 
 
-	print(isInWeapons)
 	
 func _on_area_2d_area_exited(area: Area2D) -> void:
 	if area.name == "Weapons":
@@ -425,7 +426,7 @@ func _on_area_2d_area_exited(area: Area2D) -> void:
 	
 func interact():
 	if isInWeapons && Input.is_action_just_pressed("interact"):
-		GUN.ammunition_pool_total = 200
+		gun.ammunition_pool_total = 200
 	
 	if isInHospital && Input.is_action_just_pressed("interact"):
 		if HP < maxHP:

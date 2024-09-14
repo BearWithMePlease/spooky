@@ -13,6 +13,7 @@ func _ready() -> void:
 	var shots_per_second = rpm / 60.0
 	interval = 1 / shots_per_second
 	ray_cast.enabled = true
+	
 
 
 var bulletEmpty = preload("res://scenes/bullet.tscn")
@@ -22,7 +23,7 @@ var isReloading = false
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta: float) -> void:
-	
+
 	if !isClimbing:
 		var direction = get_global_mouse_position() - self.global_position
 		var direction_angle = direction.angle()

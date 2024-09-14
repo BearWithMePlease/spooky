@@ -37,13 +37,12 @@ func _process(delta: float) -> void:
 				hit.rotation = rotation
 				get_parent().add_child(hit)
 			elif body is MonsterFace:
-				print("hello")
+				body.get_parent().get_parent().takeDamage()
 				var hit = hitBloodEmpty.instantiate()
 				hit.position = ray_cast.get_collision_point()
 				hit.rotation = rotation
 				get_parent().add_child(hit)
-				if _gun != null:
-					_gun.damageMonster();
+				
 		
 			queue_free()
 		else:
