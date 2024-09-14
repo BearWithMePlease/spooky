@@ -11,6 +11,7 @@ class_name Player
 @export var HP = 100
 @export var falldmg_multiplier = 10
 
+@onready var audio_control :=  $"../Audio_Control"
 
 var accel
 var speedcap
@@ -128,6 +129,7 @@ func update_animation_tree_param():
 		animation_tree["parameters/conditions/isWalkBA"] = false
 
 		if velocity == Vector2.ZERO: # standing still
+			audio_control.play_footsteps(false, 0.1)
 			animation_tree["parameters/conditions/isNotSprint"] = true
 			animation_tree["parameters/conditions/isNotWalk"] = true
 			animation_tree["parameters/conditions/isNotWalkB"] = true
@@ -137,6 +139,7 @@ func update_animation_tree_param():
 			animation_tree["parameters/conditions/isWalkB"] = false
 		
 		elif (direction == -1 && $body3.flip_h) || (direction == 1 && !$body3.flip_h): # movement towards mouse (forward and sprint)
+			audio_control.play_footsteps(true, 0.1)
 			animation_tree["parameters/conditions/isNotSprint"] = true
 			animation_tree["parameters/conditions/isNotWalk"] = false # walking state
 			animation_tree["parameters/conditions/isNotWalkB"] = true
@@ -146,6 +149,7 @@ func update_animation_tree_param():
 			animation_tree["parameters/conditions/isWalkB"] = false
 			
 			if accel == ACCELERATION*2:
+				audio_control.play_footsteps(true, 0.0)
 				# other states do not get edited since we do not return to facing state
 				animation_tree["parameters/conditions/isNotSprint"] = false # sprinting state		
 				animation_tree["parameters/conditions/isSprint"] = true # sprinting state
@@ -153,6 +157,7 @@ func update_animation_tree_param():
 			
 			
 		elif (direction == -1 && !$body3.flip_h) || (direction == 1 && $body3.flip_h):
+			audio_control.play_footsteps(true, 0.1)
 			animation_tree["parameters/conditions/isNotSprint"] = true
 			animation_tree["parameters/conditions/isNotWalk"] = true 
 			animation_tree["parameters/conditions/isNotWalkB"] = false # back walking state
@@ -174,6 +179,7 @@ func update_animation_tree_param():
 		animation_tree["parameters/conditions/isWalkB"] = false
 		
 		if velocity == Vector2.ZERO: # standing still
+			audio_control.play_footsteps(false, 0.1)
 			animation_tree["parameters/conditions/isNotSprintA"] = true
 			animation_tree["parameters/conditions/isNotWalkA"] = true
 			animation_tree["parameters/conditions/isNotWalkBA"] = true
@@ -183,6 +189,7 @@ func update_animation_tree_param():
 			animation_tree["parameters/conditions/isWalkBA"] = false
 		
 		elif (direction == -1 && $body3.flip_h) || (direction == 1 && !$body3.flip_h): # movement towards mouse (forward and sprint)
+			audio_control.play_footsteps(true, 0.1)
 			animation_tree["parameters/conditions/isNotSprintA"] = true
 			animation_tree["parameters/conditions/isNotWalkA"] = false # walking state
 			animation_tree["parameters/conditions/isNotWalkBA"] = true
@@ -192,6 +199,7 @@ func update_animation_tree_param():
 			animation_tree["parameters/conditions/isWalkBA"] = false
 			
 			if accel == ACCELERATION*2:
+				audio_control.play_footsteps(true, 0.0)
 				# other states do not get edited since we do not return to facing state
 				animation_tree["parameters/conditions/isNotSprintA"] = false # sprinting state		
 				animation_tree["parameters/conditions/isSprintA"] = true # sprinting state
@@ -199,6 +207,7 @@ func update_animation_tree_param():
 			
 			
 		elif (direction == -1 && !$body3.flip_h) || (direction == 1 && $body3.flip_h):
+			audio_control.play_footsteps(true, 0.1)
 			animation_tree["parameters/conditions/isNotSprintA"] = true
 			animation_tree["parameters/conditions/isNotWalkA"] = true 
 			animation_tree["parameters/conditions/isNotWalkBA"] = false # back walking state
@@ -207,7 +216,7 @@ func update_animation_tree_param():
 			animation_tree["parameters/conditions/isWalkA"] = false 
 			animation_tree["parameters/conditions/isWalkBA"] = true # back walking state
 			
-		
+	
 # Makes player ignore input for some time
 var _deafenTimer: float = 0.0;
 func deafen(time: float):

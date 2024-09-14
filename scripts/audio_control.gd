@@ -1,4 +1,5 @@
 extends Node
+class_name AudioControl
 
 @onready var light_control := $"../Light_Control"
 
