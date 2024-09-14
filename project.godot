@@ -53,6 +53,7 @@ sound_effects=""
 sound_water=""
 sound_generator=""
 sound_communication=""
+sound_ceiling_light=""
 
 [input]
 
