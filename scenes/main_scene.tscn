@@ -6,7 +6,6 @@
 [ext_resource type="Texture2D" uid="uid://843kfwxv80ts" path="res://images/player/hazmat.png" id="5_4o6dv"]
 [ext_resource type="Texture2D" uid="uid://bahc3spqbwwxl" path="res://images/player/hazmat_with_hands.png" id="6_qws5h"]
 [ext_resource type="FontFile" uid="uid://gosmfve4h532" path="res://imgs/PressStart2P-Regular.ttf" id="7_5wvvi"]
-[ext_resource type="PackedScene" path="res://scenes/gun.tscn" id="7_yae1m"]
 [ext_resource type="PackedScene" uid="uid://betx6m81e680d" path="res://prefab/monster/monster.tscn" id="7_yfrkd"]
 
 [sub_resource type="NavigationPolygon" id="NavigationPolygon_ki8cn"]
@@ -25,8 +24,8 @@ fill = 1
 fill_from = Vector2(0.5, 0.5)
 
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_byxxa"]
-radius = 1.66667
-height = 10.0
+radius = 4.0
+height = 32.0
 
 [sub_resource type="Animation" id="Animation_utkx4"]
 length = 0.001
@@ -119,7 +118,6 @@ tracks/2/path = NodePath("body3:position")
 tracks/2/interp = 1
 tracks/2/loop_wrap = true
 tracks/2/keys = {
-"times": PackedFloat32Array(0),
 "times": PackedFloat32Array(0),
 "transitions": PackedFloat32Array(1),
 "update": 0,
@@ -643,7 +641,7 @@ states/walk/position = Vector2(498, 52.4445)
 states/walk_b/node = SubResource("AnimationNodeAnimation_nhh5h")
 states/walk_b/position = Vector2(535.333, 258.667)
 transitions = ["facing", "walk", SubResource("AnimationNodeStateMachineTransition_xy5a8"), "walk", "sprint", SubResource("AnimationNodeStateMachineTransition_ls6v0"), "facing", "walk_b", SubResource("AnimationNodeStateMachineTransition_wrb8h"), "walk_b", "facing", SubResource("AnimationNodeStateMachineTransition_u8oec"), "walk", "facing", SubResource("AnimationNodeStateMachineTransition_snn0d"), "sprint", "walk", SubResource("AnimationNodeStateMachineTransition_1s6tq"), "Start", "a_facing_2", SubResource("AnimationNodeStateMachineTransition_a3l4m"), "a_facing_2", "a_walk_2", SubResource("AnimationNodeStateMachineTransition_o0hev"), "a_facing_2", "a_walk_b", SubResource("AnimationNodeStateMachineTransition_k06ch"), "a_walk_2", "a_facing_2", SubResource("AnimationNodeStateMachineTransition_ctg4l"), "a_walk_2", "a_sprint_2", SubResource("AnimationNodeStateMachineTransition_xbyde"), "a_sprint_2", "a_walk_2", SubResource("AnimationNodeStateMachineTransition_dekcx"), "a_walk_b", "a_facing_2", SubResource("AnimationNodeStateMachineTransition_3iy75"), "a_facing_2", "a_climbing_2", SubResource("AnimationNodeStateMachineTransition_ykfro"), "a_climbing_2", "a_facing_2", SubResource("AnimationNodeStateMachineTransition_iycsj"), "a_facing_2", "facing", SubResource("AnimationNodeStateMachineTransition_pf3ul"), "facing", "a_facing_2", SubResource("AnimationNodeStateMachineTransition_a0lv3")]
-graph_offset = Vector2(-270, 463)
+graph_offset = Vector2(-251, 356)
 
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_fcb8y"]
 radius = 4.0
@@ -665,12 +663,11 @@ navigation_polygon = SubResource("NavigationPolygon_ki8cn")
 [node name="Monster" parent="." instance=ExtResource("7_yfrkd")]
 position = Vector2(0, 0)
 
-[node name="Player" type="CharacterBody2D" parent="." node_paths=PackedStringArray("GUN")]
+[node name="Player" type="CharacterBody2D" parent="."]
 position = Vector2(0, -2)
 script = ExtResource("4_blcld")
 MAX_SPEED = 100
 ACCELERATION = 300
-GUN = NodePath("GunParent/gun")
 
 [node name="Aura" type="PointLight2D" parent="Player"]
 energy = 0.3
@@ -694,17 +691,16 @@ grow_horizontal = 2
 grow_vertical = 2
 color = Color(0, 0, 0, 1)
 
-
 [node name="CollisionShape2D3" type="CollisionShape2D" parent="Player"]
 position = Vector2(0, 6)
 shape = SubResource("CapsuleShape2D_byxxa")
 
 [node name="body3" type="Sprite2D" parent="Player"]
 z_index = 2
-position = Vector2(-1, 4.666)
+position = Vector2(0.333, 4.666)
 texture = ExtResource("6_qws5h")
 hframes = 23
-frame = 15
+frame = 18
 
 [node name="AnimationPlayer2" type="AnimationPlayer" parent="Player"]
 libraries = {
@@ -736,6 +732,7 @@ collision_layer = 4194304
 collision_mask = 4194304
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Player/Area2D"]
+visible = false
 position = Vector2(0, 6)
 shape = SubResource("CapsuleShape2D_fcb8y")
 

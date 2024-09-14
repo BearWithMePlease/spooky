@@ -4,7 +4,7 @@ class_name Player
 @export var MAX_SPEED = 300
 @export var ACCELERATION = 1500
 @export var FRICITON = 1200
-@export var GUN: Gun = null
+#@export var GUN: Gun = null
 @onready var axis = Vector2.ZERO
 
 const JUMP_VELOCITY = -200.0
@@ -276,7 +276,7 @@ func _ready():
 	gun.visible = gunsAreGo
 	
 	$body3.flip_h = true
-	#self.add_child(gun)
+	self.add_child(gun)
 	
 	# flip_v of gun true == left, false == right
 	
