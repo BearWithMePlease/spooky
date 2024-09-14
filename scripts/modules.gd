@@ -132,6 +132,8 @@ func _ready() -> void:
 	grid_position = GRID_SIZE * entry_position
 	on_build_module()
 	check_finished_building(0.01)
+	$"../../AudioStreamPlayer".stream.loop = true
+	$"../../AudioStreamPlayer".play()
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta: float) -> void:
@@ -360,6 +362,9 @@ func adjust_surroundings(pos: Vector2, removing = false, read_only = false) -> i
 
 	return mover_direction
 
+
+var firstBuilding = true
+
 func on_build_module():
 	# Instantiate module prefab
 	var node = Globals.module_prefabs[type].instantiate() as Module
@@ -386,6 +391,10 @@ func on_build_module():
 		# Grab second corridor and move it to lower grid spot
 		on_module_type_select(ModuleType.CORRIDOR)
 		mover.position.y += 2 * GRID_SIZE
+	
+	if !firstBuilding:
+		$"../../AudioStreamPlayer2".play()
+	firstBuilding = false
 
 func on_undo_build_module(grab_item:bool):
 	# Instantiate module prefab
@@ -432,6 +441,7 @@ func on_undo_build_module(grab_item:bool):
 	
 	check_all_connected()
 	force_update = true
+	$"../../AudioStreamPlayer3".play()
 
 func check_all_connected():
 	# Set all grid nodes to not connected

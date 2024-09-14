@@ -1,10 +1,13 @@
-[gd_scene load_steps=13 format=3 uid="uid://dmkhp5el2xbu7"]
+[gd_scene load_steps=16 format=3 uid="uid://dmkhp5el2xbu7"]
 
 [ext_resource type="Script" path="res://scripts/modules.gd" id="1_oercy"]
 [ext_resource type="Script" path="res://scripts/builder_camera.gd" id="1_omeyi"]
 [ext_resource type="PackedScene" uid="uid://c8k2daifrhtu" path="res://prefab/modules/default.tscn" id="2_6atq6"]
 [ext_resource type="FontFile" uid="uid://gosmfve4h532" path="res://imgs/PressStart2P-Regular.ttf" id="3_m2d0g"]
 [ext_resource type="Texture2D" uid="uid://fs5tafk47xm0" path="res://imgs/enter_bunker_button.png" id="3_xxcws"]
+[ext_resource type="AudioStream" uid="uid://conod1y0c6u5o" path="res://audio/sfx/bgm/epic-drums-216819.mp3" id="6_s2b5s"]
+[ext_resource type="AudioStream" uid="uid://cq0aoj3eo5ihp" path="res://audio/sfx/place-100513.mp3" id="7_olffh"]
+[ext_resource type="AudioStream" uid="uid://cqujveclb2mxe" path="res://audio/sfx/place-100513 unplace.mp3" id="8_5yx7n"]
 
 [sub_resource type="Gradient" id="Gradient_w1qyx"]
 offsets = PackedFloat32Array(0.442257)
@@ -118,6 +121,17 @@ color_invalid_spot = Color(0.866667, 0.2, 0.2, 0.933333)
 color_hover_spot = Color(0.862745, 0.862745, 0.862745, 1)
 color_invalid_hover_spot = Color(0.69963, 0.13647, 0.142437, 1)
 animation_duration = 0.1
+
+[node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("6_s2b5s")
+volume_db = -33.103
+bus = &"Music"
+
+[node name="AudioStreamPlayer2" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("7_olffh")
+
+[node name="AudioStreamPlayer3" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("8_5yx7n")
 
 [connection signal="pressed" from="GUI/Confirm_Button" to="GUI/Modules" method="on_confirm_build"]
 [connection signal="mouse_entered" from="GUI/Modules" to="GUI/Modules" method="mouse_gui_status" binds= [true]]
