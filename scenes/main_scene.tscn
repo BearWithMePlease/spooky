@@ -1,4 +1,4 @@
-[gd_scene load_steps=87 format=3 uid="uid://bo6ew1t4jg2x6"]
+[gd_scene load_steps=88 format=3 uid="uid://bo6ew1t4jg2x6"]
 
 [ext_resource type="Script" path="res://scripts/main_scene.gd" id="1_0jyw0"]
 [ext_resource type="Script" path="res://scripts/light_control.gd" id="2_una4x"]
@@ -39,6 +39,7 @@
 [ext_resource type="AudioStream" uid="uid://cihfhgsuq7wif" path="res://audio/sfx/random_noise/sound_11.mp3" id="30_22bms"]
 [ext_resource type="AudioStream" uid="uid://br38s62ld0s8p" path="res://audio/sfx/screaming/scream1.wav" id="36_5chg8"]
 [ext_resource type="AudioStream" uid="uid://bm45xq2ktdury" path="res://audio/sfx/screaming/scream2.wav" id="37_8gsgm"]
+[ext_resource type="Script" path="res://scripts/ingame_menus.gd" id="38_ptr41"]
 [ext_resource type="AudioStream" uid="uid://bxn117kypjhnw" path="res://audio/sfx/screaming/scream3.wav" id="38_tu37q"]
 [ext_resource type="AudioStream" uid="uid://mptvaa6xl0w" path="res://audio/sfx/screaming/my ears are bleeding.wav" id="39_homny"]
 
@@ -814,7 +815,7 @@ z_index = 2
 position = Vector2(0, 4.666)
 texture = ExtResource("6_qws5h")
 hframes = 23
-frame = 9
+frame = 10
 
 [node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="Player/body3"]
 stream = ExtResource("36_5chg8")
@@ -876,8 +877,249 @@ scale = Vector2(0.5, 0.5)
 theme_override_fonts/font = ExtResource("7_5wvvi")
 text = "press E to interact"
 
+[node name="GUI" type="CanvasLayer" parent="."]
+layer = 99
+
+[node name="Menus" type="Control" parent="GUI"]
+process_mode = 3
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("38_ptr41")
+
+[node name="Pause" type="Control" parent="GUI/Menus"]
+visible = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Background" type="ColorRect" parent="GUI/Menus/Pause"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0, 0, 0, 0.588235)
+
+[node name="RichTextLabel" type="RichTextLabel" parent="GUI/Menus/Pause"]
+layout_mode = 1
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -276.0
+offset_top = 100.0
+offset_right = 277.0
+offset_bottom = 146.0
+grow_horizontal = 2
+theme_override_fonts/normal_font = ExtResource("7_5wvvi")
+theme_override_font_sizes/normal_font_size = 30
+bbcode_enabled = true
+text = "[center][color=ccc]STATUS: [color=888]PAUSED"
+
+[node name="VolumeSlider" type="HSlider" parent="GUI/Menus/Pause"]
+layout_mode = 1
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -225.0
+offset_top = 300.0
+offset_right = 225.0
+offset_bottom = 350.0
+grow_horizontal = 2
+mouse_default_cursor_shape = 2
+value = 50.0
+
+[node name="Label" type="Label" parent="GUI/Menus/Pause/VolumeSlider"]
+layout_mode = 0
+offset_top = -15.0
+offset_right = 126.0
+offset_bottom = 8.0
+theme_override_fonts/font = ExtResource("7_5wvvi")
+theme_override_font_sizes/font_size = 18
+text = "Volume:"
+
+[node name="ResumeButton" type="Button" parent="GUI/Menus/Pause"]
+layout_mode = 1
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -225.0
+offset_top = 400.0
+offset_right = 225.0
+offset_bottom = 450.0
+grow_horizontal = 2
+mouse_default_cursor_shape = 2
+theme_override_fonts/font = ExtResource("7_5wvvi")
+text = "Resume"
+
+[node name="QuitToMenuButton" type="Button" parent="GUI/Menus/Pause"]
+layout_mode = 1
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -225.0
+offset_top = 475.0
+offset_right = 225.0
+offset_bottom = 525.0
+grow_horizontal = 2
+mouse_default_cursor_shape = 2
+theme_override_fonts/font = ExtResource("7_5wvvi")
+text = "Quit to Menu"
+
+[node name="Victory" type="Control" parent="GUI/Menus"]
+visible = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Background" type="ColorRect" parent="GUI/Menus/Victory"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0, 0, 0, 0.588235)
+
+[node name="RichTextLabel" type="RichTextLabel" parent="GUI/Menus/Victory"]
+layout_mode = 1
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -276.0
+offset_top = 100.0
+offset_right = 277.0
+offset_bottom = 146.0
+grow_horizontal = 2
+theme_override_fonts/normal_font = ExtResource("7_5wvvi")
+theme_override_font_sizes/normal_font_size = 30
+bbcode_enabled = true
+text = "[center][color=ccc]STATUS: [color=32ac32]SURVIVED"
+
+[node name="VolumeSlider" type="HSlider" parent="GUI/Menus/Victory"]
+layout_mode = 1
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -225.0
+offset_top = 300.0
+offset_right = 225.0
+offset_bottom = 350.0
+grow_horizontal = 2
+mouse_default_cursor_shape = 2
+value = 50.0
+
+[node name="Label" type="Label" parent="GUI/Menus/Victory/VolumeSlider"]
+layout_mode = 0
+offset_top = -15.0
+offset_right = 126.0
+offset_bottom = 8.0
+theme_override_fonts/font = ExtResource("7_5wvvi")
+theme_override_font_sizes/font_size = 18
+text = "Volume:"
+
+[node name="QuitToMenuButton" type="Button" parent="GUI/Menus/Victory"]
+layout_mode = 1
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -225.0
+offset_top = 400.0
+offset_right = 225.0
+offset_bottom = 450.0
+grow_horizontal = 2
+mouse_default_cursor_shape = 2
+theme_override_fonts/font = ExtResource("7_5wvvi")
+text = "Back to Menu"
+
+[node name="Defeat" type="Control" parent="GUI/Menus"]
+visible = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Background" type="ColorRect" parent="GUI/Menus/Defeat"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0, 0, 0, 0.588235)
+
+[node name="RichTextLabel" type="RichTextLabel" parent="GUI/Menus/Defeat"]
+layout_mode = 1
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -276.0
+offset_top = 100.0
+offset_right = 277.0
+offset_bottom = 146.0
+grow_horizontal = 2
+theme_override_fonts/normal_font = ExtResource("7_5wvvi")
+theme_override_font_sizes/normal_font_size = 30
+bbcode_enabled = true
+text = "[center][color=ccc]STATUS: [color=ac3232]YOU DIED"
+
+[node name="VolumeSlider" type="HSlider" parent="GUI/Menus/Defeat"]
+layout_mode = 1
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -225.0
+offset_top = 300.0
+offset_right = 225.0
+offset_bottom = 350.0
+grow_horizontal = 2
+mouse_default_cursor_shape = 2
+value = 50.0
+
+[node name="Label" type="Label" parent="GUI/Menus/Defeat/VolumeSlider"]
+layout_mode = 0
+offset_top = -15.0
+offset_right = 126.0
+offset_bottom = 8.0
+theme_override_fonts/font = ExtResource("7_5wvvi")
+theme_override_font_sizes/font_size = 18
+text = "Volume:"
+
+[node name="QuitToMenuButton" type="Button" parent="GUI/Menus/Defeat"]
+layout_mode = 1
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -225.0
+offset_top = 400.0
+offset_right = 225.0
+offset_bottom = 450.0
+grow_horizontal = 2
+mouse_default_cursor_shape = 2
+theme_override_fonts/font = ExtResource("7_5wvvi")
+text = "Back to Menu"
+
 [connection signal="finished_ready" from="." to="Light_Control" method="on_main_finished_ready"]
 [connection signal="finished_ready" from="." to="Audio_Control" method="on_main_finished_ready"]
 [connection signal="bake_finished" from="Modules" to="Monster" method="_on_modules_bake_finished"]
 [connection signal="area_entered" from="Player/Collision" to="Player" method="_on_area_2d_area_entered"]
 [connection signal="area_exited" from="Player/Collision" to="Player" method="_on_area_2d_area_exited"]
+[connection signal="value_changed" from="GUI/Menus/Pause/VolumeSlider" to="Audio_Control" method="_on_volume_slider_value_changed"]
+[connection signal="pressed" from="GUI/Menus/Pause/ResumeButton" to="GUI/Menus" method="_on_resume_button_pressed"]
+[connection signal="pressed" from="GUI/Menus/Pause/QuitToMenuButton" to="GUI/Menus" method="_on_quit_to_menu_button_pressed"]
+[connection signal="value_changed" from="GUI/Menus/Victory/VolumeSlider" to="Audio_Control" method="_on_volume_slider_value_changed"]
+[connection signal="pressed" from="GUI/Menus/Victory/QuitToMenuButton" to="GUI/Menus" method="_on_quit_to_menu_button_pressed"]
+[connection signal="value_changed" from="GUI/Menus/Defeat/VolumeSlider" to="Audio_Control" method="_on_volume_slider_value_changed"]
+[connection signal="pressed" from="GUI/Menus/Defeat/QuitToMenuButton" to="GUI/Menus" method="_on_quit_to_menu_button_pressed"]

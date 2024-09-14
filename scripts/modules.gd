@@ -493,7 +493,7 @@ func check_finished_building(timing:float = 0.5):
 	#if can_finish == self.confirm_build_button.disabled:
 		#return
 	
-	self.confirm_build_button.disabled = false # TODO: replace to can_finish
+	self.confirm_build_button.disabled = false #can_finish # TODO: replace to can_finish
 
 	var new_position: Vector2
 	if self.confirm_build_button.disabled:
@@ -501,7 +501,7 @@ func check_finished_building(timing:float = 0.5):
 		new_position = Vector2(self.confirm_build_button.position.x, -self.confirm_build_button.size.y) # Move outside screen
 	else:
 		# Can build bunker
-		new_position = Vector2(self.confirm_build_button.position.x, 0)
+		new_position = Vector2(self.confirm_build_button.position.x, 10)
 	
 	var tween = get_tree().create_tween()
 	tween.tween_property(self.confirm_build_button, "position", new_position, timing).set_trans(Tween.TRANS_LINEAR)

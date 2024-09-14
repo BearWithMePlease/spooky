@@ -68,9 +68,10 @@ func _footstep_loop(audiostream: AudioStreamMP3):
 	if not self.is_playing_footsteps:
 		return
 	
-	foot_steps.stream = audiostream
-	foot_steps.pitch_scale = randf_range(0.7, 0.8)
-	foot_steps.play()
+	if not self.get_tree().paused:
+		foot_steps.stream = audiostream
+		foot_steps.pitch_scale = randf_range(0.7, 0.8)
+		foot_steps.play()
 	
 	await get_tree().create_timer(delay_between_steps + audiostream.get_length()).timeout
 	_footstep_loop(sound_foot_steps.pick_random())
@@ -99,9 +100,10 @@ func _play_random_sound(audiostream: AudioStreamMP3):
 	else:
 		random_sounds.volume_db = sound_random_volume
 	
-	random_sounds.stream = audiostream
-	random_sounds.pitch_scale = randf_range(0.7, 0.8)
-	random_sounds.play()
+	if not self.get_tree().paused:
+		random_sounds.stream = audiostream
+		random_sounds.pitch_scale = randf_range(0.7, 0.8)
+		random_sounds.play()
 	
 	await get_tree().create_timer(delay_random + audiostream.get_length()).timeout
 	
@@ -122,7 +124,13 @@ func _play_shoot_sound(id: int):
 	if self.shooting_id != id:
 		return
 	
-	gun_shot_sounds.play()
+	if not self.get_tree().paused:
+		gun_shot_sounds.play()
 	
 	await get_tree().create_timer(gun_shot_sounds.stream.get_length()).timeout
 	_play_shoot_sound(id)
+
+
+func _on_volume_slider_value_changed(value: float) -> void:
+	var id = AudioServer.get_bus_index("Master")
+	AudioServer.set_bus_volume_db(id, linear_to_db(value))
