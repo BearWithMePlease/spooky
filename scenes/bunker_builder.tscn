@@ -28,6 +28,8 @@ texture = SubResource("GradientTexture1D_a51lf")
 unique_name_in_owner = true
 z_index = -1
 
+[node name="AudioStreamPlayer2D" type="AudioStreamPlayer2D" parent="Building_Space"]
+
 [node name="GUI" type="CanvasLayer" parent="."]
 
 [node name="Confirm_Button" type="Button" parent="GUI"]

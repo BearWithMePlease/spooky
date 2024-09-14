@@ -22,6 +22,8 @@ var vertical_ceiling_left: CollisionPolygon2D
 var vertical_ceiling_right: CollisionPolygon2D
 var vertical_floor_left: CollisionPolygon2D
 var vertical_floor_right: CollisionPolygon2D
+var ladder_up: CollisionShape2D
+var ladder_down: CollisionShape2D
 
 func _ready() -> void:
 	# Useful for debugging:
@@ -72,6 +74,8 @@ func fetch_nodes():
 		self.vertical_ceiling_right = get_node_or_null(^"Sprite/Borders/Vertical_Ceiling_Right")
 		self.vertical_floor_left = get_node_or_null(^"Sprite/Borders/Vertical_Floor_Left")
 		self.vertical_floor_right = get_node_or_null(^"Sprite/Borders/Vertical_Floor_Right")
+		self.ladder_down = get_node_or_null(^"Sprite/Interactables/Ladder/Down")
+		self.ladder_up = get_node_or_null(^"Sprite/Interactables/Ladder/Up")
 
 func set_direction(direction: Modules.ModuleDirection, vertical_direction: Modules.ModuleVerticalDirection = Modules.ModuleVerticalDirection.N):
 	self.direction = direction
@@ -98,6 +102,8 @@ func handle_doors():
 			self.ceiling_light.visible = true
 			self.vertical_connection_left.disabled = true
 			self.vertical_connection_right.disabled = true
+			self.ladder_down.disabled = true
+			self.ladder_up.disabled = true
 	else:
 		# Handle vertical corridor direction
 		self.ceiling_light.visible = false
@@ -114,6 +120,9 @@ func handle_doors():
 		
 		self.vertical_floor_left.disabled = vertical_direction & Modules.ModuleVerticalDirection.D == 0
 		self.vertical_floor_right.disabled = self.vertical_floor_left.disabled
+	
+		self.ladder_down.disabled = vertical_direction & Modules.ModuleVerticalDirection.D == 0
+		self.ladder_up.disabled = vertical_direction & Modules.ModuleVerticalDirection.U == 0
 	
 	# Set Light occulsions
 	self.connection_left.visible = not self.connection_left.disabled

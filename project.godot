@@ -47,6 +47,7 @@ interact_hospital=""
 generator_light=""
 hospital_light=""
 water_light=""
+ladder=""
 
 [input]
 
