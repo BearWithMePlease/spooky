@@ -29,6 +29,8 @@ centered = false
 
 [node name="Borders" type="StaticBody2D" parent="Sprite"]
 position = Vector2(128, 64)
+collision_layer = 8912897
+collision_mask = 8912897
 
 [node name="Ceiling" type="CollisionPolygon2D" parent="Sprite/Borders"]
 polygon = PackedVector2Array(-128, 13, -123, 13, -123, -22, -5, -22, -5, 13, 0, 13, 0, -27, -128, -27)
@@ -69,6 +71,8 @@ position = Vector2(92, 81)
 
 [node name="Weapons" type="Area2D" parent="Sprite/Interactables" groups=["interact_weapons"]]
 position = Vector2(83, 108)
+collision_layer = 4194304
+collision_mask = 4194304
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Sprite/Interactables/Weapons"]
 position = Vector2(-9.5, -3.5)

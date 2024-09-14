@@ -42,3 +42,8 @@ func _getAllModuleBoundingBoxes() -> Array[Rect2]:
 		var boundry := Rect2(module.global_position.x - Modules.GRID_SIZE * 0.5, module.global_position.y + Modules.GRID_SIZE * 0.5 - height, width, height)
 		boundsArr.append(boundry)
 	return boundsArr
+
+
+
+	
+	pass # Replace with function body.

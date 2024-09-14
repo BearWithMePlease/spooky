@@ -1,9 +1,10 @@
-[gd_scene load_steps=49 format=3 uid="uid://bo6ew1t4jg2x6"]
+[gd_scene load_steps=51 format=3 uid="uid://bo6ew1t4jg2x6"]
 
 [ext_resource type="Script" path="res://scripts/main_scene.gd" id="1_0jyw0"]
 [ext_resource type="Script" path="res://scripts/player/player_char.gd" id="4_blcld"]
 [ext_resource type="Texture2D" uid="uid://843kfwxv80ts" path="res://images/player/hazmat.png" id="5_4o6dv"]
 [ext_resource type="Texture2D" uid="uid://bahc3spqbwwxl" path="res://images/player/hazmat_with_hands.png" id="6_qws5h"]
+[ext_resource type="FontFile" uid="uid://gosmfve4h532" path="res://imgs/PressStart2P-Regular.ttf" id="7_5wvvi"]
 [ext_resource type="PackedScene" uid="uid://betx6m81e680d" path="res://prefab/monster/monster.tscn" id="7_yfrkd"]
 [ext_resource type="Script" path="res://scripts/builder_camera.gd" id="8_m2gle"]
 
@@ -617,7 +618,7 @@ advance_condition = &"isNotGun"
 states/End/position = Vector2(1135.33, 192)
 states/Start/position = Vector2(6, 343.333)
 states/a_climbing_2/node = SubResource("AnimationNodeAnimation_kwyag")
-states/a_climbing_2/position = Vector2(174.667, 798)
+states/a_climbing_2/position = Vector2(102.667, 752.666)
 states/a_facing_2/node = SubResource("AnimationNodeAnimation_v4210")
 states/a_facing_2/position = Vector2(297, 588.667)
 states/a_sprint_2/node = SubResource("AnimationNodeAnimation_vl4yd")
@@ -635,7 +636,11 @@ states/walk/position = Vector2(498, 52.4445)
 states/walk_b/node = SubResource("AnimationNodeAnimation_nhh5h")
 states/walk_b/position = Vector2(535.333, 258.667)
 transitions = ["facing", "walk", SubResource("AnimationNodeStateMachineTransition_xy5a8"), "walk", "sprint", SubResource("AnimationNodeStateMachineTransition_ls6v0"), "facing", "walk_b", SubResource("AnimationNodeStateMachineTransition_wrb8h"), "walk_b", "facing", SubResource("AnimationNodeStateMachineTransition_u8oec"), "walk", "facing", SubResource("AnimationNodeStateMachineTransition_snn0d"), "sprint", "walk", SubResource("AnimationNodeStateMachineTransition_1s6tq"), "Start", "a_facing_2", SubResource("AnimationNodeStateMachineTransition_a3l4m"), "a_facing_2", "a_walk_2", SubResource("AnimationNodeStateMachineTransition_o0hev"), "a_facing_2", "a_walk_b", SubResource("AnimationNodeStateMachineTransition_k06ch"), "a_walk_2", "a_facing_2", SubResource("AnimationNodeStateMachineTransition_ctg4l"), "a_walk_2", "a_sprint_2", SubResource("AnimationNodeStateMachineTransition_xbyde"), "a_sprint_2", "a_walk_2", SubResource("AnimationNodeStateMachineTransition_dekcx"), "a_walk_b", "a_facing_2", SubResource("AnimationNodeStateMachineTransition_3iy75"), "a_facing_2", "a_climbing_2", SubResource("AnimationNodeStateMachineTransition_ykfro"), "a_climbing_2", "a_facing_2", SubResource("AnimationNodeStateMachineTransition_iycsj"), "a_facing_2", "facing", SubResource("AnimationNodeStateMachineTransition_pf3ul"), "facing", "a_facing_2", SubResource("AnimationNodeStateMachineTransition_a0lv3")]
-graph_offset = Vector2(-205, 301)
+graph_offset = Vector2(-270, 463)
+
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_fcb8y"]
+radius = 4.0
+height = 28.0
 
 [node name="MainScene" type="Node2D"]
 script = ExtResource("1_0jyw0")
@@ -667,10 +672,11 @@ position = Vector2(0, 6)
 shape = SubResource("CapsuleShape2D_byxxa")
 
 [node name="body3" type="Sprite2D" parent="Player"]
-position = Vector2(0.333, 4.666)
-texture = ExtResource("5_4o6dv")
-hframes = 21
-frame = 20
+z_index = 2
+position = Vector2(-1, 4.666)
+texture = ExtResource("6_qws5h")
+hframes = 23
+frame = 15
 
 [node name="AnimationPlayer2" type="AnimationPlayer" parent="Player"]
 libraries = {
@@ -681,7 +687,7 @@ libraries = {
 tree_root = SubResource("AnimationNodeStateMachine_hdbtr")
 anim_player = NodePath("../AnimationPlayer2")
 parameters/conditions/isClimbA = false
-parameters/conditions/isGun = true
+parameters/conditions/isGun = false
 parameters/conditions/isNotClimbA = false
 parameters/conditions/isNotGun = false
 parameters/conditions/isNotSprint = false
@@ -697,4 +703,24 @@ parameters/conditions/isWalkA = false
 parameters/conditions/isWalkB = false
 parameters/conditions/isWalkBA = false
 
+[node name="Area2D" type="Area2D" parent="Player"]
+collision_layer = 4194304
+collision_mask = 4194304
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Player/Area2D"]
+position = Vector2(0, 6)
+shape = SubResource("CapsuleShape2D_fcb8y")
+
+[node name="Label" type="Label" parent="Player"]
+visible = false
+offset_left = -75.0
+offset_top = -25.0
+offset_right = 229.0
+offset_bottom = -2.0
+scale = Vector2(0.5, 0.5)
+theme_override_fonts/font = ExtResource("7_5wvvi")
+text = "press E to interact"
+
 [connection signal="bake_finished" from="Modules" to="Monster" method="_on_modules_bake_finished"]
+[connection signal="area_entered" from="Player/Area2D" to="Player" method="_on_area_2d_area_entered"]
+[connection signal="area_exited" from="Player/Area2D" to="Player" method="_on_area_2d_area_exited"]

@@ -7,7 +7,7 @@ extends CharacterBody2D
 
 @onready var axis = Vector2.ZERO
 
-const JUMP_VELOCITY = -400.0
+const JUMP_VELOCITY = -200.0
 
 var accel
 var speedcap
@@ -26,11 +26,68 @@ var attemptInventory = false
 var inInventory = false
 var gunsAreGo = false
 
+var isClimbing = false
+
+func climb():
+	
+	# detect zone
+	animation_tree["parameters/conditions/isClimbA"] = true
+	animation_tree["parameters/conditions/isNotClimbA"] = false
+	
+	animation_tree["parameters/conditions/isGun"] = false
+	animation_tree["parameters/conditions/isNotGun"] = true
+	animation_tree["parameters/conditions/isNotSprintA"] = true
+	animation_tree["parameters/conditions/isNotWalkA"] = true
+	animation_tree["parameters/conditions/isNotWalkBA"] = true
+	
+	animation_tree["parameters/conditions/isSprintA"] = false
+	animation_tree["parameters/conditions/isWalkA"] = false
+	animation_tree["parameters/conditions/isWalkBA"] = false
+	
+	
+	#move y disable gravity
+	
+	#next key input loop this shit might need to set a climb down animation
+	
+	
+	pass
+
+
+var weaponswitchCooldown = false
+@export var weaponswitchCooltime = 1 # in seconds
+
+
+
+
+
+
+func checkGun():
+	if Input.is_action_just_pressed("equip gun") && !weaponswitchCooldown && !gun.isReloading && !gunsAreGo: # worthless, no jump
+		gunsAreGo = true
+		gun.visible = gunsAreGo
+		weaponswitchCooldown = true
+		await get_tree().create_timer(weaponswitchCooltime).timeout
+		weaponswitchCooldown = false
+
+	if Input.is_action_just_pressed("equip hands") && !weaponswitchCooldown && !gun.isReloading && gunsAreGo:
+		gunsAreGo = false
+		gun.visible = gunsAreGo
+		weaponswitchCooldown = true
+		await get_tree().create_timer(weaponswitchCooltime).timeout
+		weaponswitchCooldown = false
+
 func update_animation_tree_param():
 	
 	if gunsAreGo:
 		animation_tree["parameters/conditions/isGun"] = true
 		animation_tree["parameters/conditions/isNotGun"] = false
+		animation_tree["parameters/conditions/isNotSprintA"] = true
+		animation_tree["parameters/conditions/isNotWalkA"] = true
+		animation_tree["parameters/conditions/isNotWalkBA"] = true
+		
+		animation_tree["parameters/conditions/isSprintA"] = false
+		animation_tree["parameters/conditions/isWalkA"] = false
+		animation_tree["parameters/conditions/isWalkBA"] = false
 
 		if velocity == Vector2.ZERO: # standing still
 			animation_tree["parameters/conditions/isNotSprint"] = true
@@ -70,6 +127,13 @@ func update_animation_tree_param():
 		
 		animation_tree["parameters/conditions/isGun"] = false
 		animation_tree["parameters/conditions/isNotGun"] = true
+		animation_tree["parameters/conditions/isNotSprint"] = true
+		animation_tree["parameters/conditions/isNotWalk"] = true
+		animation_tree["parameters/conditions/isNotWalkB"] = true
+		
+		animation_tree["parameters/conditions/isSprint"] = false
+		animation_tree["parameters/conditions/isWalk"] = false
+		animation_tree["parameters/conditions/isWalkB"] = false
 		
 		if velocity == Vector2.ZERO: # standing still
 			animation_tree["parameters/conditions/isNotSprintA"] = true
@@ -227,11 +291,14 @@ func _ready():
 
 func _process(delta):
 	update_animation_tree_param()
+	interact()
 
 
 
 func _physics_process(delta: float) -> void:
 	if !inInventory: # no movement in inventory
+		checkGun()
+		
 		accel = ACCELERATION
 		speedcap = MAX_SPEED
 		# Add the gravity.
@@ -271,3 +338,34 @@ func _physics_process(delta: float) -> void:
 				velocity.x = move_toward(velocity.x, 0, delta*1000)
 		
 		move_and_slide()
+
+
+
+
+var isInWeapons = false
+func _on_area_2d_area_entered(area: Area2D) -> void:
+	print(area)
+	if area.name == "Weapons":
+		isInWeapons = true
+		$Label.show()
+	else:
+		isInWeapons = false
+		$Label.hide()
+
+
+	print(isInWeapons)
+	
+func _on_area_2d_area_exited(area: Area2D) -> void:
+	if area.name == "Weapons":
+		isInWeapons = false
+		$Label.hide()
+	
+	
+	
+	
+	
+func interact():
+	if isInWeapons && Input.is_action_just_pressed("interact"):
+		gun.ammunition_pool_total = 200
+	
+		
