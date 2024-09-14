@@ -1,4 +1,4 @@
-[gd_scene load_steps=15 format=3 uid="uid://bdrk0gvju1eis"]
+[gd_scene load_steps=16 format=3 uid="uid://bdrk0gvju1eis"]
 
 [ext_resource type="Script" path="res://scripts/player/gun.gd" id="2_frt21"]
 [ext_resource type="Texture2D" uid="uid://cbpv8jr0o0ir" path="res://images/gun/v2/ak spray left.png" id="3_i037m"]
@@ -8,6 +8,7 @@
 [ext_resource type="Texture2D" uid="uid://cvxh2ac8ljlap" path="res://images/gun/v2/ak2 left hand.png" id="6_sxexb"]
 [ext_resource type="Texture2D" uid="uid://b4g2q1mld7p8w" path="res://images/gun/v2/ak reload right.png" id="7_5vlo0"]
 [ext_resource type="Texture2D" uid="uid://c0efri2wx0voy" path="res://images/gun/v2/ak reload left.png" id="8_lbyxh"]
+[ext_resource type="Texture2D" uid="uid://k0mcls2j0vos" path="res://images/gun/v2/flashtype2.png" id="9_kfree"]
 
 [sub_resource type="Resource" id="Resource_l0wrd"]
 metadata/__load_path__ = "res://arms.png"
@@ -146,6 +147,18 @@ tracks/10/keys = {
 "update": 1,
 "values": [0]
 }
+tracks/11/type = "value"
+tracks/11/imported = false
+tracks/11/enabled = true
+tracks/11/path = NodePath("PointLight2D:energy")
+tracks/11/interp = 1
+tracks/11/loop_wrap = true
+tracks/11/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [0.0]
+}
 
 [sub_resource type="Animation" id="Animation_nh7c6"]
 resource_name = "fire_new"
@@ -258,6 +271,18 @@ tracks/8/keys = {
 "update": 1,
 "values": [0, 1, 2, 3, 4]
 }
+tracks/9/type = "value"
+tracks/9/imported = false
+tracks/9/enabled = true
+tracks/9/path = NodePath("PointLight2D:energy")
+tracks/9/interp = 1
+tracks/9/loop_wrap = true
+tracks/9/keys = {
+"times": PackedFloat32Array(0, 0.0333333, 0.0666667, 0.1, 0.133333),
+"transitions": PackedFloat32Array(1, 1, 1, 1, 1),
+"update": 0,
+"values": [0.0, 0.25, 1.5, 0.27, 0.0]
+}
 
 [sub_resource type="Animation" id="Animation_hr6wd"]
 resource_name = "fire_new_2"
@@ -369,6 +394,18 @@ tracks/8/keys = {
 "transitions": PackedFloat32Array(1, 1, 1, 1, 1),
 "update": 1,
 "values": [0, 1, 2, 3, 4]
+}
+tracks/9/type = "value"
+tracks/9/imported = false
+tracks/9/enabled = true
+tracks/9/path = NodePath("PointLight2D:energy")
+tracks/9/interp = 1
+tracks/9/loop_wrap = true
+tracks/9/keys = {
+"times": PackedFloat32Array(0, 0.0333333, 0.0667, 0.1),
+"transitions": PackedFloat32Array(1, 1, 1, 1),
+"update": 0,
+"values": [0.0, 0.25, 1.5, 0.25]
 }
 
 [sub_resource type="Animation" id="Animation_xhtob"]
@@ -494,3 +531,12 @@ libraries = {
 target_position = Vector2(70, 0)
 collision_mask = 524288
 collide_with_areas = true
+
+[node name="PointLight2D" type="PointLight2D" parent="."]
+position = Vector2(66.667, -1.333)
+scale = Vector2(1.3, 1.13)
+color = Color(1, 0.596078, 0.309804, 1)
+energy = 0.0
+shadow_enabled = true
+shadow_item_cull_mask = 3073
+texture = ExtResource("9_kfree")

@@ -39,7 +39,7 @@ func _process(delta: float) -> void:
 			elif body is MonsterFace:
 				print("hello")
 				var hit = hitBloodEmpty.instantiate()
-				hit.position = position
+				hit.position = ray_cast.get_collision_point()
 				hit.rotation = rotation
 				get_parent().add_child(hit)
 				if _gun != null:

@@ -44,6 +44,8 @@ centered = false
 
 [node name="Borders" type="StaticBody2D" parent="Sprite"]
 position = Vector2(128, 64)
+collision_layer = 8912897
+collision_mask = 8912897
 
 [node name="Ceiling" type="CollisionPolygon2D" parent="Sprite/Borders"]
 polygon = PackedVector2Array(-128, 13, -128, -26, 128, -26, 128, 13, 124, 13, 124, -22, -123, -22, -123, 13)
@@ -92,9 +94,13 @@ texture = SubResource("GradientTexture2D_mamyw")
 
 [node name="Vent" parent="Sprite/Interactables" instance=ExtResource("5_nnwbo")]
 position = Vector2(210, 112)
+collision_layer = 4194304
+collision_mask = 4194304
 
 [node name="Generator" type="Area2D" parent="Sprite/Interactables" groups=["interact_generator"]]
 position = Vector2(107, 107)
+collision_layer = 4194304
+collision_mask = 4194304
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Sprite/Interactables/Generator"]
 position = Vector2(2, -6)

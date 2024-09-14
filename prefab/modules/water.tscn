@@ -44,6 +44,8 @@ centered = false
 
 [node name="Borders" type="StaticBody2D" parent="Sprite"]
 position = Vector2(128, 64)
+collision_layer = 8912897
+collision_mask = 8912897
 
 [node name="Ceiling" type="CollisionPolygon2D" parent="Sprite/Borders"]
 polygon = PackedVector2Array(-128, 13, -123, 13, -123, -22, 59, -22, 59, 13, 64, 13, 64, -26, -128, -26)
@@ -102,6 +104,8 @@ texture = SubResource("GradientTexture2D_fp0cu")
 
 [node name="Water" type="Area2D" parent="Sprite/Interactables" groups=["interact_water"]]
 position = Vector2(132, 98)
+collision_layer = 4194304
+collision_mask = 4194304
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Sprite/Interactables/Water"]
 position = Vector2(-20, 5)

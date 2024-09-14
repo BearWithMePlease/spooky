@@ -65,8 +65,9 @@ length = 0.001
 
 [sub_resource type="Animation" id="Animation_m56v4"]
 resource_name = "a_climbing_2"
-length = 0.5
-step = 0.15
+length = 0.45
+loop_mode = 1
+step = 0.01
 tracks/0/type = "value"
 tracks/0/imported = false
 tracks/0/enabled = true
@@ -674,7 +675,7 @@ states/walk/position = Vector2(498, 52.4445)
 states/walk_b/node = SubResource("AnimationNodeAnimation_nhh5h")
 states/walk_b/position = Vector2(535.333, 258.667)
 transitions = ["facing", "walk", SubResource("AnimationNodeStateMachineTransition_xy5a8"), "walk", "sprint", SubResource("AnimationNodeStateMachineTransition_ls6v0"), "facing", "walk_b", SubResource("AnimationNodeStateMachineTransition_wrb8h"), "walk_b", "facing", SubResource("AnimationNodeStateMachineTransition_u8oec"), "walk", "facing", SubResource("AnimationNodeStateMachineTransition_snn0d"), "sprint", "walk", SubResource("AnimationNodeStateMachineTransition_1s6tq"), "Start", "a_facing_2", SubResource("AnimationNodeStateMachineTransition_a3l4m"), "a_facing_2", "a_walk_2", SubResource("AnimationNodeStateMachineTransition_o0hev"), "a_facing_2", "a_walk_b", SubResource("AnimationNodeStateMachineTransition_k06ch"), "a_walk_2", "a_facing_2", SubResource("AnimationNodeStateMachineTransition_ctg4l"), "a_walk_2", "a_sprint_2", SubResource("AnimationNodeStateMachineTransition_xbyde"), "a_sprint_2", "a_walk_2", SubResource("AnimationNodeStateMachineTransition_dekcx"), "a_walk_b", "a_facing_2", SubResource("AnimationNodeStateMachineTransition_3iy75"), "a_facing_2", "a_climbing_2", SubResource("AnimationNodeStateMachineTransition_ykfro"), "a_climbing_2", "a_facing_2", SubResource("AnimationNodeStateMachineTransition_iycsj"), "a_facing_2", "facing", SubResource("AnimationNodeStateMachineTransition_pf3ul"), "facing", "a_facing_2", SubResource("AnimationNodeStateMachineTransition_a0lv3")]
-graph_offset = Vector2(-251, 356)
+graph_offset = Vector2(-256, 295)
 
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_fcb8y"]
 radius = 4.0
@@ -795,7 +796,7 @@ grow_vertical = 2
 color = Color(0, 0, 0, 1)
 
 [node name="CollisionShape2D3" type="CollisionShape2D" parent="Player"]
-position = Vector2(0, 6)
+position = Vector2(0, 7)
 shape = SubResource("CapsuleShape2D_byxxa")
 
 [node name="body3" type="Sprite2D" parent="Player"]
@@ -834,8 +835,7 @@ parameters/conditions/isWalkBA = false
 collision_layer = 4194304
 collision_mask = 4194304
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Player/Collision"]
-visible = false
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Player/Area2D"]
 position = Vector2(0, 6)
 shape = SubResource("CapsuleShape2D_fcb8y")
 

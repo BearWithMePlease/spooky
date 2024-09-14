@@ -81,8 +81,6 @@ animations = [{
 }]
 
 [node name="hitblood" type="AnimatedSprite2D"]
-scale = Vector2(2, 2)
+scale = Vector2(0.5, 0.5)
 sprite_frames = SubResource("SpriteFrames_1qhu8")
 autoplay = "default"
-frame_progress = 0.135176
-offset = Vector2(-10, 0)

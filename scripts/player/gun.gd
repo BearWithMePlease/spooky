@@ -5,7 +5,7 @@ class_name Gun
 
 var spawner
 var world
-
+var isClimbing = false
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
@@ -23,65 +23,66 @@ var isReloading = false
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta: float) -> void:
 	
-	var direction = get_global_mouse_position() - self.global_position
-	var direction_angle = direction.angle()
-	
-	if visible && !isReloading:		
-		if !Input.is_action_pressed("click") || ammunition == 0:
-			self.rotation = direction_angle
+	if !isClimbing:
+		var direction = get_global_mouse_position() - self.global_position
+		var direction_angle = direction.angle()
 		
-		
-		if Input.is_action_pressed("reload") && isReloading == false && ammunition_pool_total > 0:
-			isReloading = true
+		if visible && !isReloading:		
+			if !Input.is_action_pressed("click") || ammunition == 0:
+				self.rotation = direction_angle
 			
-			if rotation > 0.5*PI || rotation < -0.5*PI : # can do easein
-				rotation = PI
-			else	:
-				rotation = 0
+			
+			if Input.is_action_pressed("reload") && isReloading == false && ammunition_pool_total > 0:
+				isReloading = true
+				
+				if rotation > 0.5*PI || rotation < -0.5*PI : # can do easein
+					rotation = PI
+				else	:
+					rotation = 0
+
+				
+				$AnimationPlayer.play("reload_new")
+				
+				if ammunition_pool_total >= 30 : 
+					ammunition_pool_total -= 30
+					ammunition = 30
+				else:
+					ammunition = ammunition_pool_total
+					ammunition_pool_total = 0
+				
+				await get_tree().create_timer(2.5).timeout
+				isReloading = false
+				return
+
 
 			
-			$AnimationPlayer.play("reload_new")
 			
-			if ammunition_pool_total >= 30 : 
-				ammunition_pool_total -= 30
-				ammunition = 30
-			else:
-				ammunition = ammunition_pool_total
-				ammunition_pool_total = 0
 			
-			await get_tree().create_timer(2.5).timeout
-			isReloading = false
-			return
+			if ammunition > 0:
+				manageShot(direction_angle, delta)
+		else:
+			if !isReloading:
+				self.rotation = direction_angle
 
-
+		if rotation > PI:
+			rotation -= 2*PI
 		
-		
-		
-		if ammunition > 0:
-			manageShot(direction_angle, delta)
-	else:
-		if !isReloading:
-			self.rotation = direction_angle
-
-	if rotation > PI:
-		rotation -= 2*PI
-	
-	if rotation < -PI:
-		rotation += 2*PI	
-		#print(rotation)
-	if rotation > 0.5*PI || rotation < -0.5*PI :
-		#flip_v = true
-		
-		if(scale.y > 0):
-			scale.y *= -1
-		spawner.flip_h = true
-	else:
-		
-		if(scale.y < 0):
-			scale.y *= -1
-		
-		#flip_v = false
-		spawner.flip_h = false
+		if rotation < -PI:
+			rotation += 2*PI	
+			#print(rotation)
+		if rotation > 0.5*PI || rotation < -0.5*PI :
+			#flip_v = true
+			
+			if(scale.y > 0):
+				scale.y *= -1
+			spawner.flip_h = true
+		else:
+			
+			if(scale.y < 0):
+				scale.y *= -1
+			
+			#flip_v = false
+			spawner.flip_h = false
 
 	
 	

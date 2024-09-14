@@ -33,6 +33,7 @@ animations = [{
 }]
 
 [node name="hit" type="AnimatedSprite2D"]
+scale = Vector2(0.6, 0.6)
 sprite_frames = SubResource("SpriteFrames_18fch")
 autoplay = "default"
 frame = 2
