@@ -33,3 +33,4 @@ func switch_scene(from_scene: SceneType, to_scene: SceneType, addidtional = null
 			builder_modules.append(module)
 	
 	get_tree().change_scene_to_packed(packed_scenes[to_scene])
+	self.get_tree().paused = false
