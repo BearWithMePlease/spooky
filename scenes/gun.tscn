@@ -1,15 +1,17 @@
-[gd_scene load_steps=17 format=3 uid="uid://cvxn7m4bhe5mo"]
+[gd_scene load_steps=19 format=3 uid="uid://cvxn7m4bhe5mo"]
 
 [ext_resource type="Script" path="res://scripts/player/gun.gd" id="2_frt21"]
 [ext_resource type="Texture2D" uid="uid://cbpv8jr0o0ir" path="res://images/gun/v2/ak spray left.png" id="3_i037m"]
-[ext_resource type="AudioStream" uid="uid://c5nau1045ak6b" path="res://audio/sfx/gun_shoot.mp3" id="4_phd08"]
 [ext_resource type="Texture2D" uid="uid://bp0qsbbj7gfde" path="res://images/gun/v2/ak spray right.png" id="4_vos71"]
 [ext_resource type="Texture2D" uid="uid://b3e3v3taxxg8v" path="res://images/gun/ak.png" id="5_dyhsc"]
 [ext_resource type="Texture2D" uid="uid://ctkqk1gw3yow0" path="res://images/gun/v2/ak2 right hand.png" id="5_m0mtm"]
+[ext_resource type="AudioStream" uid="uid://b3meykyi02k0t" path="res://audio/sfx/rifle/magazine extraction.wav" id="6_mlxrh"]
 [ext_resource type="Texture2D" uid="uid://cvxh2ac8ljlap" path="res://images/gun/v2/ak2 left hand.png" id="6_sxexb"]
+[ext_resource type="AudioStream" uid="uid://jl0b0rkae5my" path="res://audio/sfx/rifle/stickmag.wav" id="7_05b3n"]
 [ext_resource type="Texture2D" uid="uid://b4g2q1mld7p8w" path="res://images/gun/v2/ak reload right.png" id="7_5vlo0"]
 [ext_resource type="Texture2D" uid="uid://c0efri2wx0voy" path="res://images/gun/v2/ak reload left.png" id="8_lbyxh"]
 [ext_resource type="Texture2D" uid="uid://k0mcls2j0vos" path="res://images/gun/v2/flashtype2.png" id="9_kfree"]
+[ext_resource type="AudioStream" uid="uid://qtrnntqpuptj" path="res://audio/sfx/bullet/empty-gun-shot-6209.mp3" id="10_y1wmp"]
 
 [sub_resource type="Resource" id="Resource_l0wrd"]
 metadata/__load_path__ = "res://arms.png"
@@ -170,19 +172,55 @@ tracks/12/keys = {
 "times": PackedFloat32Array(0),
 "transitions": PackedFloat32Array(1),
 "update": 1,
-"values": [ExtResource("4_phd08")]
+"values": [ExtResource("10_y1wmp")]
 }
 tracks/13/type = "value"
 tracks/13/imported = false
 tracks/13/enabled = true
-tracks/13/path = NodePath("AudioStreamPlayer:playing")
+tracks/13/path = NodePath("mag extract:stream")
 tracks/13/interp = 1
 tracks/13/loop_wrap = true
 tracks/13/keys = {
 "times": PackedFloat32Array(0),
 "transitions": PackedFloat32Array(1),
 "update": 1,
-"values": [true]
+"values": [ExtResource("6_mlxrh")]
+}
+tracks/14/type = "value"
+tracks/14/imported = false
+tracks/14/enabled = true
+tracks/14/path = NodePath("mag insert:stream")
+tracks/14/interp = 1
+tracks/14/loop_wrap = true
+tracks/14/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [ExtResource("7_05b3n")]
+}
+tracks/15/type = "value"
+tracks/15/imported = false
+tracks/15/enabled = true
+tracks/15/path = NodePath("mag extract:playing")
+tracks/15/interp = 1
+tracks/15/loop_wrap = true
+tracks/15/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [false]
+}
+tracks/16/type = "value"
+tracks/16/imported = false
+tracks/16/enabled = true
+tracks/16/path = NodePath("mag insert:playing")
+tracks/16/interp = 1
+tracks/16/loop_wrap = true
+tracks/16/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [false]
 }
 
 [sub_resource type="Animation" id="Animation_nh7c6"]
@@ -307,30 +345,6 @@ tracks/9/keys = {
 "transitions": PackedFloat32Array(1, 1, 1, 1, 1),
 "update": 0,
 "values": [0.0, 0.25, 1.5, 0.27, 0.0]
-}
-tracks/10/type = "value"
-tracks/10/imported = false
-tracks/10/enabled = true
-tracks/10/path = NodePath("AudioStreamPlayer:stream")
-tracks/10/interp = 1
-tracks/10/loop_wrap = true
-tracks/10/keys = {
-"times": PackedFloat32Array(0),
-"transitions": PackedFloat32Array(1),
-"update": 1,
-"values": [ExtResource("4_phd08")]
-}
-tracks/11/type = "value"
-tracks/11/imported = false
-tracks/11/enabled = true
-tracks/11/path = NodePath("AudioStreamPlayer:playing")
-tracks/11/interp = 1
-tracks/11/loop_wrap = true
-tracks/11/keys = {
-"times": PackedFloat32Array(0, 0.1),
-"transitions": PackedFloat32Array(1, 1),
-"update": 1,
-"values": [true, false]
 }
 
 [sub_resource type="Animation" id="Animation_hr6wd"]
@@ -544,6 +558,54 @@ tracks/6/keys = {
 "update": 1,
 "values": [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 11, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1, 0]
 }
+tracks/7/type = "value"
+tracks/7/imported = false
+tracks/7/enabled = true
+tracks/7/path = NodePath("mag extract:stream")
+tracks/7/interp = 1
+tracks/7/loop_wrap = true
+tracks/7/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [ExtResource("6_mlxrh")]
+}
+tracks/8/type = "value"
+tracks/8/imported = false
+tracks/8/enabled = true
+tracks/8/path = NodePath("mag insert:stream")
+tracks/8/interp = 1
+tracks/8/loop_wrap = true
+tracks/8/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [ExtResource("7_05b3n")]
+}
+tracks/9/type = "value"
+tracks/9/imported = false
+tracks/9/enabled = true
+tracks/9/path = NodePath("mag extract:playing")
+tracks/9/interp = 1
+tracks/9/loop_wrap = true
+tracks/9/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [true]
+}
+tracks/10/type = "value"
+tracks/10/imported = false
+tracks/10/enabled = true
+tracks/10/path = NodePath("mag insert:playing")
+tracks/10/interp = 1
+tracks/10/loop_wrap = true
+tracks/10/keys = {
+"times": PackedFloat32Array(1.5, 2.5),
+"transitions": PackedFloat32Array(1, 1),
+"update": 1,
+"values": [true, false]
+}
 
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_nmn3a"]
 _data = {
@@ -591,5 +653,13 @@ shadow_item_cull_mask = 3073
 texture = ExtResource("9_kfree")
 
 [node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="."]
-stream = ExtResource("4_phd08")
-volume_db = -30.0
+stream = ExtResource("10_y1wmp")
+volume_db = -28.0
+
+[node name="mag extract" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("6_mlxrh")
+volume_db = -20.0
+
+[node name="mag insert" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("7_05b3n")
+volume_db = -20.0

@@ -20,7 +20,7 @@ var bulletEmpty = preload("res://scenes/bullet.tscn")
 var casingEmpty = preload("res://scenes/casing.tscn")
 var isReloading = false
 
-
+var isFailing = false
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta: float) -> void:
 	if !isClimbing:
@@ -60,6 +60,14 @@ func _process(delta: float) -> void:
 			
 			if ammunition > 0:
 				manageShot(direction_angle, delta)
+			elif !isReloading && Input.is_action_pressed("click") && !isFailing:
+				isFailing = true
+				$AudioStreamPlayer.play()
+				await get_tree().create_timer(0.5).timeout
+				isFailing = false
+
+
+
 		else:
 			if !isReloading:
 				self.rotation = direction_angle

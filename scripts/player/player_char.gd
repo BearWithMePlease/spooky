@@ -223,6 +223,7 @@ func deafen(time: float):
 	isClimbing = false
 	gun.isClimbing = isClimbing
 	$AnimationTree2.active = true
+	airtime += 1
 	_deafenTimer = time;
 
 
@@ -234,6 +235,7 @@ var maxHP
 
 
 func _ready():
+	randomize()
 	maxHP = HP
 	position.x = 200
 	position.y = 200
@@ -282,6 +284,17 @@ func _physics_process(delta: float) -> void:
 		else:
 			if airtime > airtimeforDMG:
 				HP -= ceil(airtime*falldmg_multiplier)
+				
+				var pain = randi_range(0,3)
+				if pain == 0:
+					$body3/AudioStreamPlayer.play()
+				if pain == 1:
+					$body3/AudioStreamPlayer2.play()
+				if pain == 2:
+					$body3/AudioStreamPlayer3.play()
+				if pain == 3:
+					$body3/AudioStreamPlayer4.play()
+				
 				print(HP)
 			airtime = 0
 

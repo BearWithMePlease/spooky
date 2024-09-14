@@ -1,4 +1,4 @@
-[gd_scene load_steps=84 format=3 uid="uid://bo6ew1t4jg2x6"]
+[gd_scene load_steps=88 format=3 uid="uid://bo6ew1t4jg2x6"]
 
 [ext_resource type="Script" path="res://scripts/main_scene.gd" id="1_0jyw0"]
 [ext_resource type="Script" path="res://scripts/light_control.gd" id="2_una4x"]
@@ -37,7 +37,11 @@
 [ext_resource type="AudioStream" uid="uid://dgplj62jo2m88" path="res://audio/sfx/random_noise/sound_10.mp3" id="29_256ve"]
 [ext_resource type="AudioStream" uid="uid://c5nau1045ak6b" path="res://audio/sfx/gun_shoot.mp3" id="29_wxeml"]
 [ext_resource type="AudioStream" uid="uid://cihfhgsuq7wif" path="res://audio/sfx/random_noise/sound_11.mp3" id="30_22bms"]
+[ext_resource type="AudioStream" uid="uid://br38s62ld0s8p" path="res://audio/sfx/screaming/scream1.wav" id="36_5chg8"]
+[ext_resource type="AudioStream" uid="uid://bm45xq2ktdury" path="res://audio/sfx/screaming/scream2.wav" id="37_8gsgm"]
 [ext_resource type="Script" path="res://scripts/ingame_menus.gd" id="38_ptr41"]
+[ext_resource type="AudioStream" uid="uid://bxn117kypjhnw" path="res://audio/sfx/screaming/scream3.wav" id="38_tu37q"]
+[ext_resource type="AudioStream" uid="uid://mptvaa6xl0w" path="res://audio/sfx/screaming/my ears are bleeding.wav" id="39_homny"]
 
 [sub_resource type="NavigationPolygon" id="NavigationPolygon_ki8cn"]
 agent_radius = 8.0
@@ -812,6 +816,22 @@ position = Vector2(0, 4.666)
 texture = ExtResource("6_qws5h")
 hframes = 23
 frame = 10
+
+[node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="Player/body3"]
+stream = ExtResource("36_5chg8")
+volume_db = -28.0
+
+[node name="AudioStreamPlayer2" type="AudioStreamPlayer" parent="Player/body3"]
+stream = ExtResource("37_8gsgm")
+volume_db = -32.0
+
+[node name="AudioStreamPlayer3" type="AudioStreamPlayer" parent="Player/body3"]
+stream = ExtResource("38_tu37q")
+volume_db = -32.0
+
+[node name="AudioStreamPlayer4" type="AudioStreamPlayer" parent="Player/body3"]
+stream = ExtResource("39_homny")
+volume_db = -32.0
 
 [node name="AnimationPlayer2" type="AnimationPlayer" parent="Player"]
 libraries = {
