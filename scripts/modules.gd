@@ -140,7 +140,7 @@ func _process(delta: float) -> void:
 	
 	# move module to cursor with animation
 	move_to_cursor(delta) 
-
+	
 	# only process if grid_position has changed or click action
 	if grid_position == old_grid_position and not Input.is_action_just_pressed("click") and not Input.is_action_just_pressed("right_click") and not force_update:
 		return
@@ -226,6 +226,8 @@ func mouse_gui_status(mouse_over_gui:bool):
 	if self.mouse_over_gui == mouse_over_gui:
 		return
 	
+	adjust_surroundings(grid_position, mouse_over_gui)
+	
 	self.mouse_over_gui = mouse_over_gui
 	self.force_update = true
 	mover.visible = not mouse_over_gui
@@ -261,10 +263,14 @@ func move_to_cursor(delta: float):
 		animation_weight = 0
 
 func on_module_type_select(type: ModuleType, new_position = null):
-	self.type = type
+	if moving:
+		# Deselect module. Increase placable count
+		var module_button = module_buttons.get(self.type) as ModuleButton
+		if module_button != null:
+			module_button.add_to_placeable_count(+1)
 	
+	self.type = type
 	moving = true
-	mover.z_index = 1
 	
 	if new_position == null:
 		animation_new_position = grid_position
@@ -358,7 +364,6 @@ func on_build_module():
 	# Instantiate module prefab
 	var node = Globals.module_prefabs[type].instantiate() as Module
 	node.init(grid_position, type, mover.direction, mover.vertical_direction)
-	node.z_index = -1
 	mover.get_parent().add_child(node)
 	
 	# Add module to each grid slot it occupies

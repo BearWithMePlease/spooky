@@ -1,4 +1,4 @@
-[gd_scene load_steps=30 format=3 uid="uid://dbh7dg5maj6s5"]
+[gd_scene load_steps=31 format=3 uid="uid://dbh7dg5maj6s5"]
 
 [ext_resource type="Texture2D" uid="uid://bsfoxkgqdmhpf" path="res://images/wall.png" id="1_teqsy"]
 [ext_resource type="Script" path="res://scripts/player/player_char.gd" id="2_wk836"]
@@ -686,8 +686,9 @@ offset_bottom = 24.0
 text = "59"
 metadata/_edit_use_anchors_ = true
 
-[node name="Player" type="CharacterBody2D" parent="."]
+[node name="Player" type="CharacterBody2D" parent="." node_paths=PackedStringArray("GUN")]
 script = ExtResource("2_wk836")
+GUN = NodePath("gun")
 
 [node name="CollisionShape2D3" type="CollisionShape2D" parent="Player"]
 position = Vector2(2, 19)
@@ -715,3 +716,5 @@ parameters/conditions/isNotWalkB = false
 parameters/conditions/isSprint = false
 parameters/conditions/isWalk = false
 parameters/conditions/isWalkB = false
+
+[node name="gun" parent="Player" instance=ExtResource("5_baxtd")]

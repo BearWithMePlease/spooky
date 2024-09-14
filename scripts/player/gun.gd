@@ -1,5 +1,5 @@
 extends Sprite2D
-
+class_name Gun
 
 var spawner
 var world
