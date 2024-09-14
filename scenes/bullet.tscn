@@ -7,7 +7,7 @@
 size = Vector2(67.5, 30)
 
 [node name="bullet" type="Sprite2D"]
-scale = Vector2(0.1, 0.1)
+scale = Vector2(0.08, 0.08)
 texture = ExtResource("1_0ssl8")
 script = ExtResource("1_vd67m")
 
@@ -19,4 +19,7 @@ collision_mask = 133
 position = Vector2(-5.68434e-14, 0)
 shape = SubResource("RectangleShape2D_7bvyv")
 
-[connection signal="body_entered" from="Area2D" to="." method="_on_area_2d_body_entered"]
+[node name="RayCast2D" type="RayCast2D" parent="."]
+target_position = Vector2(170, 0)
+collision_mask = 524292
+collide_with_areas = true

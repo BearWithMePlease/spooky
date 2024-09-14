@@ -22,6 +22,8 @@ var vertical_ceiling_left: CollisionPolygon2D
 var vertical_ceiling_right: CollisionPolygon2D
 var vertical_floor_left: CollisionPolygon2D
 var vertical_floor_right: CollisionPolygon2D
+var ladder_up: CollisionShape2D
+var ladder_down: CollisionShape2D
 
 func _ready() -> void:
 	# Useful for debugging:
@@ -30,6 +32,7 @@ func _ready() -> void:
 	var module_mover = get_node_or_null("%Module_Mover")
 	if module_mover != null and self.get_instance_id() == module_mover.get_instance_id():
 		is_mover = true
+		z_index = 100
 
 func init(module_position:Vector2, type:Modules.ModuleType, direction: Modules.ModuleDirection, vertical_direction: Modules.ModuleVerticalDirection = Modules.ModuleVerticalDirection.N):
 	self.position = module_position
@@ -40,7 +43,6 @@ func init(module_position:Vector2, type:Modules.ModuleType, direction: Modules.M
 	fetch_nodes()
 	set_direction(direction, vertical_direction)
 	
-	self.z_index = 0
 	self.visible = true
 	sprite.modulate = Color.WHITE
 
@@ -72,13 +74,8 @@ func fetch_nodes():
 		self.vertical_ceiling_right = get_node_or_null(^"Sprite/Borders/Vertical_Ceiling_Right")
 		self.vertical_floor_left = get_node_or_null(^"Sprite/Borders/Vertical_Floor_Left")
 		self.vertical_floor_right = get_node_or_null(^"Sprite/Borders/Vertical_Floor_Right")
-		
-		var failed = self.ceiling_light == null || self.connection_ceiling == null || self.connection_floor == null
-		failed = failed || self.vertical_connection_left == null || self.vertical_connection_right == null
-		failed = failed || self.vertical_ceiling_left == null || self.vertical_ceiling_right == null
-		failed = failed || self.vertical_floor_left == null || self.vertical_floor_right == null
-		if failed:
-			push_error("Failed to fetch some Corridor nodes")
+		self.ladder_down = get_node_or_null(^"Sprite/Interactables/Ladder/Down")
+		self.ladder_up = get_node_or_null(^"Sprite/Interactables/Ladder/Up")
 
 func set_direction(direction: Modules.ModuleDirection, vertical_direction: Modules.ModuleVerticalDirection = Modules.ModuleVerticalDirection.N):
 	self.direction = direction
@@ -93,45 +90,54 @@ func adjust_direction(direction: Modules.ModuleDirection, vertical_direction: Mo
 	else: set_direction(self.direction | direction, self.vertical_direction | vertical_direction) 				# Add
 
 func handle_doors():
-	if self.is_mover:
+	if self.is_mover or self.connection_left == null or self.connection_right == null:
 		return
 	
 	if self.type != Modules.ModuleType.CORRIDOR || self.vertical_direction == Modules.ModuleVerticalDirection.N:
 		# Handle every module type except when a corridor has a vertical direction
-		if self.connection_left == null || self.connection_right == null:
-			push_error("Failed to handle essential door borders")
-		else:
-			self.connection_left.disabled = direction & Modules.ModuleDirection.L != 0
-			self.connection_right.disabled = direction & Modules.ModuleDirection.R != 0
-			
-			if self.type == Modules.ModuleType.CORRIDOR:
-				if  self.ceiling_light == null ||  self.vertical_connection_left == null ||  self.vertical_connection_right == null:
-					push_error("Failed to handle vertical corridor door borders")
-				else:
-					self.ceiling_light.visible = true
-					self.vertical_connection_left.disabled = true
-					self.vertical_connection_right.disabled = true
+		self.connection_left.disabled = direction & Modules.ModuleDirection.L != 0
+		self.connection_right.disabled = direction & Modules.ModuleDirection.R != 0
+		
+		if self.type == Modules.ModuleType.CORRIDOR:
+			self.ceiling_light.visible = true
+			self.vertical_connection_left.disabled = true
+			self.vertical_connection_right.disabled = true
+			self.ladder_down.disabled = true
+			self.ladder_up.disabled = true
 	else:
 		# Handle vertical corridor direction
-		var failed =  self.ceiling_light == null ||  self.connection_left == null ||  self.connection_right == null
-		failed = failed ||  self.vertical_connection_left == null ||  self.vertical_connection_right == null
-		failed = failed || self.connection_ceiling == null ||  self.connection_floor == null
-		failed = failed || self.vertical_ceiling_left == null || self.vertical_ceiling_right == null
-		failed = failed || self.vertical_floor_left == null || self.vertical_floor_right == null
-		if failed:
-			push_error("Failed to handle vertical corridor door borders")
-		else:
-			self.ceiling_light.visible = false
-			self.connection_left.disabled = true
-			self.connection_right.disabled = true
-			
-			self.vertical_connection_left.disabled = direction & Modules.ModuleDirection.L != 0
-			self.vertical_connection_right.disabled = direction & Modules.ModuleDirection.R != 0
-			self.connection_ceiling.disabled = vertical_direction & Modules.ModuleVerticalDirection.U != 0
-			self.connection_floor.disabled = vertical_direction & Modules.ModuleVerticalDirection.D != 0
-			
-			self.vertical_ceiling_left.disabled = vertical_direction & Modules.ModuleVerticalDirection.U == 0
-			self.vertical_ceiling_right.disabled = self.vertical_ceiling_left.disabled
-			
-			self.vertical_floor_left.disabled = vertical_direction & Modules.ModuleVerticalDirection.D == 0
-			self.vertical_floor_right.disabled = self.vertical_floor_left.disabled
+		self.ceiling_light.visible = false
+		self.connection_left.disabled = true
+		self.connection_right.disabled = true
+		
+		self.vertical_connection_left.disabled = direction & Modules.ModuleDirection.L != 0
+		self.vertical_connection_right.disabled = direction & Modules.ModuleDirection.R != 0
+		self.connection_ceiling.disabled = vertical_direction & Modules.ModuleVerticalDirection.U != 0
+		self.connection_floor.disabled = vertical_direction & Modules.ModuleVerticalDirection.D != 0
+		
+		self.vertical_ceiling_left.disabled = vertical_direction & Modules.ModuleVerticalDirection.U == 0
+		self.vertical_ceiling_right.disabled = self.vertical_ceiling_left.disabled
+		
+		self.vertical_floor_left.disabled = vertical_direction & Modules.ModuleVerticalDirection.D == 0
+		self.vertical_floor_right.disabled = self.vertical_floor_left.disabled
+	
+		self.ladder_down.disabled = vertical_direction & Modules.ModuleVerticalDirection.D == 0
+		self.ladder_up.disabled = vertical_direction & Modules.ModuleVerticalDirection.U == 0
+	
+	# Set Light occulsions
+	self.connection_left.visible = not self.connection_left.disabled
+	self.connection_right.visible = not self.connection_right.disabled
+	
+	if self.type == Modules.ModuleType.CORRIDOR:
+		self.vertical_connection_left.visible = not self.vertical_connection_left.disabled
+		self.vertical_connection_right.visible = not self.vertical_connection_right.disabled
+	
+		self.connection_ceiling.visible = self.vertical_direction & Modules.ModuleVerticalDirection.U == 0
+		self.connection_floor.visible = self.vertical_direction & Modules.ModuleVerticalDirection.D == 0
+		
+		self.vertical_ceiling_left.visible = self.vertical_direction & Modules.ModuleVerticalDirection.U != 0
+		self.vertical_ceiling_right.visible = self.vertical_direction & Modules.ModuleVerticalDirection.U != 0
+		
+		self.vertical_floor_left.visible = self.vertical_direction & Modules.ModuleVerticalDirection.D != 0
+		self.vertical_floor_right.visible = self.vertical_direction & Modules.ModuleVerticalDirection.D != 0
+		

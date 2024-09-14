@@ -26,6 +26,7 @@ var builder_modules: Array[Module] = []
 func switch_scene(from_scene: SceneType, to_scene: SceneType, addidtional = null):
 	if from_scene == SceneType.BUNKER_BUILD and to_scene == SceneType.MAIN_SCENE:
 		# Add modules to scene
+		builder_modules = [] # TODO: Need to .free() all
 		for old_module:Module in addidtional:
 			var module = module_prefabs[old_module.type].instantiate() as Module
 			module.init(old_module.position, old_module.type, old_module.direction, old_module.vertical_direction)

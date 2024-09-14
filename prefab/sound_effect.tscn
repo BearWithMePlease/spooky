@@ -1,0 +1,9 @@
+[gd_scene format=3 uid="uid://bospy2knasfaj"]
+
+[node name="Sound" type="AudioStreamPlayer2D" groups=["sound_effects"]]
+position = Vector2(112, 106)
+volume_db = -10.0
+max_distance = 750.0
+attenuation = 3.0
+bus = &"SFX"
+area_mask = 0

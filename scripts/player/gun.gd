@@ -12,37 +12,63 @@ func _ready() -> void:
 	randomize()
 	var shots_per_second = rpm / 60.0
 	interval = 1 / shots_per_second
-	pass # Replace with function body.
+	ray_cast.enabled = true
+
 
 var bulletEmpty = preload("res://scenes/bullet.tscn")
 var casingEmpty = preload("res://scenes/casing.tscn")
-
+var isReloading = false
 
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta: float) -> void:
+	
 	var direction = get_global_mouse_position() - self.global_position
+	var direction_angle = direction.angle()
 	
-	
-	
-	if !Input.is_action_pressed("click") || ammunition == 0:
-		self.rotation = direction.angle()
-	
-	
-	if Input.is_action_pressed("reload"):
-		$AnimationPlayer.play("reload_new")
-		ammunition = 30
-	
+	if visible && !isReloading:		
+		if !Input.is_action_pressed("click") || ammunition == 0:
+			self.rotation = direction_angle
+		
+		
+		if Input.is_action_pressed("reload") && isReloading == false && ammunition_pool_total > 0:
+			isReloading = true
+			
+			if rotation > 0.5*PI || rotation < -0.5*PI : # can do easein
+				rotation = PI
+			else	:
+				rotation = 0
+
+			
+			$AnimationPlayer.play("reload_new")
+			
+			if ammunition_pool_total >= 30 : 
+				ammunition_pool_total -= 30
+				ammunition = 30
+			else:
+				ammunition = ammunition_pool_total
+				ammunition_pool_total = 0
+			
+			await get_tree().create_timer(2.5).timeout
+			isReloading = false
+			return
+
+
+		
+		
+		
+		if ammunition > 0:
+			manageShot(direction_angle, delta)
+	else:
+		if !isReloading:
+			self.rotation = direction_angle
+
 	if rotation > PI:
 		rotation -= 2*PI
 	
 	if rotation < -PI:
 		rotation += 2*PI	
-	
-	if ammunition > 0:
-		manageShot(direction.angle(), delta)
-		
-
+		#print(rotation)
 	if rotation > 0.5*PI || rotation < -0.5*PI :
 		#flip_v = true
 		
@@ -56,6 +82,7 @@ func _process(delta: float) -> void:
 		
 		#flip_v = false
 		spawner.flip_h = false
+
 	
 	
 var rpm = 600
@@ -63,29 +90,34 @@ var interval
 var last_shot_time = 0.0
 var rapidShotCounter = 0
 
-var ammunition = 30
+@export var ammunition_pool_total = 200
+@export var ammunition = 30
 
-	
+
+@onready var ray_cast = $RayCast2D
+
 func manageShot(direction_angle, delta):
 	var time_between_shot = (Time.get_ticks_msec() - last_shot_time) / 1000.0
+	ray_cast.force_raycast_update()
+	var ray_cast_collison = !ray_cast.is_colliding()
 	if Input.is_action_pressed("click") && time_between_shot >= interval:
 		
+		if ray_cast_collison:
+			if time_between_shot < interval+0.1:
+				rapidShotCounter += 0.5
+			else:
+				rapidShotCounter = 0
+				
+			shoot()
 		
-		if time_between_shot < interval+0.1:
-			rapidShotCounter += 0.5
-		else:
-			rapidShotCounter = 0
+			var bump = randf_range(-0.02, 0.02)* min(9,rapidShotCounter)
+			if bump > 0:
+				bump = min(0.1, bump)
+			if bump < 0:
+				bump = max(-0.1, bump)
 			
-		shoot()
-		
-		var bump = randf_range(-0.02, 0.02)* min(9,rapidShotCounter)
-		if bump > 0:
-			bump = min(0.1, bump)
-		if bump < 0:
-			bump = max(-0.1, bump)
-			
-		self.rotation = self.rotation + bump
-		last_shot_time = Time.get_ticks_msec()
+			self.rotation = self.rotation + bump
+			last_shot_time = Time.get_ticks_msec()
 		
 		#SPRAY CONTROL
 		var target_angle = direction_angle		
@@ -104,11 +136,14 @@ func manageShot(direction_angle, delta):
 				rotate(recoil_mitigation * delta)
 			else:
 				rotate(-recoil_mitigation * delta)
+	
+
+
 
 
 func shoot():
 	var bullet := bulletEmpty.instantiate() as Bullet
-	bullet.initialize(self, self.rotation, self.global_position + Vector2(55, 0).rotated(self.rotation));
+	bullet.initialize(self, self.rotation, self.global_position + Vector2(20, 0).rotated(self.rotation));
 	
 	if rapidShotCounter == 0:
 		$AnimationPlayer.play("fire_new_2")
@@ -122,11 +157,11 @@ func shoot():
 	casing.angular_velocity = -40 - randi_range(0, 10)
 
 	if !spawner.flip_h: 
-		casing.global_position = self.global_position + Vector2(23, -2.2).rotated(self.rotation) 
-		casing.initial_velocity = Vector2(-150+randi_range(-20, 20), -300+randi_range(-20, 20)).rotated(self.rotation)
+		casing.global_position = self.global_position + Vector2(7.5, -2.2).rotated(self.rotation) 
+		casing.initial_velocity = Vector2(-75+randi_range(-20, 20), -150+randi_range(-20, 20)).rotated(self.rotation)
 	else:
-		casing.global_position = self.global_position + Vector2(23, 2.2).rotated(self.rotation) 
-		casing.initial_velocity = Vector2(-150+randi_range(-20, 20), 300+randi_range(-20, 20)).rotated(self.rotation)
+		casing.global_position = self.global_position + Vector2(7.5, 2.2).rotated(self.rotation) 
+		casing.initial_velocity = Vector2(-75+randi_range(-20, 20), 150+randi_range(-20, 20)).rotated(self.rotation)
 
 	
 	world.add_child(casing)

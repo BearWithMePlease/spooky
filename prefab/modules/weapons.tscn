@@ -6,16 +6,16 @@
 [ext_resource type="PackedScene" uid="uid://dki4talhc74jp" path="res://prefab/ceiling_lamp.tscn" id="3_pssmm"]
 
 [sub_resource type="OccluderPolygon2D" id="OccluderPolygon2D_le7af"]
-polygon = PackedVector2Array(0, 0, 5, 0, 5, -35, 123, -35, 123, 0, 128, 0, 128, -40, 0, -40)
+polygon = PackedVector2Array(0, -3, 1, -3, 1, -50, 127, -49, 127, -3, 128, -3, 128, -50, 0, -51)
 
 [sub_resource type="OccluderPolygon2D" id="OccluderPolygon2D_w0ors"]
-polygon = PackedVector2Array(0, 51, 128, 51, 128, 48, 0, 48)
+polygon = PackedVector2Array(0, 51, 128, 51, 128, 50, 0, 50)
 
 [sub_resource type="OccluderPolygon2D" id="OccluderPolygon2D_2fw73"]
-polygon = PackedVector2Array(0, 0, 0, 0, 5, 0, 5, 48, 0, 48)
+polygon = PackedVector2Array(0, -3, 1, -3, 1, 50, 0, 50)
 
 [sub_resource type="OccluderPolygon2D" id="OccluderPolygon2D_08mp2"]
-polygon = PackedVector2Array(0, 0, 0, 0, 5, 0, 5, 48, 0, 48)
+polygon = PackedVector2Array(4, -3, 5, -3, 5, 50, 4, 50)
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_6erjm"]
 size = Vector2(61, 41)
@@ -29,6 +29,8 @@ centered = false
 
 [node name="Borders" type="StaticBody2D" parent="Sprite"]
 position = Vector2(128, 64)
+collision_layer = 8912897
+collision_mask = 8912897
 
 [node name="Ceiling" type="CollisionPolygon2D" parent="Sprite/Borders"]
 polygon = PackedVector2Array(-128, 13, -123, 13, -123, -22, -5, -22, -5, 13, 0, 13, 0, -27, -128, -27)
@@ -69,6 +71,8 @@ position = Vector2(92, 81)
 
 [node name="Weapons" type="Area2D" parent="Sprite/Interactables" groups=["interact_weapons"]]
 position = Vector2(83, 108)
+collision_layer = 4194304
+collision_mask = 4194304
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Sprite/Interactables/Weapons"]
 position = Vector2(-9.5, -3.5)
