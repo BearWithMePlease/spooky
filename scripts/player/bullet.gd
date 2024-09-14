@@ -1,6 +1,13 @@
 extends Sprite2D
 
 class_name Bullet
+
+var _gun: Gun = null;
+func initialize(gun: Gun, rot: float, pos: Vector2) -> void:
+	_gun = gun;
+	self.rotation = rot;
+	self.global_position = pos;
+
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
 	$Area2D.monitoring = true
@@ -28,10 +35,12 @@ func _on_area_2d_body_entered(body: Node2D) -> void:
 			hit.position = position
 			hit.rotation = rotation
 			get_parent().add_child(hit)
-		else:
+		elif body is MonsterFace:
 			var hit = hitBloodEmpty.instantiate()
 			hit.position = position
 			hit.rotation = rotation
 			get_parent().add_child(hit)
+			if _gun != null:
+				_gun.damageMonster();
 		
 		queue_free()

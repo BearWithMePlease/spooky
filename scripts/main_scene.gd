@@ -1,8 +1,10 @@
 extends Node2D
 
+class_name MainScene
+
+@export var monster: Monster = null
 @onready var modules := $Modules as NavigationRegion2D
 @onready var player = $Player
-@onready var monster = $Monster
 
 func _ready() -> void:
 	# Load modules from Module Builder (safed in Globals)

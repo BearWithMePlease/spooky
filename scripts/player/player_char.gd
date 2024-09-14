@@ -1,12 +1,13 @@
 extends CharacterBody2D
 class_name Player
 
-@export var MAX_SPEED = 300
-@export var ACCELERATION = 1500
-@export var FRICITON = 1200
+@export var MAX_SPEED := 300
+@export var ACCELERATION := 1500
+@export var FRICITON := 1200
+@export var JUMP_VELOCITY := -400.0
+@export var GRAVITY := 98.0
 @export var GUN: Gun = null
 @onready var axis = Vector2.ZERO
-const JUMP_VELOCITY = -400.0
 var accel
 var speedcap
 @onready var anims = $body3
@@ -55,6 +56,11 @@ func update_animation_tree_param():
 #var gunEmpty = preload("res://scenes/gun.tscn")
 #var gun = gunEmpty.instantiate()
 
+# Makes player ignore input for some time
+var _deafenTimer: float = 0.0;
+func deafen(time: float):
+	_deafenTimer = time;
+
 func _ready():
 	position.x = 200
 	position.y = 200
@@ -71,6 +77,7 @@ func _ready():
 	animation_tree.active = true
 
 func _process(delta):
+	_deafenTimer = max(0, _deafenTimer - delta);
 	update_animation_tree_param()
 
 
@@ -81,9 +88,8 @@ func _physics_process(delta: float) -> void:
 		speedcap = MAX_SPEED
 		# Add the gravity.
 		if not is_on_floor():
-			velocity += get_gravity() * delta
+			velocity += Vector2.DOWN * GRAVITY * delta
 			velocity.x = move_toward(velocity.x, 0, 20*delta)
-
 
 		# Handle jump.
 		if Input.is_action_just_pressed("ui_accept") and is_on_floor(): # worthless, no jump
@@ -92,7 +98,7 @@ func _physics_process(delta: float) -> void:
 		# Get the input direction and handle the movement/deceleration.
 		# As good practice, you should replace UI actions with custom gameplay actions.
 		
-		if is_on_floor():
+		if is_on_floor() and _deafenTimer <= 0:
 			direction = 0
 
 			if Input.is_action_pressed("Left"):

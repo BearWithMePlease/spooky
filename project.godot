@@ -22,6 +22,7 @@ Globals="*res://scripts/globals.gd"
 [debug]
 
 gdscript/warnings/shadowed_variable=0
+gdscript/warnings/integer_division=0
 
 [display]
 

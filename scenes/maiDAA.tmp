@@ -1,12 +1,11 @@
 [gd_scene load_steps=38 format=3 uid="uid://bo6ew1t4jg2x6"]
 
 [ext_resource type="Script" path="res://scripts/main_scene.gd" id="1_0jyw0"]
-[ext_resource type="Script" path="res://scripts/player/player_char.gd" id="3_e7kov"]
+[ext_resource type="Script" path="res://scripts/player/player_char.gd" id="4_blcld"]
 [ext_resource type="Texture2D" uid="uid://cdhkjlqvj2iq8" path="res://images/player/hazmat.png" id="5_4o6dv"]
 [ext_resource type="Texture2D" uid="uid://cdl3wg5u1x0i" path="res://images/player/hazmat_with_hands.png" id="6_qws5h"]
 [ext_resource type="Script" path="res://scenes/monster.gd" id="7_r0p8v"]
 [ext_resource type="PackedScene" uid="uid://bdrk0gvju1eis" path="res://scenes/gun.tscn" id="7_yae1m"]
-[ext_resource type="Script" path="res://scripts/monster/monsterBody.gd" id="8_ckd53"]
 [ext_resource type="Script" path="res://scripts/builder_camera.gd" id="8_m2gle"]
 [ext_resource type="PackedScene" uid="uid://3h6eguht44i6" path="res://prefab/monster/monsterLeg.tscn" id="9_b6g5w"]
 [ext_resource type="PackedScene" uid="uid://mb1u0vbty7ft" path="res://prefab/monster/monsterFace.tscn" id="10_f4dsy"]
@@ -631,6 +630,148 @@ states/walk_b/position = Vector2(535.333, 258.667)
 transitions = ["Start", "facing", SubResource("AnimationNodeStateMachineTransition_s1bs7"), "facing", "walk", SubResource("AnimationNodeStateMachineTransition_xy5a8"), "walk", "sprint", SubResource("AnimationNodeStateMachineTransition_ls6v0"), "facing", "walk_b", SubResource("AnimationNodeStateMachineTransition_wrb8h"), "walk_b", "facing", SubResource("AnimationNodeStateMachineTransition_u8oec"), "walk", "facing", SubResource("AnimationNodeStateMachineTransition_snn0d"), "sprint", "walk", SubResource("AnimationNodeStateMachineTransition_1s6tq")]
 graph_offset = Vector2(-387, -2)
 
+[sub_resource type="GDScript" id="GDScript_kn0bg"]
+script/source = "extends Node2D
+
+class_name MonsterBody
+
+# Inspired by The Rain World https://youtu.be/sVntwsrjNe4
+@export var facesCount: int = 4
+@export var legsCount: int = 16
+@export var legRadius: float = 30.0
+@export var monsterLegScene: PackedScene = null
+@export var monsterFaceScene: PackedScene = null
+@export var particles: CPUParticles2D = null
+@export var player: Player = null
+var _isPlayerSeen := false
+var _legPosition: Array[Vector2] = []
+var _legGroundPos: Array[Vector2] = []
+var _legIsOnGround: Array[bool] = []
+var _legs: Array[MonsterLeg] = []
+var _faces: Array[RigidBody2D] = []
+# Used in physics_process:
+var _center := Vector2(0, 0)
+var _input: Vector2 = Vector2(0, 0)
+const WALL_COLLISION_MASK = 0b01
+var _isNavigationMapBaked := false
+var _moveDirection: Vector2 = Vector2.ZERO
+var _grabPlayer := false;
+
+func move(direction: Vector2) -> void:
+	_moveDirection = direction;
+
+func canSeePlayer() -> bool:
+	return _isPlayerSeen;
+
+\"\"\" returns distance of leg to player\"\"\"
+func grabPlayer(state: bool) -> float:
+	_grabPlayer = state;
+	var pos = _legs[0].getPosOfLastPoint();
+	if pos.x != 0 || pos.y != 0:
+		return pos.distance_to(player.global_position);
+	return -1;
+
+func _ready() -> void:
+	_center = global_position
+	# Generate faces
+	for i in facesCount:
+		var face := monsterFaceScene.instantiate() as RigidBody2D
+		add_child(face)
+		# little random so that they push each other out
+		face.position = Vector2(randf_range(-1, 1), randf_range(-1, 1))
+		_faces.append(face)
+	
+	# Generate legs
+	for i in legsCount:
+		var leg := monsterLegScene.instantiate() as MonsterLeg
+		add_child(leg)
+		_legs.append(leg)
+	
+	_legPosition.resize(_legs.size())
+	_legGroundPos.resize(_legs.size())
+	_legIsOnGround.resize(_legs.size())
+	
+	# make initial legs positions in circle
+	var angle: float = 0.0
+	for legIndex in _legs.size():
+		_legPosition[legIndex] = Vector2(
+			cos(angle),
+			sin(angle)
+		) * legRadius
+		angle += 2.0 * PI / float(_legs.size())
+		
+func _process(_delta: float) -> void:
+	# Update ground positions of legs
+	for legIndex in _legs.size():
+		var raySource: Vector2 = global_position + _legPosition[legIndex]
+		if legIndex == 0 and _grabPlayer:
+			_legs[0].updateLeg(raySource, player.global_position, true, true)
+		else:
+			_legs[legIndex].updateLeg(raySource, _legGroundPos[legIndex], _legIsOnGround[legIndex])		
+	
+	# Make particles spawn at legs
+	var allPoints: Array[Vector2] = []
+	for leg in _legs:
+		allPoints.append_array(leg.getAllUnlockedPoints())
+	particles.emission_points = allPoints
+
+func _physics_process(delta):
+	# Raycasting player
+	if player != null:
+		var playerTarget := player.global_position + Vector2.DOWN * 10.0
+		var query = PhysicsRayQueryParameters2D.create(global_position, playerTarget)
+		query.collide_with_bodies = true
+		query.collision_mask = player.collision_layer | WALL_COLLISION_MASK
+		var space_state = get_world_2d().direct_space_state
+		var result = space_state.intersect_ray(query)
+		_isPlayerSeen = result and result.collider is Player
+			
+	# Monster rigidbody movement
+	var newCenter := Vector2.ZERO
+	for faceIndex in _faces.size():
+		var rigidbody := _faces[faceIndex] as RigidBody2D
+		if rigidbody != null:
+			# Lerp position of heads towards monster center
+			rigidbody.global_position = lerp(rigidbody.global_position, _center, delta)
+			newCenter += rigidbody.global_position
+			rigidbody.linear_velocity = _moveDirection # NOTE: they mean, not to use it in _process....
+	newCenter /= _faces.size()
+	_center = newCenter
+	get_parent().global_position = newCenter
+	
+	for legIndex in _legs.size():
+		# Check if position of legs is valid
+		# not longer then leg itself
+		var needsToFindNewPos: bool = false
+		var raySource: Vector2 = global_position + _legPosition[legIndex]
+		var direction: Vector2 = _legGroundPos[legIndex] - raySource
+		if (direction).length() > _legs[legIndex].getLegLength():
+			needsToFindNewPos = true
+		
+		if not needsToFindNewPos and _legIsOnGround[legIndex]:
+			continue
+		
+		# Try to find ground randomly few times with raycast
+		_legIsOnGround[legIndex] = false
+		for i in 5:
+			var randomDirection: Vector2 = Vector2(
+				cos(randf_range(0, 2 * PI)),
+				sin(randf_range(0, 2 * PI))
+			).normalized()
+			var rayTarget: Vector2 = raySource + randomDirection * _legs[legIndex].getLegLength()
+			var query = PhysicsRayQueryParameters2D.create(raySource, rayTarget)
+			query.collide_with_bodies = true
+			query.collide_with_areas = false
+			query.collision_mask = WALL_COLLISION_MASK
+			var space_state = get_world_2d().direct_space_state
+			var result = space_state.intersect_ray(query)
+			# If found, store it
+			if result:
+				_legGroundPos[legIndex] = result.position
+				_legIsOnGround[legIndex] = true
+				break
+"
+
 [node name="MainScene" type="Node2D" node_paths=PackedStringArray("monster")]
 script = ExtResource("1_0jyw0")
 monster = NodePath("Monster")
@@ -649,14 +790,13 @@ region_rect = Rect2(100, 100, 100, 100)
 [node name="Modules" type="NavigationRegion2D" parent="."]
 navigation_polygon = SubResource("NavigationPolygon_ki8cn")
 
-[node name="Player" type="CharacterBody2D" parent="." node_paths=PackedStringArray("GUN")]
+[node name="Player" type="CharacterBody2D" parent="."]
 collision_layer = 2
-script = ExtResource("3_e7kov")
+script = ExtResource("4_blcld")
 MAX_SPEED = 100
 ACCELERATION = 300
 JUMP_VELOCITY = -100.0
 GRAVITY = 200.0
-GUN = NodePath("GunParent/gun")
 
 [node name="body3" type="Sprite2D" parent="Player"]
 position = Vector2(1, 14)
@@ -688,8 +828,7 @@ parameters/conditions/isWalkB = false
 position = Vector2(1, 11)
 scale = Vector2(0.346, 0.346)
 
-[node name="gun" parent="Player/GunParent" node_paths=PackedStringArray("monster") instance=ExtResource("7_yae1m")]
-monster = NodePath("../../../Monster")
+[node name="gun" parent="Player/GunParent" instance=ExtResource("7_yae1m")]
 
 [node name="Monster" type="Node2D" parent="." node_paths=PackedStringArray("monsterBody", "player", "navigationAgent", "modules")]
 script = ExtResource("7_r0p8v")
@@ -703,7 +842,7 @@ modules = NodePath("../Modules")
 [node name="MonsterBody" type="Node2D" parent="Monster" node_paths=PackedStringArray("particles", "player")]
 z_index = 1
 y_sort_enabled = true
-script = ExtResource("8_ckd53")
+script = SubResource("GDScript_kn0bg")
 legsCount = 15
 legRadius = 6.0
 monsterLegScene = ExtResource("9_b6g5w")

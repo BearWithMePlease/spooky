@@ -1,12 +1,12 @@
 [gd_scene load_steps=38 format=3 uid="uid://bo6ew1t4jg2x6"]
 
 [ext_resource type="Script" path="res://scripts/main_scene.gd" id="1_0jyw0"]
-[ext_resource type="Script" path="res://scripts/player/player_char.gd" id="3_e7kov"]
+[ext_resource type="Script" path="res://scripts/player/player_char.gd" id="4_blcld"]
 [ext_resource type="Texture2D" uid="uid://cdhkjlqvj2iq8" path="res://images/player/hazmat.png" id="5_4o6dv"]
 [ext_resource type="Texture2D" uid="uid://cdl3wg5u1x0i" path="res://images/player/hazmat_with_hands.png" id="6_qws5h"]
 [ext_resource type="Script" path="res://scenes/monster.gd" id="7_r0p8v"]
 [ext_resource type="PackedScene" uid="uid://bdrk0gvju1eis" path="res://scenes/gun.tscn" id="7_yae1m"]
-[ext_resource type="Script" path="res://scripts/monster/monsterBody.gd" id="8_ckd53"]
+[ext_resource type="Script" path="res://scripts/monster/monsterBody.gd" id="8_06fmu"]
 [ext_resource type="Script" path="res://scripts/builder_camera.gd" id="8_m2gle"]
 [ext_resource type="PackedScene" uid="uid://3h6eguht44i6" path="res://prefab/monster/monsterLeg.tscn" id="9_b6g5w"]
 [ext_resource type="PackedScene" uid="uid://mb1u0vbty7ft" path="res://prefab/monster/monsterFace.tscn" id="10_f4dsy"]
@@ -19,7 +19,7 @@ colors = PackedColorArray(0.196078, 0.196078, 0.196078, 1)
 gradient = SubResource("Gradient_0yq7r")
 
 [sub_resource type="NavigationPolygon" id="NavigationPolygon_ki8cn"]
-agent_radius = 6.0
+agent_radius = 8.0
 
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_byxxa"]
 radius = 1.66667
@@ -650,8 +650,7 @@ region_rect = Rect2(100, 100, 100, 100)
 navigation_polygon = SubResource("NavigationPolygon_ki8cn")
 
 [node name="Player" type="CharacterBody2D" parent="." node_paths=PackedStringArray("GUN")]
-collision_layer = 2
-script = ExtResource("3_e7kov")
+script = ExtResource("4_blcld")
 MAX_SPEED = 100
 ACCELERATION = 300
 JUMP_VELOCITY = -100.0
@@ -688,8 +687,7 @@ parameters/conditions/isWalkB = false
 position = Vector2(1, 11)
 scale = Vector2(0.346, 0.346)
 
-[node name="gun" parent="Player/GunParent" node_paths=PackedStringArray("monster") instance=ExtResource("7_yae1m")]
-monster = NodePath("../../../Monster")
+[node name="gun" parent="Player/GunParent" instance=ExtResource("7_yae1m")]
 
 [node name="Monster" type="Node2D" parent="." node_paths=PackedStringArray("monsterBody", "player", "navigationAgent", "modules")]
 script = ExtResource("7_r0p8v")
@@ -700,16 +698,15 @@ modules = NodePath("../Modules")
 
 [node name="NavigationAgent2D" type="NavigationAgent2D" parent="Monster"]
 
-[node name="MonsterBody" type="Node2D" parent="Monster" node_paths=PackedStringArray("particles", "player")]
+[node name="MonsterBody" type="Node2D" parent="Monster" node_paths=PackedStringArray("particles")]
 z_index = 1
 y_sort_enabled = true
-script = ExtResource("8_ckd53")
+script = ExtResource("8_06fmu")
 legsCount = 15
 legRadius = 6.0
 monsterLegScene = ExtResource("9_b6g5w")
 monsterFaceScene = ExtResource("10_f4dsy")
 particles = NodePath("CPUParticles2D")
-player = NodePath("../../Player")
 
 [node name="CPUParticles2D" type="CPUParticles2D" parent="Monster/MonsterBody"]
 amount = 25

@@ -1,6 +1,8 @@
 extends Sprite2D
 class_name Gun
 
+@export var monster: Monster = null;
+
 var spawner
 var world
 
@@ -87,29 +89,26 @@ func manageShot(direction_angle, delta):
 		
 		#SPRAY CONTROL
 		var target_angle = direction_angle		
-		var angle_difference = target_angle - rotation
+		var angle_diff = target_angle - rotation
 
-		if angle_difference > PI:
-			angle_difference -= 2 * PI
+		if angle_diff > PI:
+			angle_diff -= 2 * PI
 		
-		elif angle_difference < -PI:
-			angle_difference += 2 * PI
+		elif angle_diff < -PI:
+			angle_diff += 2 * PI
 			
 		var recoil_mitigation = 10.0  
 		
-		if abs(angle_difference) > 0.1:  #adjust to not overcorrect
-			if angle_difference > 0:
+		if abs(angle_diff) > 0.1:  #adjust to not overcorrect
+			if angle_diff > 0:
 				rotate(recoil_mitigation * delta)
 			else:
 				rotate(-recoil_mitigation * delta)
 
 
 func shoot():
-	var bullet = bulletEmpty.instantiate()
-	bullet.rotation = self.rotation
-	bullet.global_position = self.global_position + Vector2(55, 0).rotated(self.rotation) # redundant
-	
-	
+	var bullet := bulletEmpty.instantiate() as Bullet
+	bullet.initialize(self, self.rotation, self.global_position + Vector2(55, 0).rotated(self.rotation));
 	
 	if rapidShotCounter == 0:
 		$AnimationPlayer.play("fire_new_2")
@@ -131,3 +130,6 @@ func shoot():
 
 	
 	world.add_child(casing)
+	
+func damageMonster() -> void:
+	monster.takeDamage();
