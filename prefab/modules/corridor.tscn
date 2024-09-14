@@ -152,7 +152,6 @@ occluder_light_mask = 1025
 position = Vector2(32, 20)
 
 [node name="Interactables" type="Node2D" parent="Sprite"]
-visible = false
 
 [node name="Ladder" type="Area2D" parent="Sprite/Interactables" groups=["ladder"]]
 collision_layer = 4194304
