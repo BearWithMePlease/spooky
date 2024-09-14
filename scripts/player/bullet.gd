@@ -11,8 +11,13 @@ func initialize(gun: Gun, rot: float, pos: Vector2) -> void:
 	self.rotation = rot;
 	self.global_position = pos;
 
+
+var sound = preload("res://scenes/shotsfx.tscn")
+
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
+	var sound2 = sound.instantiate()
+	_gun.add_child(sound2)
 	ray_cast.enabled = true
 	$Area2D.monitoring = false
 
