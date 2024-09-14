@@ -11,7 +11,6 @@ class_name Player
 @export var HP = 100
 @export var falldmg_multiplier = 10
 
-const JUMP_VELOCITY = -200.0
 
 var accel
 var speedcap
@@ -212,7 +211,7 @@ func update_animation_tree_param():
 # Makes player ignore input for some time
 var _deafenTimer: float = 0.0;
 func deafen(time: float):
-_deafenTimer = time;
+	_deafenTimer = time;
 
 
 

@@ -1,4 +1,4 @@
-[gd_scene load_steps=4 format=3 uid="uid://betx6m81e680d"]
+[gd_scene load_steps=4 format=3 uid="uid://chnqbtwpbtrir"]
 
 [ext_resource type="PackedScene" uid="uid://3h6eguht44i6" path="res://prefab/monster/monsterLeg.tscn" id="2_yj3md"]
 [ext_resource type="PackedScene" uid="uid://mb1u0vbty7ft" path="res://prefab/monster/monsterFace.tscn" id="3_ux430"]

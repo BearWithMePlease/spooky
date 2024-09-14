@@ -1,20 +1,20 @@
-[gd_scene load_steps=63 format=3 uid="uid://bo6ew1t4jg2x6"]
+[gd_scene load_steps=67 format=3 uid="uid://bo6ew1t4jg2x6"]
 
 [ext_resource type="Script" path="res://scripts/main_scene.gd" id="1_0jyw0"]
 [ext_resource type="Script" path="res://scripts/light_control.gd" id="2_una4x"]
 [ext_resource type="Script" path="res://scripts/monster/monsterBody.gd" id="3_ccd75"]
 [ext_resource type="Script" path="res://scripts/player/player_char.gd" id="4_blcld"]
-[ext_resource type="PackedScene" uid="uid://3h6eguht44i6" path="res://prefab/monster/monsterLeg.tscn" id="4_mj277"]
 [ext_resource type="AudioStream" uid="uid://d0sc8vvf4rlv0" path="res://audio/sfx/light_on.mp3" id="4_ch04v"]
+[ext_resource type="PackedScene" uid="uid://3h6eguht44i6" path="res://prefab/monster/monsterLeg.tscn" id="4_mj277"]
 [ext_resource type="Texture2D" uid="uid://843kfwxv80ts" path="res://images/player/hazmat.png" id="5_4o6dv"]
-[ext_resource type="PackedScene" uid="uid://mb1u0vbty7ft" path="res://prefab/monster/monsterFace.tscn" id="5_p2plt"]
 [ext_resource type="AudioStream" uid="uid://ckeqab8exdk7q" path="res://audio/sfx/light_off.mp3" id="5_76aoe"]
+[ext_resource type="PackedScene" uid="uid://mb1u0vbty7ft" path="res://prefab/monster/monsterFace.tscn" id="5_p2plt"]
 [ext_resource type="Script" path="res://scripts/audio_control.gd" id="5_wrx4j"]
 [ext_resource type="AudioStream" uid="uid://cedmjxxqnpqpy" path="res://audio/sfx/footsteps/footsteps-1.mp3" id="6_kbj1v"]
 [ext_resource type="Texture2D" uid="uid://bahc3spqbwwxl" path="res://images/player/hazmat_with_hands.png" id="6_qws5h"]
 [ext_resource type="FontFile" uid="uid://gosmfve4h532" path="res://imgs/PressStart2P-Regular.ttf" id="7_5wvvi"]
-[ext_resource type="Script" path="res://scenes/monster.gd" id="7_r0p8v"]
 [ext_resource type="AudioStream" uid="uid://be62gfc1nvc07" path="res://audio/sfx/footsteps/footsteps-2.mp3" id="7_ndd1u"]
+[ext_resource type="Script" path="res://scenes/monster.gd" id="7_r0p8v"]
 [ext_resource type="PackedScene" uid="uid://bdrk0gvju1eis" path="res://scenes/gun.tscn" id="7_yae1m"]
 [ext_resource type="AudioStream" uid="uid://da2qdiqee6jvq" path="res://audio/sfx/footsteps/footsteps-3.mp3" id="8_01px5"]
 [ext_resource type="AudioStream" uid="uid://oaivvndflsnd" path="res://audio/sfx/footsteps/footsteps-4.mp3" id="9_igb8x"]
@@ -764,7 +764,7 @@ z_index = 2
 position = Vector2(0, 4.666)
 texture = ExtResource("6_qws5h")
 hframes = 23
-frame = 10
+frame = 9
 
 [node name="AnimationPlayer2" type="AnimationPlayer" parent="Player"]
 libraries = {
