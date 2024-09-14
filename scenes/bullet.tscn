@@ -7,7 +7,7 @@
 size = Vector2(67.5, 30)
 
 [node name="bullet" type="Sprite2D"]
-scale = Vector2(0.08, 0.08)
+scale = Vector2(0.06, 0.06)
 texture = ExtResource("1_0ssl8")
 script = ExtResource("1_vd67m")
 

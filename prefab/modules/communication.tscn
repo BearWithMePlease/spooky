@@ -41,6 +41,8 @@ centered = false
 
 [node name="Borders" type="StaticBody2D" parent="Sprite"]
 position = Vector2(128, 64)
+collision_layer = 8912897
+collision_mask = 8912897
 
 [node name="Ceiling" type="CollisionPolygon2D" parent="Sprite/Borders"]
 polygon = PackedVector2Array(0, 13, -5, 13, -5, -22, -123, -22, -123, 13, -128, 13, -128, -27, 0, -27)
@@ -87,6 +89,8 @@ offset = Vector2(0.5, 0.5)
 [node name="Interactables" type="Node2D" parent="Sprite"]
 
 [node name="Communication" type="Area2D" parent="Sprite/Interactables" groups=["interact_communication"]]
+collision_layer = 4194304
+collision_mask = 4194304
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Sprite/Interactables/Communication"]
 position = Vector2(58, 107)
