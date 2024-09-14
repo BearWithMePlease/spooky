@@ -1,4 +1,4 @@
-[gd_scene load_steps=80 format=3 uid="uid://bo6ew1t4jg2x6"]
+[gd_scene load_steps=84 format=3 uid="uid://bo6ew1t4jg2x6"]
 
 [ext_resource type="Script" path="res://scripts/main_scene.gd" id="1_0jyw0"]
 [ext_resource type="Script" path="res://scripts/light_control.gd" id="2_una4x"]
@@ -30,9 +30,13 @@
 [ext_resource type="AudioStream" uid="uid://drewawapbdp4w" path="res://audio/sfx/random_noise/sound_5.mp3" id="23_2opvi"]
 [ext_resource type="AudioStream" uid="uid://27yx3pked2kp" path="res://audio/sfx/random_noise/sound_6.mp3" id="24_eal8t"]
 [ext_resource type="AudioStream" uid="uid://ccynk1hjmewto" path="res://audio/sfx/random_noise/sound_7.mp3" id="25_4k2ct"]
+[ext_resource type="AudioStream" uid="uid://bwa4q3uu7bxl2" path="res://audio/sfx/random_noise/monster_close/monster_close_1.mp3" id="26_0lfmj"]
 [ext_resource type="AudioStream" uid="uid://u6brqy6vxytv" path="res://audio/sfx/random_noise/sound_8.mp3" id="26_8fepu"]
 [ext_resource type="AudioStream" uid="uid://0t1l64nksl6q" path="res://audio/sfx/random_noise/sound_9.mp3" id="27_2xppg"]
+[ext_resource type="AudioStream" uid="uid://ttq2xd7ypj7w" path="res://audio/sfx/random_noise/monster_close/monster_close_2.mp3" id="27_g7mrr"]
+[ext_resource type="AudioStream" uid="uid://cu02un1sdut4u" path="res://audio/sfx/random_noise/monster_close/monster_close_3.mp3" id="28_cvbbk"]
 [ext_resource type="AudioStream" uid="uid://dgplj62jo2m88" path="res://audio/sfx/random_noise/sound_10.mp3" id="29_256ve"]
+[ext_resource type="AudioStream" uid="uid://c5nau1045ak6b" path="res://audio/sfx/gun_shoot.mp3" id="29_wxeml"]
 [ext_resource type="AudioStream" uid="uid://cihfhgsuq7wif" path="res://audio/sfx/random_noise/sound_11.mp3" id="30_22bms"]
 
 [sub_resource type="NavigationPolygon" id="NavigationPolygon_ki8cn"]
@@ -697,11 +701,16 @@ sound_light_on = ExtResource("4_ch04v")
 sound_light_off = ExtResource("5_76aoe")
 sound_foot_steps = Array[AudioStreamMP3]([ExtResource("6_kbj1v"), ExtResource("7_ndd1u"), ExtResource("8_01px5"), ExtResource("9_igb8x"), ExtResource("10_nncqf"), ExtResource("11_4s113"), ExtResource("12_rh8bm"), ExtResource("13_n4g3t"), ExtResource("14_4o2oy")])
 sound_random = Array[AudioStreamMP3]([ExtResource("19_fdaxv"), ExtResource("20_1lwuc"), ExtResource("21_nq4b5"), ExtResource("22_d6db7"), ExtResource("23_2opvi"), ExtResource("24_eal8t"), ExtResource("25_4k2ct"), ExtResource("26_8fepu"), ExtResource("27_2xppg"), ExtResource("29_256ve"), ExtResource("30_22bms")])
+sound_random_very_close = Array[AudioStreamMP3]([ExtResource("26_0lfmj"), ExtResource("27_g7mrr"), ExtResource("28_cvbbk")])
 
 [node name="Foot_Steps" type="AudioStreamPlayer" parent="Audio_Control"]
 bus = &"SFX"
 
 [node name="Random_Sounds" type="AudioStreamPlayer" parent="Audio_Control"]
+bus = &"SFX"
+
+[node name="Gun_Shot" type="AudioStreamPlayer" parent="Audio_Control"]
+stream = ExtResource("29_wxeml")
 bus = &"SFX"
 
 [node name="Modules" type="NavigationRegion2D" parent="."]
@@ -803,7 +812,7 @@ z_index = 2
 position = Vector2(0, 4.666)
 texture = ExtResource("6_qws5h")
 hframes = 23
-frame = 10
+frame = 9
 
 [node name="AnimationPlayer2" type="AnimationPlayer" parent="Player"]
 libraries = {
