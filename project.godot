@@ -54,6 +54,9 @@ sound_water=""
 sound_generator=""
 sound_communication=""
 sound_ceiling_light=""
+close_to_monster_area=""
+player_collision=""
+very_close_to_monster_area=""
 
 [input]
 

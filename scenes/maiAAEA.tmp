@@ -1,4 +1,4 @@
-[gd_scene load_steps=66 format=3 uid="uid://bo6ew1t4jg2x6"]
+[gd_scene load_steps=81 format=3 uid="uid://bo6ew1t4jg2x6"]
 
 [ext_resource type="Script" path="res://scripts/main_scene.gd" id="1_0jyw0"]
 [ext_resource type="Script" path="res://scripts/light_control.gd" id="2_una4x"]
@@ -39,10 +39,14 @@
 agent_radius = 8.0
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_gyg4v"]
-size = Vector2(1000, 500)
+size = Vector2(50, 50)
 
-[sub_resource type="RectangleShape2D" id="RectangleShape2D_hny0f"]
-size = Vector2(400, 200)
+[sub_resource type="Gradient" id="Gradient_hp55h"]
+
+[sub_resource type="GradientTexture2D" id="GradientTexture2D_dr10e"]
+gradient = SubResource("Gradient_hp55h")
+width = 500
+height = 500
 
 [sub_resource type="Gradient" id="Gradient_6josf"]
 interpolation_mode = 2
@@ -746,27 +750,23 @@ monitorable = false
 shape = SubResource("RectangleShape2D_gyg4v")
 debug_color = Color(0, 0.6, 0.701961, 0)
 
-[node name="VERY_CloseToMonsterArea" type="Area2D" parent="Monster/MonsterBody" groups=["very_close_to_monster_area"]]
-collision_layer = 0
-collision_mask = 4194304
-monitorable = false
-
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Monster/MonsterBody/VERY_CloseToMonsterArea"]
-shape = SubResource("RectangleShape2D_hny0f")
-debug_color = Color(0, 0.6, 0.701961, 0)
+[node name="Sprite2D" type="Sprite2D" parent="Monster/MonsterBody/CloseToMonsterArea"]
+visible = false
+texture = SubResource("GradientTexture2D_dr10e")
 
 [node name="NavigationAgent2D" type="NavigationAgent2D" parent="Monster"]
 
-[node name="Player" type="CharacterBody2D" parent="."]
-z_index = 2
+[node name="Player" type="CharacterBody2D" parent="." node_paths=PackedStringArray("GUN")]
 position = Vector2(0, -2)
 collision_layer = 2
 collision_mask = 3
 script = ExtResource("4_blcld")
 MAX_SPEED = 100
 ACCELERATION = 300
-JUMP_VELOCITY = -120.0
-GRAVITY = 500.0
+GUN = NodePath("gun")
+
+[node name="gun" parent="Player" node_paths=PackedStringArray("monster") instance=ExtResource("7_yae1m")]
+monster = NodePath("../../Monster")
 
 [node name="Aura" type="PointLight2D" parent="Player"]
 energy = 0.3
@@ -829,7 +829,7 @@ parameters/conditions/isWalkA = false
 parameters/conditions/isWalkB = false
 parameters/conditions/isWalkBA = false
 
-[node name="Collision" type="Area2D" parent="Player" groups=["player_collision"]]
+[node name="Collision" type="Area2D" parent="Player" groups=["player_collsion"]]
 collision_layer = 4194304
 collision_mask = 4194304
 

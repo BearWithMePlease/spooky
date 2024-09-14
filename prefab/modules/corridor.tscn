@@ -48,7 +48,6 @@ texture = ExtResource("2_0vfcj")
 centered = false
 
 [node name="Borders" type="StaticBody2D" parent="Sprite"]
-visible = false
 position = Vector2(128, 64)
 collision_layer = 8912897
 collision_mask = 8912897
