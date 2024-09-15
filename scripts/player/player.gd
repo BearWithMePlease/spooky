@@ -523,7 +523,7 @@ func interact():
 			if HP +50 > maxHP:
 				self.HP = maxHP
 			if HP < maxHP:
-				self.HP += 50
+				self.HP += 25
 			hospitalCooldown = true
 			print(HP)
 	
