@@ -339,7 +339,6 @@ func _physics_process(delta: float) -> void:
 				if pain == 3:
 					$body3/AudioStreamPlayer4.play()
 				camera.apply_shake()
-				print(HP)
 			airtime = 0
 
 		# Handle jump.
@@ -397,7 +396,6 @@ var ladder_array = []
 var lastWeaponsBuddy
 var generator
 func _on_area_2d_area_entered(area: Area2D) -> void:
-	#print(area)
 	if area.name == "Weapons":
 		isInWeapons = true
 		lastWeaponsBuddy = area
@@ -529,7 +527,6 @@ func interact():
 		if isInWeapons && Input.is_action_just_pressed("interact") && !ammoCooldown.has(lastWeaponsBuddy):
 			GUN.ammunition_pool_total += 15
 			ammoCooldown.append(lastWeaponsBuddy)
-			print(GUN.ammunition_pool_total)
 		
 		
 		if isInHospital:
@@ -547,14 +544,12 @@ func interact():
 			if HP < maxHP:
 				self.HP += 25
 			hospitalCooldown = true
-			print(HP)
 			
 		if isInGenerator && barrel.isExploded():
 			$generator.show()
 			
 			if Input.is_action_just_pressed("interact"):
 				barrel.reset()
-				print("Generator gtfo")
 
 	else:
 		$generator.hide()
@@ -574,11 +569,10 @@ func interact():
 			$water.show()
 	
 	if isInWater && Input.is_action_just_pressed("interact"):
-		print("water gtfo")
 		(waterBody as WaterValve).raiseUpWater();
 	
 	if isInGeneratorVent && Input.is_action_just_pressed("interact"):
-		print("Vent gtfo")
+		pass
 		
 	
 	
@@ -592,4 +586,4 @@ func interact():
 		aura.enabled = false;
 	
 	if isInBed && Input.is_action_just_pressed("interact"):
-		print("Bed gtfo")
+		pass

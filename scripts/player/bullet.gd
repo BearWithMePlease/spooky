@@ -31,7 +31,6 @@ func _process(delta: float) -> void:
 
 	if ray_cast.is_colliding():
 		var body = ray_cast.get_collider()
-		#print("Bullet hit: ", body)
 		if body.get_class() != "Bullet" && body.get_class() != "CharacterBody2D":
 			hide()
 			

@@ -12,7 +12,6 @@ func _ready() -> void:
 	player.position = Vector2(490, 0)
 	player.world = $".."
 	self.add_child(player)
-	print("child added")
 	
 	
 	#player.anims.play()

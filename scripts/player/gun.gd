@@ -77,7 +77,6 @@ func _process(delta: float) -> void:
 		
 		if rotation < -PI:
 			rotation += 2*PI	
-			#print(rotation)
 		if rotation > 0.5*PI || rotation < -0.5*PI :
 			#flip_v = true
 			

@@ -1,7 +1,7 @@
 extends Node2D
 class_name Storm
 
-const IRL_SECONDS_TO_INGAME_HOURS := 1.0 / 2.0;
+const IRL_SECONDS_TO_INGAME_HOURS := 1.0 / 3.5;
 @export var timeDisplay: Label = null;
 var _time: DateTime;
 var _currentAberration := 0.0;
