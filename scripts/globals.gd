@@ -24,8 +24,13 @@ var module_prefabs = {
 }
 
 var builder_modules: Array[Module] = []
+var custom_cross := load("res://imgs/cross.png")
+var custom_cursor := load("res://imgs/cursor.png")
 
 func switch_scene(from_scene: SceneType, to_scene: SceneType, addidtional = null):
+	Input.set_custom_mouse_cursor(null, Input.CURSOR_CROSS)
+	Input.set_custom_mouse_cursor(null, Input.CURSOR_ARROW)
+	
 	if from_scene == SceneType.BUNKER_BUILD and to_scene == SceneType.MAIN_SCENE:
 		# Add modules to scene
 		builder_modules = [] # TODO: Need to .free() all

@@ -24,6 +24,7 @@ func defeat():
 	self.get_tree().paused = true
 	defeat_menu.visible = true
 	pause_menu.visible = false
+	$"../Player_stats".set_health(0)
 
 func _on_resume_button_pressed() -> void:
 	self.get_tree().paused = false
@@ -31,4 +32,4 @@ func _on_resume_button_pressed() -> void:
 
 
 func _on_quit_to_menu_button_pressed() -> void:
-	Globals.switch_scene(Globals.SceneType.MAIN_SCENE, Globals.SceneType.BUNKER_BUILD)
+	Globals.switch_scene(Globals.SceneType.MAIN_SCENE, Globals.SceneType.START_MENU)

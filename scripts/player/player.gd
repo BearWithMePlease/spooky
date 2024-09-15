@@ -27,6 +27,17 @@ var isClimbing = false
 var climbInputU = false
 var climbInputD = false
 
+var custom_cross := load("res://imgs/cross.png")
+var custom_cursor := load("res://imgs/cursor.png")
+
+func takeDMG(dmgvalue):
+	if HP > dmgvalue:
+		HP -= dmgvalue
+	else:
+		HP = 0
+		$"../GUI/Menus".defeat()
+
+
 func climb(delta):
 	
 	if climbInputU:
@@ -223,7 +234,7 @@ func deafen(time: float):
 	isClimbing = false
 	GUN.isClimbing = isClimbing
 	$AnimationTree2.active = true
-	airtime += 1
+	airtime += 2
 	_deafenTimer = time;
 
 
@@ -252,7 +263,19 @@ func _ready():
 
 	#self.add_child(GUN)
 
+
+		
+
 func _process(delta):
+	if gunsAreGo:
+		Input.set_custom_mouse_cursor(custom_cross, Input.CURSOR_ARROW)
+	else:
+		Input.set_custom_mouse_cursor(custom_cursor, Input.CURSOR_ARROW)
+	
+	
+	if $"../Monster/MonsterBody".getHealth() <= 0:
+		$"../GUI/Menus".victory() #virctory here
+
 	_deafenTimer = max(0, _deafenTimer - delta);
 	
 	if _deafenTimer <= 0:
@@ -262,12 +285,19 @@ func _process(delta):
 		else:
 			climb(delta)
 		interact()
+	
+	if $"../Storm".isStorm():
+		ammoCooldown = []
+		hospitalCooldown = false
 
 @onready var camera = $Camera
 
 var airtime = 0
 @export var airtimeforDMG = 0.4
 func _physics_process(delta: float) -> void:
+	if isClimbing:
+		airtime = 0
+	
 	if !inInventory && !isClimbing: # no movement in inventory
 		checkGun()
 		
@@ -284,7 +314,7 @@ func _physics_process(delta: float) -> void:
 		else:
 			if airtime > airtimeforDMG:
 				var dmgtaken = ceil(airtime*falldmg_multiplier)
-				if HP < dmgtaken:
+				if HP <= dmgtaken:
 					$"../GUI/Menus".defeat() #death here
 				else:
 					HP -= ceil(airtime*falldmg_multiplier)
@@ -352,18 +382,19 @@ var isInBed = false
 
 var ladder_array = []
 
+var lastWeaponsBuddy
 func _on_area_2d_area_entered(area: Area2D) -> void:
 	#print(area)
 	if area.name == "Weapons":
 		isInWeapons = true
-		$Label.show()
+		lastWeaponsBuddy = area
 	else:
 		isInWeapons = false
 	
 	
 	if area.name == "Healing":
 		isInHospital = true
-		$Label.show()
+		#$Label.show()
 	else:
 		isInHospital = false
 
@@ -371,7 +402,7 @@ func _on_area_2d_area_entered(area: Area2D) -> void:
 	if area is WaterValve:
 		waterBody = area;
 		isInWater = true
-		$Label.show()
+		#$Label.show()
 	else:
 		isInWater = false
 		waterBody = null;
@@ -379,28 +410,28 @@ func _on_area_2d_area_entered(area: Area2D) -> void:
 	
 	if area.name == "Vent":
 		isInGeneratorVent = true
-		$Label.show()
+		#$Label.show()
 	else:
 		isInGeneratorVent = false
 
 	
 	if area.name == "Generator":
 		isInGenerator = true
-		$Label.show()
+		#$Label.show()
 	else:
 		isInGenerator = false
 	
 	
 	if area.name == "Communication":
 		isInCom = true
-		$Label.show()
+		#$Label.show()
 	else:
 		isInCom = false
 	
 	
 	if area.name == "Bed":
 		isInBed = true
-		$Label.show()
+		#$Label.show()
 	else:
 		isInBed = false
 	
@@ -414,40 +445,42 @@ func _on_area_2d_area_entered(area: Area2D) -> void:
 
 
 
-	
 func _on_area_2d_area_exited(area: Area2D) -> void:
 	if area.name == "Weapons":
 		isInWeapons = false
-		$Label.hide()
+		
+		$"unused  weapons".hide()
+		$expired.hide()
 	
 	if area.name == "Healing":
 		isInHospital = false
-		$Label.hide()
-	
+		$expired.hide()
+		$"unused hospital".hide()	
+		
 	if area is WaterValve:
 		isInWater = false
 		waterBody = null;
-		$Label.hide()
+		#$Label.hide()
 	
 	
 	
 	if area.name == "Vent":
 		isInGeneratorVent = false
-		$Label.hide()
+		#$Label.hide()
 		
 	if area.name == "Generator":
 		isInGenerator = false
-		$Label.hide()
+		#$Label.hide()
 		
 	
 	if area.name == "Communication":
 		isInCom = false
-		$Label.hide()
+		#$Label.hide()
 		
 	
 	if area.name == "Bed":
 		isInBed = false
-		$Label.hide()
+		#$Label.hide()
 	
 	
 	if area.name == "Ladder":
@@ -458,14 +491,41 @@ func _on_area_2d_area_exited(area: Area2D) -> void:
 			$AnimationTree2.active = true
 	
 	
-	
+var ammoCooldown = []
+var hospitalCooldown = false
 func interact():
-	if isInWeapons && Input.is_action_just_pressed("interact"):
-		GUN.ammunition_pool_total = 200
-	
-	if isInHospital && Input.is_action_just_pressed("interact"):
-		if HP < maxHP:
-			self.HP = maxHP
+	if !$"../Storm".isStorm(): 
+		
+		if isInWeapons:
+			if !ammoCooldown.has(lastWeaponsBuddy):
+				$"unused  weapons".show()
+				$expired.hide()
+			else:
+				$expired.show()
+				$"unused  weapons".hide()
+		
+		if isInWeapons && Input.is_action_just_pressed("interact") && !ammoCooldown.has(lastWeaponsBuddy):
+			GUN.ammunition_pool_total += 30
+			ammoCooldown.append(lastWeaponsBuddy)
+			print(GUN.ammunition_pool_total)
+		
+		
+		if isInHospital:
+			if !hospitalCooldown:
+				$"unused hospital".show()
+				$expired.hide()
+			else:
+				$expired.show()
+				$"unused hospital".hide()
+		
+		
+		if isInHospital && Input.is_action_just_pressed("interact") && !hospitalCooldown:
+			if HP +50 > maxHP:
+				self.HP = maxHP
+			if HP < maxHP:
+				self.HP += 50
+			hospitalCooldown = true
+			print(HP)
 	
 	if isInWater && Input.is_action_just_pressed("interact"):
 		print("water gtfo")

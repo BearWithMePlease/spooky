@@ -11,13 +11,14 @@ class_name AudioControl
 @export_category("Foot Steps")
 @export var sound_foot_steps: Array[AudioStreamMP3]
 @export var sound_foot_volume: float = -10
-@onready var foot_steps: AudioStreamPlayer = $Foot_Steps
+@onready var foot_steps := $Foot_Steps
 
 @export_category("Random Sounds")
 @export var sound_random: Array[AudioStreamMP3]
 @export var sound_random_volume: float = 5
 @export var sound_random_very_close: Array[AudioStreamMP3]
 @export var sound_random_very_close_volume: float = -10
+@export var will_play_random_sounds:bool = true
 @onready var random_sounds: AudioStreamPlayer = $Random_Sounds
 
 @export_category("Gun Shot")
@@ -42,7 +43,8 @@ func on_main_finished_ready():
 	random_sounds.volume_db = sound_random_volume
 	gun_shot_sounds.volume_db = sound_gun_shot_volume
 	
-	play_random_sounds(true)
+	if will_play_random_sounds:
+		play_random_sounds(true)
 
 
 func play_light_flicker(light_source: PointLight2D, to_enabled: bool, pitch_scale: float = 1.0):
@@ -133,4 +135,4 @@ func _play_shoot_sound(id: int):
 
 func _on_volume_slider_value_changed(value: float) -> void:
 	var id = AudioServer.get_bus_index("Master")
-	AudioServer.set_bus_volume_db(id, linear_to_db(value))
+	AudioServer.set_bus_volume_db(id, linear_to_db(value)*0.4)
