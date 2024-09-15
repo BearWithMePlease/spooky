@@ -1,4 +1,4 @@
-[gd_scene load_steps=92 format=3 uid="uid://bo6ew1t4jg2x6"]
+[gd_scene load_steps=93 format=3 uid="uid://bo6ew1t4jg2x6"]
 
 [ext_resource type="Script" path="res://scripts/main_scene.gd" id="1_0jyw0"]
 [ext_resource type="Script" path="res://scripts/light_control.gd" id="2_una4x"]
@@ -37,10 +37,10 @@
 [ext_resource type="AudioStream" uid="uid://c5nau1045ak6b" path="res://audio/sfx/gun_shoot.mp3" id="29_wxeml"]
 [ext_resource type="AudioStream" uid="uid://cihfhgsuq7wif" path="res://audio/sfx/random_noise/sound_11.mp3" id="30_22bms"]
 [ext_resource type="Script" path="res://scripts/player/player.gd" id="30_bvicb"]
+[ext_resource type="Script" path="res://scripts/pan_zoom_camera.gd" id="35_6pws3"]
 [ext_resource type="Shader" path="res://scripts/aberration.gdshader" id="35_eawox"]
 [ext_resource type="PackedScene" uid="uid://cvxn7m4bhe5mo" path="res://scenes/gun.tscn" id="35_l6ijx"]
 [ext_resource type="Script" path="res://scenes/storm.gd" id="35_ui06t"]
-[ext_resource type="Script" path="res://scripts/pan_zoom_camera.gd" id="35_6pws3"]
 [ext_resource type="AudioStream" uid="uid://br38s62ld0s8p" path="res://audio/sfx/screaming/scream1.wav" id="36_5chg8"]
 [ext_resource type="AudioStream" uid="uid://bm45xq2ktdury" path="res://audio/sfx/screaming/scream2.wav" id="37_8gsgm"]
 [ext_resource type="Script" path="res://scripts/ingame_menus.gd" id="38_ptr41"]
@@ -828,7 +828,7 @@ z_index = 2
 position = Vector2(0, 4.666)
 texture = ExtResource("6_qws5h")
 hframes = 23
-frame = 9
+frame = 10
 
 [node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="Player/body3"]
 stream = ExtResource("36_5chg8")
