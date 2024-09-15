@@ -5,6 +5,7 @@ const IRL_SECONDS_TO_INGAME_HOURS := 1.0 / 2.0;
 @export var timeDisplay: Label = null;
 var _time: DateTime;
 var _currentAberration := 0.0;
+var _stopp_time: bool = false
 const ABERRATION_TRANSITION := 0.5;
 
 class DateTime:
@@ -33,6 +34,9 @@ func isStorm() -> bool:
 	return _time.getHours() < 12;
 
 func _process(delta: float) -> void:
+	if _stopp_time:
+		return
+	
 	_time.irlSeconds += delta;
 	timeDisplay.add_theme_color_override("font_color", Color("562923") if isStorm() else Color("3b6d62"));
 	timeDisplay.text = "Day " + str(_time.getDay()) + ": ";
