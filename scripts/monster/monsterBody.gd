@@ -21,7 +21,7 @@ var _center := Vector2(0, 0)
 const WALL_COLLISION_MASK = 0b01
 var _moveDirection: Vector2 = Vector2.ZERO
 var _grabPlayer := false;
-var _health: int = 100;
+var _health: int = 300;
 
 func resetLegs() -> void:
 	for leg in _legs:

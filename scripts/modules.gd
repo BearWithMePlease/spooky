@@ -500,10 +500,10 @@ func check_finished_building(timing:float = 0.5):
 
 	# Can not click button if: not connected or not all rooms placed (except Corridor) or moving module
 	var can_finish = not self.all_connected or not placed_all_rooms or self.moving
-	#if can_finish == self.confirm_build_button.disabled:
-		#return
+	if can_finish == self.confirm_build_button.disabled:
+		return
 	
-	self.confirm_build_button.disabled = false #can_finish # TODO: replace to can_finish
+	self.confirm_build_button.disabled = can_finish # TODO: replace to can_finish
 
 	var new_position: Vector2
 	if self.confirm_build_button.disabled:

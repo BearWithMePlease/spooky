@@ -43,18 +43,12 @@ func _process(delta: float) -> void:
 				
 				$AnimationPlayer.play("reload_new")
 				
-				if ammunition_pool_total >= 30 : 
-					if ammunition == 0:
-						ammunition_pool_total -= 30
-						ammunition = 30
-					else:
-						ammunition_pool_total += ammunition
-						ammunition_pool_total -= 30
-						ammunition = 30
-
-				else:
-					ammunition = ammunition_pool_total
-					ammunition_pool_total = 0
+				var diff = min(30 - ammunition, ammunition_pool_total)
+				
+				ammunition += diff
+				ammunition_pool_total -= diff
+				
+				
 				
 				await get_tree().create_timer(2.5).timeout
 				isReloading = false
