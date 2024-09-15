@@ -1,12 +1,35 @@
-[gd_scene load_steps=15 format=3 uid="uid://ogv0kj11knlg"]
+[gd_scene load_steps=21 format=3 uid="uid://ogv0kj11knlg"]
 
 [ext_resource type="Script" path="res://scripts/module.gd" id="2_2pgmg"]
 [ext_resource type="Texture2D" uid="uid://ba82qlhnxs647" path="res://imgs/modules/generator/n.png" id="2_f5htx"]
 [ext_resource type="Texture2D" uid="uid://23fct8kq14u0" path="res://imgs/modules/generator/wall.png" id="2_hvsvt"]
+[ext_resource type="Script" path="res://prefab/modules/barrel.gd" id="3_syxdc"]
 [ext_resource type="PackedScene" uid="uid://dki4talhc74jp" path="res://prefab/ceiling_lamp.tscn" id="3_uedks"]
+[ext_resource type="Texture2D" uid="uid://cxswmt22q3ngg" path="res://imgs/modules/generator/barrel_new.png" id="4_fnli7"]
+[ext_resource type="Texture2D" uid="uid://w3a7qamsfxah" path="res://imgs/modules/generator/barrel_exploded.png" id="5_eltvb"]
 [ext_resource type="PackedScene" uid="uid://tbs4ifkjrnhc" path="res://prefab/vent.tscn" id="5_nnwbo"]
 [ext_resource type="AudioStream" uid="uid://cn3njy7bpuo3h" path="res://audio/sfx/generator_running.mp3" id="6_e7xe1"]
 [ext_resource type="PackedScene" uid="uid://bospy2knasfaj" path="res://prefab/sound_effect.tscn" id="6_f2cux"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_7l51i"]
+size = Vector2(21, 57)
+
+[sub_resource type="Curve" id="Curve_ugast"]
+_data = [Vector2(0.0173611, 0.954225), 0.0, 0.0, 0, 0, Vector2(0.493056, 0.395775), 0.0, 0.0, 0, 0]
+point_count = 2
+
+[sub_resource type="Gradient" id="Gradient_kuyru"]
+offsets = PackedFloat32Array(0, 0.211538, 0.438462, 0.792308, 0.976923)
+colors = PackedColorArray(0.890196, 0.866667, 0.819608, 1, 0.65098, 0.533333, 0.290196, 1, 0.470588, 0.145098, 0.129412, 1, 0.470588, 0.145098, 0.129412, 0.647059, 0, 0, 0, 0.490196)
+
+[sub_resource type="Gradient" id="Gradient_1ndru"]
+colors = PackedColorArray(0.65098, 0.533333, 0.290196, 1, 0, 0, 0, 1)
+
+[sub_resource type="GradientTexture2D" id="GradientTexture2D_bpqit"]
+gradient = SubResource("Gradient_1ndru")
+fill = 1
+fill_from = Vector2(0.5, 0.5)
+fill_to = Vector2(0.5, 0.05)
 
 [sub_resource type="OccluderPolygon2D" id="OccluderPolygon2D_5q2ex"]
 polygon = PackedVector2Array(-128, -37, 128, -36, 128, 10, 127, 10, 127, -35, -127, -36, -127, 10, -128, 10)
@@ -20,17 +43,6 @@ polygon = PackedVector2Array(3, -3, 4, -3, 4, 50, 3, 50)
 [sub_resource type="OccluderPolygon2D" id="OccluderPolygon2D_7x8lh"]
 polygon = PackedVector2Array(0, -3, 1, -3, 1, 50, 0, 50)
 
-[sub_resource type="Gradient" id="Gradient_fy635"]
-offsets = PackedFloat32Array(0, 0.755844)
-colors = PackedColorArray(1, 1, 1, 1, 0, 0, 0, 1)
-
-[sub_resource type="GradientTexture2D" id="GradientTexture2D_mamyw"]
-gradient = SubResource("Gradient_fy635")
-width = 16
-height = 16
-fill = 1
-fill_from = Vector2(0.5, 0.5)
-
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_0u251"]
 size = Vector2(78, 48)
 
@@ -41,6 +53,50 @@ script = ExtResource("2_2pgmg")
 light_mask = 3073
 texture = ExtResource("2_f5htx")
 centered = false
+
+[node name="Barrel" type="Area2D" parent="Sprite"]
+position = Vector2(65, 91)
+collision_layer = 524289
+script = ExtResource("3_syxdc")
+newBarrel = ExtResource("4_fnli7")
+explodedBarrel = ExtResource("5_eltvb")
+
+[node name="Sprite" type="Sprite2D" parent="Sprite/Barrel"]
+texture_filter = 1
+texture = ExtResource("4_fnli7")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Sprite/Barrel"]
+position = Vector2(0.5, 3.5)
+shape = SubResource("RectangleShape2D_7l51i")
+
+[node name="CPUParticles2D" type="CPUParticles2D" parent="Sprite/Barrel"]
+emitting = false
+amount = 80
+lifetime = 1.2
+one_shot = true
+speed_scale = 2.0
+explosiveness = 1.0
+emission_shape = 1
+emission_sphere_radius = 17.22
+spread = 0.0
+gravity = Vector2(0, 0)
+angular_velocity_min = -346.37
+angular_velocity_max = 224.42
+linear_accel_min = -3.9
+linear_accel_max = 100.0
+radial_accel_min = -0.55
+radial_accel_max = 100.0
+tangential_accel_min = -51.95
+tangential_accel_max = 16.88
+scale_amount_min = 4.0
+scale_amount_max = 20.0
+scale_amount_curve = SubResource("Curve_ugast")
+color_ramp = SubResource("Gradient_kuyru")
+
+[node name="PointLight2D" type="PointLight2D" parent="Sprite/Barrel"]
+energy = 0.0
+texture = SubResource("GradientTexture2D_bpqit")
+texture_scale = 2.25
 
 [node name="Borders" type="StaticBody2D" parent="Sprite"]
 position = Vector2(128, 64)
@@ -84,11 +140,6 @@ position = Vector2(118, 59)
 
 [node name="Ceiling_Light2" parent="Sprite/Lights" instance=ExtResource("3_uedks")]
 position = Vector2(214, 67)
-
-[node name="Electric_Light" type="PointLight2D" parent="Sprite/Lights" groups=["electric_light", "generator_light"]]
-position = Vector2(66, 92)
-range_item_cull_mask = 1024
-texture = SubResource("GradientTexture2D_mamyw")
 
 [node name="Interactables" type="Node2D" parent="Sprite"]
 
