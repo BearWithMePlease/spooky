@@ -791,11 +791,64 @@ GRAVITY = 500.0
 GUN = NodePath("gun")
 airtimeforDMG = 0.6
 
+[node name="expired" type="Label" parent="Player"]
+visible = false
+offset_left = -77.8
+offset_top = -26.0
+offset_right = 442.2
+offset_bottom = 9.0
+scale = Vector2(0.3, 0.3)
+theme_override_fonts/font = ExtResource("7_5wvvi")
+theme_override_font_sizes/font_size = 16
+text = "no more supplies 
+for today in this stash"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="unused hospital" type="Label" parent="Player"]
+visible = false
+offset_left = -50.0
+offset_top = -27.1
+offset_right = 286.0
+offset_bottom = 15.9
+scale = Vector2(0.3, 0.3)
+theme_override_fonts/font = ExtResource("7_5wvvi")
+theme_override_font_sizes/font_size = 16
+text = "press E 
+to heal up"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="unused  weapons" type="Label" parent="Player"]
+visible = false
+offset_left = -50.0
+offset_top = -27.0
+offset_right = 286.0
+offset_bottom = 16.0
+scale = Vector2(0.3, 0.3)
+theme_override_fonts/font = ExtResource("7_5wvvi")
+theme_override_font_sizes/font_size = 16
+text = "press E 
+to restock ammunition"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Label" type="Label" parent="Player"]
+visible = false
+offset_left = -46.0
+offset_top = -35.0
+offset_right = 258.0
+offset_bottom = -12.0
+scale = Vector2(0.3, 0.3)
+theme_override_fonts/font = ExtResource("7_5wvvi")
+text = "press E to interact"
+
 [node name="gun" parent="Player" node_paths=PackedStringArray("monster") instance=ExtResource("35_l6ijx")]
 monster = NodePath("../../Monster")
 ammunition_pool_total = 30
 
 [node name="Aura" type="PointLight2D" parent="Player"]
+position = Vector2(3, 0)
 energy = 0.3
 blend_mode = 2
 shadow_enabled = true
@@ -831,7 +884,7 @@ z_index = 2
 position = Vector2(0, 4.666)
 texture = ExtResource("6_qws5h")
 hframes = 23
-frame = 10
+frame = 9
 
 [node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="Player/body3"]
 stream = ExtResource("36_5chg8")
@@ -882,15 +935,6 @@ collision_mask = 4194304
 visible = false
 position = Vector2(0, 6)
 shape = SubResource("CapsuleShape2D_fcb8y")
-
-[node name="Label" type="Label" parent="Player"]
-offset_left = -75.0
-offset_top = -25.0
-offset_right = 229.0
-offset_bottom = -2.0
-scale = Vector2(0.3, 0.3)
-theme_override_fonts/font = ExtResource("7_5wvvi")
-text = "press E to interact"
 
 [node name="Storm" type="Node2D" parent="." node_paths=PackedStringArray("timeDisplay")]
 script = ExtResource("35_ui06t")
