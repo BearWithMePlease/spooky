@@ -8,8 +8,10 @@ class_name Player
 @export var GRAVITY := 98.0
 @export var GUN: Gun = null;
 @onready var axis = Vector2.ZERO
+@onready var aura: PointLight2D = $Aura;
 @export var HP = 100
 @export var falldmg_multiplier = 10
+@export var globalLight: DirectionalLight2D = null;
 
 @onready var audio_control :=  $"../Audio_Control"
 
@@ -267,6 +269,14 @@ func _ready():
 		
 
 func _process(delta):
+	if isUsingCommunicationRoom:
+		if global_position.distance_to(positionWhenUsedCommunicationRoom) > 1.0 or Input.is_action_pressed("click"):
+			isUsingCommunicationRoom = false;
+			camera.center_on_player();
+			globalLight.energy = 3.0;
+			aura.enabled = true;
+	
+	
 	if gunsAreGo:
 		Input.set_custom_mouse_cursor(custom_cross, Input.CURSOR_ARROW)
 	else:
@@ -376,6 +386,8 @@ var isInGenerator = false
 var isInGeneratorVent = false
 
 var isInCom = false
+var isUsingCommunicationRoom: bool = false;
+var positionWhenUsedCommunicationRoom: Vector2 = Vector2.ZERO;
 
 var isInBed = false
 
@@ -383,6 +395,7 @@ var isInBed = false
 var ladder_array = []
 
 var lastWeaponsBuddy
+var generator
 func _on_area_2d_area_entered(area: Area2D) -> void:
 	#print(area)
 	if area.name == "Weapons":
@@ -417,6 +430,7 @@ func _on_area_2d_area_entered(area: Area2D) -> void:
 	
 	if area.name == "Generator":
 		isInGenerator = true
+		generator = area
 		#$Label.show()
 	else:
 		isInGenerator = false
@@ -424,7 +438,7 @@ func _on_area_2d_area_entered(area: Area2D) -> void:
 	
 	if area.name == "Communication":
 		isInCom = true
-		#$Label.show()
+		$communications.show()
 	else:
 		isInCom = false
 	
@@ -460,6 +474,7 @@ func _on_area_2d_area_exited(area: Area2D) -> void:
 	if area is WaterValve:
 		isInWater = false
 		waterBody = null;
+		$water.hide()
 		#$Label.hide()
 	
 	
@@ -470,12 +485,14 @@ func _on_area_2d_area_exited(area: Area2D) -> void:
 		
 	if area.name == "Generator":
 		isInGenerator = false
+		$generator.hide()
 		#$Label.hide()
 		
 	
 	if area.name == "Communication":
 		isInCom = false
-		#$Label.hide()
+		$communications.hide()
+
 		
 	
 	if area.name == "Bed":
@@ -493,7 +510,12 @@ func _on_area_2d_area_exited(area: Area2D) -> void:
 	
 var ammoCooldown = []
 var hospitalCooldown = false
+var barrel
 func interact():
+	
+	if isInGenerator:
+		barrel = generator.get_parent().get_parent().find_child("Barrel")
+		
 	if !$"../Storm".isStorm(): 
 		
 		if isInWeapons:
@@ -523,9 +545,33 @@ func interact():
 			if HP +50 > maxHP:
 				self.HP = maxHP
 			if HP < maxHP:
-				self.HP += 50
+				self.HP += 25
 			hospitalCooldown = true
 			print(HP)
+			
+		if isInGenerator && barrel.isExploded():
+			$generator.show()
+			
+			if Input.is_action_just_pressed("interact"):
+				barrel.reset()
+				print("Generator gtfo")
+
+	else:
+		$generator.hide()
+		$"unused hospital".hide()
+		$"unused  weapons".hide()
+		$expired.hide()
+
+
+
+
+	
+	
+	if isInWater:
+		if waterBody._waterIsRaisen:
+			$water.hide()
+		else:
+			$water.show()
 	
 	if isInWater && Input.is_action_just_pressed("interact"):
 		print("water gtfo")
@@ -534,11 +580,16 @@ func interact():
 	if isInGeneratorVent && Input.is_action_just_pressed("interact"):
 		print("Vent gtfo")
 		
-	if isInGenerator && Input.is_action_just_pressed("interact"):
-		print("Generator gtfo")
+	
 	
 	if isInCom && Input.is_action_just_pressed("interact"):
-		print("Communication gtfo")
+		$communications.hide()
+		# depending on zoom implementation
+		(camera as PanZoomCamera).center_on_bunker();
+		isUsingCommunicationRoom = true;
+		positionWhenUsedCommunicationRoom = self.global_position;
+		globalLight.energy = 0.25;
+		aura.enabled = false;
 	
 	if isInBed && Input.is_action_just_pressed("interact"):
 		print("Bed gtfo")

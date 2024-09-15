@@ -56,13 +56,13 @@ func random_light_flicker():
 	await get_tree().create_timer(randf_range(5, 10)).timeout
 	random_light_flicker()
 
-func left_area_entered(area: Area2D):
+func left_area_entered(_area: Area2D):
 	current_movement = FakeMovement.WALKING_RIGHT
 
-func right_area_entered(area: Area2D):
+func right_area_entered(_area: Area2D):
 	current_movement = FakeMovement.LADDER_DOWN
 
-func despawn(area: Area2D):
+func despawn(_area: Area2D):
 	fake_player.global_position = spawn_point.global_position
 	current_movement = FakeMovement.LADDER_UP
 

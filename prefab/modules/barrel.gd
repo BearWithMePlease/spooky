@@ -17,6 +17,7 @@ func explodeBarrel() -> void:
 	particles.emitting = true;
 	_lightTimer = LIGHT_FALL_TIME;
 	_isExploded = true;
+	$AudioStreamPlayer.play()
 	
 func isExploded() -> bool:
 	return _isExploded;
@@ -26,3 +27,10 @@ func _process(delta: float) -> void:
 	const MAX_LIGHT := 12.5;
 	var procent := _lightTimer / LIGHT_FALL_TIME;
 	light.energy = MAX_LIGHT * (procent * procent) # quadratisch
+	
+	
+func reset():
+	_lightTimer = 0.0
+	_isExploded = false
+	sprite.texture = newBarrel
+	particles.emitting = false

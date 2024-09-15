@@ -1,4 +1,4 @@
-[gd_scene load_steps=21 format=3 uid="uid://ogv0kj11knlg"]
+[gd_scene load_steps=22 format=3 uid="uid://ogv0kj11knlg"]
 
 [ext_resource type="Script" path="res://scripts/module.gd" id="2_2pgmg"]
 [ext_resource type="Texture2D" uid="uid://ba82qlhnxs647" path="res://imgs/modules/generator/n.png" id="2_f5htx"]
@@ -8,6 +8,7 @@
 [ext_resource type="Texture2D" uid="uid://cxswmt22q3ngg" path="res://imgs/modules/generator/barrel_new.png" id="4_fnli7"]
 [ext_resource type="Texture2D" uid="uid://w3a7qamsfxah" path="res://imgs/modules/generator/barrel_exploded.png" id="5_eltvb"]
 [ext_resource type="PackedScene" uid="uid://tbs4ifkjrnhc" path="res://prefab/vent.tscn" id="5_nnwbo"]
+[ext_resource type="AudioStream" uid="uid://rdoyf0votlde" path="res://audio/sfx/explosion-42132.mp3" id="6_b38gi"]
 [ext_resource type="AudioStream" uid="uid://cn3njy7bpuo3h" path="res://audio/sfx/generator_running.mp3" id="6_e7xe1"]
 [ext_resource type="PackedScene" uid="uid://bospy2knasfaj" path="res://prefab/sound_effect.tscn" id="6_f2cux"]
 
@@ -97,6 +98,10 @@ color_ramp = SubResource("Gradient_kuyru")
 energy = 0.0
 texture = SubResource("GradientTexture2D_bpqit")
 texture_scale = 2.25
+
+[node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="Sprite/Barrel"]
+stream = ExtResource("6_b38gi")
+volume_db = -32.0
 
 [node name="Borders" type="StaticBody2D" parent="Sprite"]
 position = Vector2(128, 64)

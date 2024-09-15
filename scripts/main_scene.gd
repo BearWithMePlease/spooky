@@ -25,7 +25,7 @@ var tutorial_msg = {
 	TutorialStep.FINISHED: "",
 }
 
-var current_tutorial_step:TutorialStep = TutorialStep.FINISHED
+var current_tutorial_step: TutorialStep = TutorialStep.FINISHED
 
 func _ready() -> void:
 	# Fot tutorial select
@@ -42,6 +42,18 @@ func _ready() -> void:
 		#monster.global_position = spawn_point.global_position
 		
 	# Calculate boundries of bunker to bake navigation polygons
+	var bounds := getBunkerBounds();
+	modules.navigation_polygon.add_outline(PackedVector2Array([
+		bounds.position,
+		Vector2(bounds.position.x + bounds.size.x, bounds.position.y),
+		bounds.position + bounds.size,
+		Vector2(bounds.position.x, bounds.position.y + bounds.size.y)
+	]))
+	modules.bake_navigation_polygon()
+	
+	finished_ready.emit()
+
+func getBunkerBounds() -> Rect2:
 	var boundries := _getAllModuleBoundingBoxes()
 	var from := Vector2(1e9, 1e9)
 	var to := Vector2(-1e9, -1e9)
@@ -54,10 +66,7 @@ func _ready() -> void:
 			from.y = boundry.position.y
 		if to.y < boundry.position.y + boundry.size.y:
 			to.y = boundry.position.y + boundry.size.y
-	modules.navigation_polygon.add_outline(PackedVector2Array([from, Vector2(from.x + to.x, from.y), to, Vector2(from.x, from.y + to.y)]))
-	modules.bake_navigation_polygon()
-	
-	finished_ready.emit()
+	return Rect2(from, to - from);
 
 func _process(delta: float) -> void:
 	if current_tutorial_step == TutorialStep.SELECT_WEAPON:
@@ -85,6 +94,7 @@ func change_tutorialstep(next_step: TutorialStep):
 		$GUI/Tutorial/Label.visible = false
 		$Storm._stopp_time = false
 
+
 # Founds boundry of each module
 func _getAllModuleBoundingBoxes() -> Array[Rect2]:
 	var boundsArr: Array[Rect2] = []
@@ -96,12 +106,6 @@ func _getAllModuleBoundingBoxes() -> Array[Rect2]:
 		var boundry := Rect2(module.global_position.x - Modules.GRID_SIZE * 0.5, module.global_position.y + Modules.GRID_SIZE * 0.5 - height, width, height)
 		boundsArr.append(boundry)
 	return boundsArr
-
-
-
-	
-	pass # Replace with function body.
-
 
 func _on_play_raw_pressed() -> void:
 	play_tutorial = false
