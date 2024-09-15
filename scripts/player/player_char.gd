@@ -252,7 +252,6 @@ func _ready():
 
 	self.add_child(gun)
 
-	
 func _process(delta):
 	_deafenTimer = max(0, _deafenTimer - delta);
 	
@@ -264,6 +263,7 @@ func _process(delta):
 			climb(delta)
 		interact()
 
+@onready var camera = $Camera
 
 var airtime = 0
 @export var airtimeforDMG = 0.4
@@ -294,7 +294,7 @@ func _physics_process(delta: float) -> void:
 					$body3/AudioStreamPlayer3.play()
 				if pain == 3:
 					$body3/AudioStreamPlayer4.play()
-				
+				camera.apply_shake()
 				print(HP)
 			airtime = 0
 

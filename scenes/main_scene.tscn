@@ -1,4 +1,4 @@
-[gd_scene load_steps=88 format=3 uid="uid://bo6ew1t4jg2x6"]
+[gd_scene load_steps=89 format=3 uid="uid://bo6ew1t4jg2x6"]
 
 [ext_resource type="Script" path="res://scripts/main_scene.gd" id="1_0jyw0"]
 [ext_resource type="Script" path="res://scripts/light_control.gd" id="2_una4x"]
@@ -37,6 +37,7 @@
 [ext_resource type="AudioStream" uid="uid://dgplj62jo2m88" path="res://audio/sfx/random_noise/sound_10.mp3" id="29_256ve"]
 [ext_resource type="AudioStream" uid="uid://c5nau1045ak6b" path="res://audio/sfx/gun_shoot.mp3" id="29_wxeml"]
 [ext_resource type="AudioStream" uid="uid://cihfhgsuq7wif" path="res://audio/sfx/random_noise/sound_11.mp3" id="30_22bms"]
+[ext_resource type="Script" path="res://scripts/pan_zoom_camera.gd" id="35_6pws3"]
 [ext_resource type="AudioStream" uid="uid://br38s62ld0s8p" path="res://audio/sfx/screaming/scream1.wav" id="36_5chg8"]
 [ext_resource type="AudioStream" uid="uid://bm45xq2ktdury" path="res://audio/sfx/screaming/scream2.wav" id="37_8gsgm"]
 [ext_resource type="Script" path="res://scripts/ingame_menus.gd" id="38_ptr41"]
@@ -794,6 +795,8 @@ current = true
 scale = Vector2(0.987829, 0.884354)
 offset = Vector2(0, -15)
 zoom = Vector2(5, 5)
+script = ExtResource("35_6pws3")
+randomStrength = 10.0
 
 [node name="Background" type="CanvasLayer" parent="Player/Camera"]
 layer = -1

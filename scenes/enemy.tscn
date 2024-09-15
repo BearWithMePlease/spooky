@@ -1,6 +1,6 @@
 [gd_scene load_steps=6 format=3 uid="uid://c3cfufhet1let"]
 
-[ext_resource type="PackedScene" uid="uid://betx6m81e680d" path="res://prefab/monster/monster.tscn" id="1_xcd52"]
+[ext_resource type="PackedScene" uid="uid://chnqbtwpbtrir" path="res://prefab/monster/monster.tscn" id="1_xcd52"]
 [ext_resource type="Texture2D" uid="uid://bsfoxkgqdmhpf" path="res://images/wall.png" id="4_pjkcp"]
 [ext_resource type="Script" path="res://scripts/fps.gd" id="6_m5y2w"]
 
