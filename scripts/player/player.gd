@@ -283,7 +283,11 @@ func _physics_process(delta: float) -> void:
 
 		else:
 			if airtime > airtimeforDMG:
-				HP -= ceil(airtime*falldmg_multiplier)
+				var dmgtaken = ceil(airtime*falldmg_multiplier)
+				if HP < dmgtaken:
+					$"../GUI/Menus".defeat() #death here
+				else:
+					HP -= ceil(airtime*falldmg_multiplier)
 				
 				var pain = randi_range(0,3)
 				if pain == 0:
