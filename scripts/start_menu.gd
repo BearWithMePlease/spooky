@@ -4,8 +4,11 @@ extends Node2D
 @onready var spawn_point := $Animation_Positions/SpawnPoint
 @onready var light_control := $Light_Control
 
+@export var effect: float = 50.0
+
 var current_movement: FakeMovement
 var speed = 100
+var mouse_in_window: bool = true
 
 enum FakeMovement {
 	LADDER_UP,
@@ -31,6 +34,19 @@ func _process(delta: float) -> void:
 	elif current_movement == FakeMovement.LADDER_UP:
 		fake_player.position += Vector2(0, -speed * delta)
 		fake_player.play("climbing")
+		
+	if mouse_in_window:
+		var viewport_rect := get_viewport().get_visible_rect()
+		var mouse_pos = get_viewport().get_mouse_position()
+		var mouse_offset = mouse_pos / viewport_rect.size - Vector2.ONE * 0.5
+	
+		$Camera2D.offset = lerp($Camera2D.offset, mouse_offset * effect, 10.0 * delta)
+
+func _notification(what):
+	if what == NOTIFICATION_WM_MOUSE_ENTER:
+		mouse_in_window = true
+	elif what == NOTIFICATION_WM_MOUSE_EXIT:
+		mouse_in_window = false
 
 func random_light_flicker():
 	await get_tree().create_timer(randf_range(5, 10)).timeout
