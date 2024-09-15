@@ -6,7 +6,7 @@ class_name Player
 @export var FRICITON := 1200
 @export var JUMP_VELOCITY := -100.0
 @export var GRAVITY := 98.0
-#@export var GUN: Gun = null
+@export var GUN: Gun = null;
 @onready var axis = Vector2.ZERO
 @export var HP = 100
 @export var falldmg_multiplier = 10
@@ -78,11 +78,11 @@ func checkClimbInput():
 		
 		global_position.x = ladder_array[0].global_position.x+32
 		isClimbing = true
-		gun.isClimbing = isClimbing
+		GUN.isClimbing = isClimbing
 		$body3.flip_h = false
 
 		gunsAreGo = false
-		gun.visible = gunsAreGo
+		GUN.visible = gunsAreGo
 		$AnimationTree2.active = false
 		
 		$AnimationPlayer2.play("a_climbing_2")
@@ -90,7 +90,7 @@ func checkClimbInput():
 	
 	if isClimbing && !(Input.is_action_pressed("Forward") || Input.is_action_pressed("Back")) && (Input.is_action_just_pressed("Left") || Input.is_action_just_pressed("Right") || Input.is_action_just_pressed("ui_accept")):
 		isClimbing = false
-		gun.isClimbing = isClimbing
+		GUN.isClimbing = isClimbing
 		$AnimationTree2.active = true
 		if Input.is_action_just_pressed("Left"):
 			velocity = Vector2(-100, -100)
@@ -101,16 +101,16 @@ func checkClimbInput():
 
 
 func checkGun():
-	if Input.is_action_just_pressed("equip gun") && !weaponswitchCooldown && !gun.isReloading && !gunsAreGo && !isClimbing: # worthless, no jump
+	if Input.is_action_just_pressed("equip gun") && !weaponswitchCooldown && !GUN.isReloading && !gunsAreGo && !isClimbing: # worthless, no jump
 		gunsAreGo = true
-		gun.visible = gunsAreGo
+		GUN.visible = gunsAreGo
 		weaponswitchCooldown = true
 		await get_tree().create_timer(weaponswitchCooltime).timeout
 		weaponswitchCooldown = false
 
-	if Input.is_action_just_pressed("equip hands") && !weaponswitchCooldown && !gun.isReloading && gunsAreGo && !isClimbing:
+	if Input.is_action_just_pressed("equip hands") && !weaponswitchCooldown && !GUN.isReloading && gunsAreGo && !isClimbing:
 		gunsAreGo = false
-		gun.visible = gunsAreGo
+		GUN.visible = gunsAreGo
 		weaponswitchCooldown = true
 		await get_tree().create_timer(weaponswitchCooltime).timeout
 		weaponswitchCooldown = false
@@ -221,7 +221,7 @@ func update_animation_tree_param():
 var _deafenTimer: float = 0.0;
 func deafen(time: float):
 	isClimbing = false
-	gun.isClimbing = isClimbing
+	GUN.isClimbing = isClimbing
 	$AnimationTree2.active = true
 	airtime += 1
 	_deafenTimer = time;
@@ -229,8 +229,8 @@ func deafen(time: float):
 
 
 
-var gunEmpty = preload("res://scenes/gun.tscn")
-var gun = gunEmpty.instantiate()
+# var gunEmpty = preload("res://scenes/GUN.tscn")
+# var gun = gunEmpty.instantiate()
 var maxHP
 
 
@@ -240,9 +240,9 @@ func _ready():
 	position.x = 200
 	position.y = 200
 	
-	gun.world = world
-	gun.spawner = $body3
-	gun.visible = gunsAreGo
+	GUN.world = world
+	GUN.spawner = $body3
+	GUN.visible = gunsAreGo
 	
 	$body3.flip_h = true
 	
@@ -250,7 +250,7 @@ func _ready():
 	
 	animation_tree.active = true
 
-	self.add_child(gun)
+	self.add_child(GUN)
 
 	
 func _process(delta):
@@ -402,8 +402,8 @@ func _on_area_2d_area_entered(area: Area2D) -> void:
 		ladder_array.append(area)
 	else:
 		isClimbing = false
-		gun.isClimbing = isClimbing
-		gun.visible = gunsAreGo
+		GUN.isClimbing = isClimbing
+		GUN.visible = gunsAreGo
 
 
 
@@ -446,14 +446,14 @@ func _on_area_2d_area_exited(area: Area2D) -> void:
 		ladder_array.pop_front()
 		if ladder_array.size() == 0:
 			isClimbing = false
-			gun.isClimbing = isClimbing
+			GUN.isClimbing = isClimbing
 			$AnimationTree2.active = true
 	
 	
 	
 func interact():
 	if isInWeapons && Input.is_action_just_pressed("interact"):
-		gun.ammunition_pool_total = 200
+		GUN.ammunition_pool_total = 200
 	
 	if isInHospital && Input.is_action_just_pressed("interact"):
 		if HP < maxHP:

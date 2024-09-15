@@ -393,7 +393,7 @@ class CheckSpawned extends TreeNode:
 				_targetModule = _findMostDistantModule();
 			_navigationAgent.target_position = _targetModule.global_position;
 			var direction = (_navigationAgent.get_next_path_position() - _monsterBody.global_position).normalized();
-			_monsterBody.move(direction * 4.0);
+			_monsterBody.move(direction * 3.0);
 			_monsterBody.grabPlayer(false);
 			
 			# If reached the most far room, despawn
