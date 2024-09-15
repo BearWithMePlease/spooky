@@ -1,4 +1,4 @@
-[gd_scene load_steps=93 format=3 uid="uid://bo6ew1t4jg2x6"]
+[gd_scene load_steps=94 format=3 uid="uid://bo6ew1t4jg2x6"]
 
 [ext_resource type="Script" path="res://scripts/main_scene.gd" id="1_0jyw0"]
 [ext_resource type="Script" path="res://scripts/light_control.gd" id="2_una4x"]
@@ -46,6 +46,7 @@
 [ext_resource type="Script" path="res://scripts/ingame_menus.gd" id="38_ptr41"]
 [ext_resource type="AudioStream" uid="uid://bxn117kypjhnw" path="res://audio/sfx/screaming/scream3.wav" id="38_tu37q"]
 [ext_resource type="AudioStream" uid="uid://mptvaa6xl0w" path="res://audio/sfx/screaming/my ears are bleeding.wav" id="39_homny"]
+[ext_resource type="Script" path="res://scripts/player_stats.gd" id="45_mnho6"]
 
 [sub_resource type="NavigationPolygon" id="NavigationPolygon_ki8cn"]
 agent_radius = 8.0
@@ -829,7 +830,7 @@ z_index = 2
 position = Vector2(0, 4.666)
 texture = ExtResource("6_qws5h")
 hframes = 23
-frame = 9
+frame = 10
 
 [node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="Player/body3"]
 stream = ExtResource("36_5chg8")
@@ -908,6 +909,54 @@ theme_override_colors/font_color = Color(1, 1, 1, 1)
 theme_override_fonts/font = ExtResource("7_5wvvi")
 theme_override_font_sizes/font_size = 16
 text = "19:00"
+autowrap_mode = 3
+
+[node name="Player_stats" type="Control" parent="GUI"]
+layout_mode = 3
+anchors_preset = 0
+offset_right = 40.0
+offset_bottom = 40.0
+script = ExtResource("45_mnho6")
+
+[node name="Health" type="Label" parent="GUI/Player_stats"]
+texture_filter = 1
+layout_mode = 1
+anchors_preset = 2
+anchor_top = 1.0
+anchor_bottom = 1.0
+offset_left = 15.0
+offset_top = 546.0
+offset_right = 315.0
+offset_bottom = 608.0
+grow_vertical = 0
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_constants/line_spacing = 10
+theme_override_fonts/font = ExtResource("7_5wvvi")
+theme_override_font_sizes/font_size = 18
+text = "Health:
+[@@@@@@@@@@]"
+vertical_alignment = 1
+autowrap_mode = 3
+
+[node name="Ammo" type="Label" parent="GUI/Player_stats"]
+texture_filter = 1
+layout_mode = 1
+anchors_preset = 2
+anchor_top = 1.0
+anchor_bottom = 1.0
+offset_left = 838.0
+offset_top = 546.0
+offset_right = 1138.0
+offset_bottom = 608.0
+grow_vertical = 0
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_constants/line_spacing = 10
+theme_override_fonts/font = ExtResource("7_5wvvi")
+theme_override_font_sizes/font_size = 18
+text = "Ammo:
+10|3 "
+horizontal_alignment = 2
+vertical_alignment = 1
 autowrap_mode = 3
 
 [node name="ColorRect" type="ColorRect" parent="GUI"]
