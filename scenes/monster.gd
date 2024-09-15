@@ -104,7 +104,7 @@ class Sequence extends TreeNode:
 					continue;
 				TreeNodeState.RUNNING:
 					anyChildRunning = true;
-					continue;
+					break;
 				_:
 					state = TreeNodeState.SUCCESS;
 					return state;
@@ -174,7 +174,8 @@ class CheckPlayerInFOVRange extends TreeNode:
 	func evaluate(_delta: float) -> TreeNodeState:
 		if _monsterBody.canSeePlayer():
 			parent.parent.setData("lastPlayerPos", _player.global_position);
-			return TreeNodeState.SUCCESS 
+			return TreeNodeState.SUCCESS
+		_monsterBody.grabPlayer(false);
 		return TreeNodeState.FAILURE;
 
 class TaskGoToPlayer extends TreeNode:
@@ -195,7 +196,8 @@ class TaskGoToPlayer extends TreeNode:
 		
 		if dst < GRAB_DST + 10.0:
 			return TreeNodeState.SUCCESS;
-			
+		
+		_monsterBody.grabPlayer(false);
 		return TreeNodeState.RUNNING;
 		
 class TaskSearchPlayer extends TreeNode:
@@ -335,23 +337,95 @@ class CheckMonsterAlive extends TreeNode:
 			_monsterBody.move(Vector2.ZERO);
 			return TreeNodeState.FAILURE;
 		return TreeNodeState.SUCCESS;
+
+class CheckSpawned extends TreeNode:
+	var _monsterBody: MonsterBody;
+	var _modules: Array[Module];
+	var _storm: Storm;
+	var _navigationAgent: NavigationAgent2D;
+	var _player: Player;
+	var _targetModule: Module;
+	var _spawned: bool;
+	
+	func _init(monsterBody: MonsterBody, modules: Array[Module], storm: Storm, navigationAgent: NavigationAgent2D, player: Player) -> void:
+		super();
+		_monsterBody = monsterBody;
+		_modules = modules;
+		_storm = storm;
+		_navigationAgent = navigationAgent;
+		_player = player;
+		_targetModule = null;
+		_spawned = false;
 		
+	func _findMostDistantModule() -> Module:
+		var biggestDst: float = -100;
+		var mostDistantModule := _modules[0];
+		for module: Module in _modules:
+			var dst := module.global_position.distance_to(_player.global_position);
+			if dst > biggestDst:
+				biggestDst = dst
+				mostDistantModule = module;
+		return mostDistantModule;
+		
+	func teleport(pos: Vector2) -> void:
+		_monsterBody.get_parent().global_position = pos;
+		_monsterBody.position = Vector2(0, 0);
+		_monsterBody._center = pos;
+		_monsterBody.resetLegs();
+		for face in _monsterBody._faces:
+			face.position = Vector2(0, 0);
+			face.linear_velocity = Vector2(0, 0);
+			face.angular_velocity = 0;
+		_monsterBody.get_parent().global_position = pos;
+	
+	func evaluate(delta: float) -> TreeNodeState:
+		# spawn
+		if not _spawned and _storm.isStorm():
+			_spawned = true;
+			_targetModule = null;
+			_monsterBody.visible = true;
+			teleport(_findMostDistantModule().global_position);
+			
+		# despawn
+		elif _spawned and not _storm.isStorm():
+			# Go to distant room
+			if _targetModule == null:
+				_targetModule = _findMostDistantModule();
+			_navigationAgent.target_position = _targetModule.global_position;
+			var direction = (_navigationAgent.get_next_path_position() - _monsterBody.global_position).normalized();
+			_monsterBody.move(direction * 3.0);
+			_monsterBody.grabPlayer(false);
+			
+			# If reached the most far room, despawn
+			var dstToMonster := _monsterBody.global_position.distance_to(_targetModule.global_position);
+			if dstToMonster < Modules.GRID_SIZE:
+				_monsterBody.visible = false;
+				teleport(Vector2(-1e5, -1e5));
+				_targetModule = null;
+				_spawned = false;
+			return TreeNodeState.RUNNING;
+		
+		return TreeNodeState.SUCCESS if _storm.isStorm() else TreeNodeState.FAILURE;
+
 class MonsterBT extends BehaviorTree:
 	var _monsterBody: MonsterBody;
 	var _modules: Array[Module];
 	var _navigationAgent: NavigationAgent2D;
 	var _player: Player;
+	var _storm: Storm;
 	
-	func _init(monsterBody: MonsterBody, modules: Array[Module], navigationAgent: NavigationAgent2D, player: Player) -> void:
+	func _init(monsterBody: MonsterBody, modules: Array[Module], navigationAgent: NavigationAgent2D, player: Player, storm: Storm) -> void:
 		_monsterBody = monsterBody;
 		_modules = modules;
 		_navigationAgent = navigationAgent;
 		_player = player;
+		_storm = storm;
 		super(); # has to be last, because it will call setupTree(), that needs all above
 	
 	func setupTree() -> TreeNode:
 		var root = Sequence.new([
 			CheckMonsterAlive.new(_monsterBody),
+			CheckSpawned.new(_monsterBody, _modules, _storm, _navigationAgent, _player),
 			Selector.new([
 				Sequence.new([
 					CheckIsMonsterHurt.new(_monsterBody),
@@ -375,6 +449,7 @@ class MonsterBT extends BehaviorTree:
 @export var player: Player = null;
 @export var navigationAgent: NavigationAgent2D = null;
 @export var modules: NavigationRegion2D = null;
+@export var storm: Storm = null;
 var _isNavigationMapBaked: bool = false;
 var _monsterBT: MonsterBT;
 
@@ -407,4 +482,4 @@ func _on_modules_bake_finished() -> void:
 func createTree() -> void:
 	await get_tree().physics_frame; # need this to wait for navigation map to update
 	var arr := getAllModules();
-	_monsterBT = MonsterBT.new(monsterBody, arr, navigationAgent, player);
+	_monsterBT = MonsterBT.new(monsterBody, arr, navigationAgent, player, storm);
