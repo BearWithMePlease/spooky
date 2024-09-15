@@ -33,6 +33,7 @@ func takeDMG(dmgvalue):
 		HP -= dmgvalue
 	else:
 		HP = 0
+		$"../GUI/Menus".defeat()
 
 
 func climb(delta):
