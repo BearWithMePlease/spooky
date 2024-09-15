@@ -378,7 +378,7 @@ class CheckSpawned extends TreeNode:
 			face.angular_velocity = 0;
 		_monsterBody.get_parent().global_position = pos;
 	
-	func evaluate(delta: float) -> TreeNodeState:
+	func evaluate(_delta: float) -> TreeNodeState:
 		# spawn
 		if not _spawned and _storm.isStorm():
 			_spawned = true;

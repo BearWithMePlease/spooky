@@ -8,8 +8,10 @@ class_name Player
 @export var GRAVITY := 98.0
 @export var GUN: Gun = null;
 @onready var axis = Vector2.ZERO
+@onready var aura: PointLight2D = $Aura;
 @export var HP = 100
 @export var falldmg_multiplier = 10
+@export var globalLight: DirectionalLight2D = null;
 
 @onready var audio_control :=  $"../Audio_Control"
 
@@ -267,6 +269,14 @@ func _ready():
 		
 
 func _process(delta):
+	if isUsingCommunicationRoom:
+		if global_position.distance_to(positionWhenUsedCommunicationRoom) > 1.0 or Input.is_action_pressed("click"):
+			isUsingCommunicationRoom = false;
+			camera.center_on_player();
+			globalLight.energy = 3.0;
+			aura.enabled = true;
+	
+	
 	if gunsAreGo:
 		Input.set_custom_mouse_cursor(custom_cross, Input.CURSOR_ARROW)
 	else:
@@ -376,6 +386,8 @@ var isInGenerator = false
 var isInGeneratorVent = false
 
 var isInCom = false
+var isUsingCommunicationRoom: bool = false;
+var positionWhenUsedCommunicationRoom: Vector2 = Vector2.ZERO;
 
 var isInBed = false
 
@@ -538,7 +550,11 @@ func interact():
 		print("Generator gtfo")
 	
 	if isInCom && Input.is_action_just_pressed("interact"):
-		print("Communication gtfo")
+		(camera as PanZoomCamera).center_on_bunker();
+		isUsingCommunicationRoom = true;
+		positionWhenUsedCommunicationRoom = self.global_position;
+		globalLight.energy = 0.25;
+		aura.enabled = false;
 	
 	if isInBed && Input.is_action_just_pressed("interact"):
 		print("Bed gtfo")

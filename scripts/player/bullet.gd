@@ -25,7 +25,7 @@ func _ready() -> void:
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta: float) -> void:
 	move_local_x(880 * delta)
-	
+	var player := _gun.get_parent() as Player;
 	#ray_cast.target_position += Vector2(20*delta, 0)
 	ray_cast.force_raycast_update()
 
@@ -49,23 +49,21 @@ func _process(delta: float) -> void:
 			elif body is Barrel:
 				if not (body as Barrel).isExploded():
 					(body as Barrel).explodeBarrel();
-					var player := _gun.get_parent() as Player;
 					for child in player.get_children():
 						if child is PanZoomCamera:
 							(child as PanZoomCamera).apply_shake()
 							break;
-						
-				if body.global_position.distance_to(_gun.monster.global_position) < 200.0:
-					for monsterChild in _gun.monster.get_children():
-						if monsterChild is MonsterBody:
-							var monsterBody := monsterChild as MonsterBody;
-							var monsterHealth := monsterChild.getHealth() as int;
-							const BARREL_EXPLOSION_DAMAGE := 25.0;
-							monsterHealth = max(0, monsterHealth - BARREL_EXPLOSION_DAMAGE);
-							monsterChild.setHealth(monsterHealth);
-							break;
+					if body.global_position.distance_to(_gun.monster.global_position) < 100.0:
+						for monsterChild in _gun.monster.get_children():
+							if monsterChild is MonsterBody:
+								var monsterHealth := monsterChild.getHealth() as int;
+								const BARREL_EXPLOSION_DAMAGE := 25.0;
+								monsterHealth = max(0, monsterHealth - BARREL_EXPLOSION_DAMAGE);
+								monsterChild.setHealth(monsterHealth);
+								break;
+					if body.global_position.distance_to(player.global_position) < 100.0:
+						player.takeDMG(30.0);
 				
-				# TODO: Gott abziehe hier health
 			
 			queue_free()
 		else:

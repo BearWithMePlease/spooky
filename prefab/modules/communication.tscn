@@ -1,9 +1,10 @@
-[gd_scene load_steps=14 format=3 uid="uid://bwisoomk8helm"]
+[gd_scene load_steps=15 format=3 uid="uid://bwisoomk8helm"]
 
 [ext_resource type="Script" path="res://scripts/module.gd" id="1_rdnqu"]
 [ext_resource type="Texture2D" uid="uid://b64wfhxrqbnmr" path="res://imgs/modules/communication/n.png" id="2_43pyl"]
 [ext_resource type="Texture2D" uid="uid://d0o40bd2267b" path="res://imgs/modules/communication/wall.png" id="2_p30nr"]
 [ext_resource type="PackedScene" uid="uid://dki4talhc74jp" path="res://prefab/ceiling_lamp.tscn" id="3_4bq63"]
+[ext_resource type="Script" path="res://prefab/modules/communication.gd" id="4_crlgp"]
 [ext_resource type="PackedScene" uid="uid://bospy2knasfaj" path="res://prefab/sound_effect.tscn" id="5_5ia4q"]
 [ext_resource type="AudioStream" uid="uid://dlogiyt4kskmo" path="res://audio/sfx/communication_running.mp3" id="6_vqa0v"]
 
@@ -93,6 +94,7 @@ offset = Vector2(0.5, 0.5)
 [node name="Communication" type="Area2D" parent="Sprite/Interactables" groups=["interact_communication"]]
 collision_layer = 4194304
 collision_mask = 4194304
+script = ExtResource("4_crlgp")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Sprite/Interactables/Communication"]
 position = Vector2(58, 107)
