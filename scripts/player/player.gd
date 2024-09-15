@@ -27,6 +27,8 @@ var isClimbing = false
 var climbInputU = false
 var climbInputD = false
 
+var custom_cross := load("res://imgs/cross.png")
+var custom_cursor := load("res://imgs/cursor.png")
 
 func takeDMG(dmgvalue):
 	if HP > dmgvalue:
@@ -261,7 +263,16 @@ func _ready():
 
 	self.add_child(GUN)
 
+
+		
+
 func _process(delta):
+	if gunsAreGo:
+		Input.set_custom_mouse_cursor(custom_cross, Input.CURSOR_ARROW)
+	else:
+		Input.set_custom_mouse_cursor(custom_cursor, Input.CURSOR_ARROW)
+	
+	
 	if $"../Monster/MonsterBody".getHealth() <= 0:
 		$"../GUI/Menus".victory() #virctory here
 
