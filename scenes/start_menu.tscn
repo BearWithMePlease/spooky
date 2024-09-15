@@ -753,6 +753,10 @@ color = Color(0.00784314, 0.0117647, 0.0156863, 1)
 
 [node name="Foreground" type="CanvasLayer" parent="."]
 layer = 50
+offset = Vector2(-580, -320)
+transform = Transform2D(1, 0, 0, 1, -580, -320)
+follow_viewport_enabled = true
+follow_viewport_scale = 0.5
 
 [node name="RichTextLabel" type="RichTextLabel" parent="Foreground"]
 anchors_preset = 5
