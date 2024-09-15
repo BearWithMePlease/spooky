@@ -846,6 +846,7 @@ text = "press E to interact"
 [node name="gun" parent="Player" node_paths=PackedStringArray("monster") instance=ExtResource("35_l6ijx")]
 monster = NodePath("../../Monster")
 ammunition_pool_total = 30
+ammunition = 0
 
 [node name="Aura" type="PointLight2D" parent="Player"]
 position = Vector2(3, 0)
@@ -884,7 +885,7 @@ z_index = 2
 position = Vector2(0, 4.666)
 texture = ExtResource("6_qws5h")
 hframes = 23
-frame = 10
+frame = 9
 
 [node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="Player/body3"]
 stream = ExtResource("36_5chg8")

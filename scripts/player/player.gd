@@ -505,7 +505,7 @@ func interact():
 				$"unused  weapons".hide()
 		
 		if isInWeapons && Input.is_action_just_pressed("interact") && !ammoCooldown.has(lastWeaponsBuddy):
-			GUN.ammunition_pool_total += 30
+			GUN.ammunition_pool_total += 15
 			ammoCooldown.append(lastWeaponsBuddy)
 			print(GUN.ammunition_pool_total)
 		
