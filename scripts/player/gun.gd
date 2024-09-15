@@ -44,8 +44,14 @@ func _process(delta: float) -> void:
 				$AnimationPlayer.play("reload_new")
 				
 				if ammunition_pool_total >= 30 : 
-					ammunition_pool_total -= 30
-					ammunition = 30
+					if ammunition == 0:
+						ammunition_pool_total -= 30
+						ammunition = 30
+					else:
+						ammunition_pool_total += ammunition
+						ammunition_pool_total -= 30
+						ammunition = 30
+
 				else:
 					ammunition = ammunition_pool_total
 					ammunition_pool_total = 0

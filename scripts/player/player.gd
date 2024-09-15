@@ -27,6 +27,15 @@ var isClimbing = false
 var climbInputU = false
 var climbInputD = false
 
+
+func takeDMG(dmgvalue):
+	if HP > dmgvalue:
+		HP -= dmgvalue
+	else:
+		HP = 0
+		$"../GUI/Menus".defeat()
+
+
 func climb(delta):
 	
 	if climbInputU:
@@ -223,7 +232,7 @@ func deafen(time: float):
 	isClimbing = false
 	GUN.isClimbing = isClimbing
 	$AnimationTree2.active = true
-	airtime += 1
+	airtime += 2
 	_deafenTimer = time;
 
 
@@ -253,6 +262,9 @@ func _ready():
 	self.add_child(GUN)
 
 func _process(delta):
+	if $"../Monster/MonsterBody".getHealth() <= 0:
+		$"../GUI/Menus".victory() #virctory here
+
 	_deafenTimer = max(0, _deafenTimer - delta);
 	
 	if _deafenTimer <= 0:
@@ -272,6 +284,9 @@ func _process(delta):
 var airtime = 0
 @export var airtimeforDMG = 0.4
 func _physics_process(delta: float) -> void:
+	if isClimbing:
+		airtime = 0
+	
 	if !inInventory && !isClimbing: # no movement in inventory
 		checkGun()
 		
