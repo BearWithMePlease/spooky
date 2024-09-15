@@ -56,13 +56,13 @@ size = Vector2(1000, 500)
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_hny0f"]
 size = Vector2(400, 200)
 
-[sub_resource type="Gradient" id="Gradient_6josf"]
+[sub_resource type="Gradient" id="Gradient_ix6ti"]
 interpolation_mode = 2
 offsets = PackedFloat32Array(0, 0.5)
 colors = PackedColorArray(1, 1, 1, 1, 0.0354537, 0.0354537, 0.0354537, 1)
 
 [sub_resource type="GradientTexture2D" id="GradientTexture2D_x2omx"]
-gradient = SubResource("Gradient_6josf")
+gradient = SubResource("Gradient_ix6ti")
 width = 1024
 height = 1024
 fill = 1
@@ -902,6 +902,7 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+mouse_filter = 1
 script = ExtResource("38_ptr41")
 
 [node name="Pause" type="Control" parent="GUI/Menus"]
