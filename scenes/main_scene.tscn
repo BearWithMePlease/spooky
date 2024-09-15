@@ -791,6 +791,7 @@ GUN = NodePath("gun")
 
 [node name="gun" parent="Player" node_paths=PackedStringArray("monster") instance=ExtResource("35_l6ijx")]
 monster = NodePath("../../Monster")
+ammunition_pool_total = 30
 
 [node name="Aura" type="PointLight2D" parent="Player"]
 energy = 0.3
