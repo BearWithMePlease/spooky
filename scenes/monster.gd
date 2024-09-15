@@ -21,6 +21,7 @@ const TIME_CHANGE_ROOM := 20.0;
 const WANDER_SPEED := 1.0;
 const SEARCH_SPEED := 1.75;
 const DAMAGE: int = 2;
+const TIME_UNTIL_DESPAWN_WHEN_STUCK = 20.0;
 
 class TreeNode:
 	var state: TreeNodeState;
@@ -346,6 +347,7 @@ class CheckSpawned extends TreeNode:
 	var _player: Player;
 	var _targetModule: Module;
 	var _spawned: bool;
+	var _timerToDespawn: float;
 	
 	func _init(monsterBody: MonsterBody, modules: Array[Module], storm: Storm, navigationAgent: NavigationAgent2D, player: Player) -> void:
 		super();
@@ -356,6 +358,7 @@ class CheckSpawned extends TreeNode:
 		_player = player;
 		_targetModule = null;
 		_spawned = false;
+		_timerToDespawn = 0.0;
 		
 	func _findMostDistantModule() -> Module:
 		var biggestDst: float = -100;
@@ -378,7 +381,7 @@ class CheckSpawned extends TreeNode:
 			face.angular_velocity = 0;
 		_monsterBody.get_parent().global_position = pos;
 	
-	func evaluate(_delta: float) -> TreeNodeState:
+	func evaluate(delta: float) -> TreeNodeState:
 		# spawn
 		if not _spawned and _storm.isStorm():
 			_spawned = true;
@@ -390,7 +393,9 @@ class CheckSpawned extends TreeNode:
 		elif _spawned and not _storm.isStorm():
 			# Go to distant room
 			if _targetModule == null:
+				_timerToDespawn = TIME_UNTIL_DESPAWN_WHEN_STUCK;
 				_targetModule = _findMostDistantModule();
+			_timerToDespawn = max(0, _timerToDespawn - delta);
 			_navigationAgent.target_position = _targetModule.global_position;
 			var direction = (_navigationAgent.get_next_path_position() - _monsterBody.global_position).normalized();
 			_monsterBody.move(direction * 3.0);
@@ -398,7 +403,7 @@ class CheckSpawned extends TreeNode:
 			
 			# If reached the most far room, despawn
 			var dstToMonster := _monsterBody.global_position.distance_to(_targetModule.global_position);
-			if dstToMonster < Modules.GRID_SIZE:
+			if dstToMonster < Modules.GRID_SIZE or _timerToDespawn <= 0.0:
 				_monsterBody.visible = false;
 				teleport(Vector2(-1e5, -1e5));
 				_targetModule = null;
@@ -472,7 +477,6 @@ func _draw() -> void:
 	pass
 	
 func takeDamage() -> void:
-	print("hit on monster")
 	monsterBody.setHealth(max(0, monsterBody.getHealth() - DAMAGE));
 
 func _on_modules_bake_finished() -> void:
