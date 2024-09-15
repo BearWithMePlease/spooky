@@ -1,4 +1,4 @@
-[gd_scene load_steps=93 format=3 uid="uid://bo6ew1t4jg2x6"]
+[gd_scene load_steps=83 format=3 uid="uid://bo6ew1t4jg2x6"]
 
 [ext_resource type="Script" path="res://scripts/main_scene.gd" id="1_0jyw0"]
 [ext_resource type="Script" path="res://scripts/light_control.gd" id="2_una4x"]
@@ -14,6 +14,7 @@
 [ext_resource type="FontFile" uid="uid://gosmfve4h532" path="res://imgs/PressStart2P-Regular.ttf" id="7_5wvvi"]
 [ext_resource type="AudioStream" uid="uid://be62gfc1nvc07" path="res://audio/sfx/footsteps/footsteps-2.mp3" id="7_ndd1u"]
 [ext_resource type="Script" path="res://scenes/monster.gd" id="7_r0p8v"]
+[ext_resource type="PackedScene" uid="uid://bdrk0gvju1eis" path="res://scenes/gun.tscn" id="7_yae1m"]
 [ext_resource type="AudioStream" uid="uid://da2qdiqee6jvq" path="res://audio/sfx/footsteps/footsteps-3.mp3" id="8_01px5"]
 [ext_resource type="AudioStream" uid="uid://oaivvndflsnd" path="res://audio/sfx/footsteps/footsteps-4.mp3" id="9_igb8x"]
 [ext_resource type="AudioStream" uid="uid://dpk8jtf88ue36" path="res://audio/sfx/footsteps/footsteps-5.mp3" id="10_nncqf"]
@@ -28,24 +29,12 @@
 [ext_resource type="AudioStream" uid="uid://drewawapbdp4w" path="res://audio/sfx/random_noise/sound_5.mp3" id="23_2opvi"]
 [ext_resource type="AudioStream" uid="uid://27yx3pked2kp" path="res://audio/sfx/random_noise/sound_6.mp3" id="24_eal8t"]
 [ext_resource type="AudioStream" uid="uid://ccynk1hjmewto" path="res://audio/sfx/random_noise/sound_7.mp3" id="25_4k2ct"]
-[ext_resource type="AudioStream" uid="uid://bwa4q3uu7bxl2" path="res://audio/sfx/random_noise/monster_close/monster_close_1.mp3" id="26_0lfmj"]
 [ext_resource type="AudioStream" uid="uid://u6brqy6vxytv" path="res://audio/sfx/random_noise/sound_8.mp3" id="26_8fepu"]
 [ext_resource type="AudioStream" uid="uid://0t1l64nksl6q" path="res://audio/sfx/random_noise/sound_9.mp3" id="27_2xppg"]
-[ext_resource type="AudioStream" uid="uid://ttq2xd7ypj7w" path="res://audio/sfx/random_noise/monster_close/monster_close_2.mp3" id="27_g7mrr"]
-[ext_resource type="AudioStream" uid="uid://cu02un1sdut4u" path="res://audio/sfx/random_noise/monster_close/monster_close_3.mp3" id="28_cvbbk"]
 [ext_resource type="AudioStream" uid="uid://dgplj62jo2m88" path="res://audio/sfx/random_noise/sound_10.mp3" id="29_256ve"]
-[ext_resource type="AudioStream" uid="uid://c5nau1045ak6b" path="res://audio/sfx/gun_shoot.mp3" id="29_wxeml"]
 [ext_resource type="AudioStream" uid="uid://cihfhgsuq7wif" path="res://audio/sfx/random_noise/sound_11.mp3" id="30_22bms"]
-[ext_resource type="Script" path="res://scripts/player/player.gd" id="30_bvicb"]
-[ext_resource type="Script" path="res://scripts/pan_zoom_camera.gd" id="35_6pws3"]
 [ext_resource type="Shader" path="res://scripts/aberration.gdshader" id="35_eawox"]
-[ext_resource type="PackedScene" uid="uid://cvxn7m4bhe5mo" path="res://scenes/gun.tscn" id="35_l6ijx"]
 [ext_resource type="Script" path="res://scenes/storm.gd" id="35_ui06t"]
-[ext_resource type="AudioStream" uid="uid://br38s62ld0s8p" path="res://audio/sfx/screaming/scream1.wav" id="36_5chg8"]
-[ext_resource type="AudioStream" uid="uid://bm45xq2ktdury" path="res://audio/sfx/screaming/scream2.wav" id="37_8gsgm"]
-[ext_resource type="Script" path="res://scripts/ingame_menus.gd" id="38_ptr41"]
-[ext_resource type="AudioStream" uid="uid://bxn117kypjhnw" path="res://audio/sfx/screaming/scream3.wav" id="38_tu37q"]
-[ext_resource type="AudioStream" uid="uid://mptvaa6xl0w" path="res://audio/sfx/screaming/my ears are bleeding.wav" id="39_homny"]
 
 [sub_resource type="NavigationPolygon" id="NavigationPolygon_ki8cn"]
 agent_radius = 8.0
@@ -56,13 +45,465 @@ size = Vector2(1000, 500)
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_hny0f"]
 size = Vector2(400, 200)
 
-[sub_resource type="Gradient" id="Gradient_ix6ti"]
+[sub_resource type="GDScript" id="GDScript_dossv"]
+script/source = "extends CharacterBody2D
+
+class_name Player
+
+@export var MAX_SPEED := 300
+@export var ACCELERATION := 1500
+@export var FRICITON := 1200
+@export var JUMP_VELOCITY := -200.0
+@export var GRAVITY := 98.0
+@export var GUN: Gun = null
+@onready var axis = Vector2.ZERO
+@export var HP = 100
+@export var falldmg_multiplier = 10
+
+
+var accel
+var speedcap
+@onready var anims = $body3
+@onready var animation_tree : AnimationTree = $AnimationTree2
+@onready var world = $\"..\"
+var direction := 0
+var attemptInventory = false
+var inInventory = false
+var gunsAreGo = false
+
+var isClimbing = false
+var climbInputU = false
+var climbInputD = false
+
+func climb(delta):
+	
+	if climbInputU:
+		velocity.y = -30000*delta
+		move_and_slide()
+		
+	if Input.is_action_pressed(\"Forward\") && !climbInputU && !climbInputD:
+		velocity = Vector2(0,0)
+		climbInputU = true
+		$AnimationPlayer2.play(\"a_climbing_2\")
+		await get_tree().create_timer(0.45).timeout
+		$AnimationPlayer2.stop()
+		climbInputU = false
+
+		
+	
+
+	if climbInputD:
+		velocity.y = 35000*delta
+		move_and_slide()
+		
+	if Input.is_action_pressed(\"Back\") && !climbInputU && !climbInputD && !is_on_floor():
+		velocity = Vector2(0,0)
+		climbInputD = true
+		$AnimationPlayer2.play_backwards(\"a_climbing_2\")	
+		await get_tree().create_timer(0.45).timeout 	
+		$AnimationPlayer2.stop()
+		climbInputD = false
+
+		
+	
+
+	
+	#move y disable gravity
+	
+	#next key input loop this shit might need to set a climb down animation
+	
+	
+	pass
+
+
+var weaponswitchCooldown = false
+@export var weaponswitchCooltime = 1 # in seconds
+
+
+func checkClimbInput():
+	if ladder_array.size() > 0 && !isClimbing && (Input.is_action_pressed(\"Forward\") || Input.is_action_pressed(\"Back\")):
+		
+		
+		global_position.x = ladder_array[0].global_position.x+32
+		isClimbing = true
+		gun.isClimbing = isClimbing
+		$body3.flip_h = false
+
+		gunsAreGo = false
+		gun.visible = gunsAreGo
+		$AnimationTree2.active = false
+		
+		$AnimationPlayer2.play(\"a_climbing_2\")
+		$AnimationPlayer2.stop()
+	
+	if isClimbing && !(Input.is_action_pressed(\"Forward\") || Input.is_action_pressed(\"Back\")) && (Input.is_action_just_pressed(\"Left\") || Input.is_action_just_pressed(\"Right\") || Input.is_action_just_pressed(\"ui_accept\")):
+		isClimbing = false
+		gun.isClimbing = isClimbing
+		$AnimationTree2.active = true
+		if Input.is_action_just_pressed(\"Left\"):
+			velocity = Vector2(-100, -100)
+		if Input.is_action_just_pressed(\"Right\"):
+			velocity = Vector2(100, -100)
+
+
+
+
+func checkGun():
+	if Input.is_action_just_pressed(\"equip gun\") && !weaponswitchCooldown && !gun.isReloading && !gunsAreGo && !isClimbing: # worthless, no jump
+		gunsAreGo = true
+		GUN.visible = gunsAreGo
+		weaponswitchCooldown = true
+		await get_tree().create_timer(weaponswitchCooltime).timeout
+		weaponswitchCooldown = false
+
+	if Input.is_action_just_pressed(\"equip hands\") && !weaponswitchCooldown && !gun.isReloading && gunsAreGo && !isClimbing:
+		gunsAreGo = false
+		GUN.visible = gunsAreGo
+		weaponswitchCooldown = true
+		await get_tree().create_timer(weaponswitchCooltime).timeout
+		weaponswitchCooldown = false
+
+func update_animation_tree_param():
+	
+	if gunsAreGo:
+		animation_tree[\"parameters/conditions/isGun\"] = true
+		animation_tree[\"parameters/conditions/isNotGun\"] = false
+		animation_tree[\"parameters/conditions/isNotSprintA\"] = true
+		animation_tree[\"parameters/conditions/isNotWalkA\"] = true
+		animation_tree[\"parameters/conditions/isNotWalkBA\"] = true
+		
+		animation_tree[\"parameters/conditions/isSprintA\"] = false
+		animation_tree[\"parameters/conditions/isWalkA\"] = false
+		animation_tree[\"parameters/conditions/isWalkBA\"] = false
+
+		if velocity == Vector2.ZERO: # standing still
+			animation_tree[\"parameters/conditions/isNotSprint\"] = true
+			animation_tree[\"parameters/conditions/isNotWalk\"] = true
+			animation_tree[\"parameters/conditions/isNotWalkB\"] = true
+			
+			animation_tree[\"parameters/conditions/isSprint\"] = false
+			animation_tree[\"parameters/conditions/isWalk\"] = false
+			animation_tree[\"parameters/conditions/isWalkB\"] = false
+		
+		elif (direction == -1 && $body3.flip_h) || (direction == 1 && !$body3.flip_h): # movement towards mouse (forward and sprint)
+			animation_tree[\"parameters/conditions/isNotSprint\"] = true
+			animation_tree[\"parameters/conditions/isNotWalk\"] = false # walking state
+			animation_tree[\"parameters/conditions/isNotWalkB\"] = true
+			
+			animation_tree[\"parameters/conditions/isSprint\"] = false
+			animation_tree[\"parameters/conditions/isWalk\"] = true # walking state
+			animation_tree[\"parameters/conditions/isWalkB\"] = false
+			
+			if accel == ACCELERATION*2:
+				# other states do not get edited since we do not return to facing state
+				animation_tree[\"parameters/conditions/isNotSprint\"] = false # sprinting state		
+				animation_tree[\"parameters/conditions/isSprint\"] = true # sprinting state
+		
+			
+			
+		elif (direction == -1 && !$body3.flip_h) || (direction == 1 && $body3.flip_h):
+			animation_tree[\"parameters/conditions/isNotSprint\"] = true
+			animation_tree[\"parameters/conditions/isNotWalk\"] = true 
+			animation_tree[\"parameters/conditions/isNotWalkB\"] = false # back walking state
+			
+			animation_tree[\"parameters/conditions/isSprint\"] = false
+			animation_tree[\"parameters/conditions/isWalk\"] = false 
+			animation_tree[\"parameters/conditions/isWalkB\"] = true # back walking state
+		
+	else:
+		
+		animation_tree[\"parameters/conditions/isGun\"] = false
+		animation_tree[\"parameters/conditions/isNotGun\"] = true
+		animation_tree[\"parameters/conditions/isNotSprint\"] = true
+		animation_tree[\"parameters/conditions/isNotWalk\"] = true
+		animation_tree[\"parameters/conditions/isNotWalkB\"] = true
+		
+		animation_tree[\"parameters/conditions/isSprint\"] = false
+		animation_tree[\"parameters/conditions/isWalk\"] = false
+		animation_tree[\"parameters/conditions/isWalkB\"] = false
+		
+		if velocity == Vector2.ZERO: # standing still
+			animation_tree[\"parameters/conditions/isNotSprintA\"] = true
+			animation_tree[\"parameters/conditions/isNotWalkA\"] = true
+			animation_tree[\"parameters/conditions/isNotWalkBA\"] = true
+			
+			animation_tree[\"parameters/conditions/isSprintA\"] = false
+			animation_tree[\"parameters/conditions/isWalkA\"] = false
+			animation_tree[\"parameters/conditions/isWalkBA\"] = false
+		
+		elif (direction == -1 && $body3.flip_h) || (direction == 1 && !$body3.flip_h): # movement towards mouse (forward and sprint)
+			animation_tree[\"parameters/conditions/isNotSprintA\"] = true
+			animation_tree[\"parameters/conditions/isNotWalkA\"] = false # walking state
+			animation_tree[\"parameters/conditions/isNotWalkBA\"] = true
+			
+			animation_tree[\"parameters/conditions/isSprintA\"] = false
+			animation_tree[\"parameters/conditions/isWalkA\"] = true # walking state
+			animation_tree[\"parameters/conditions/isWalkBA\"] = false
+			
+			if accel == ACCELERATION*2:
+				# other states do not get edited since we do not return to facing state
+				animation_tree[\"parameters/conditions/isNotSprintA\"] = false # sprinting state		
+				animation_tree[\"parameters/conditions/isSprintA\"] = true # sprinting state
+		
+			
+			
+		elif (direction == -1 && !$body3.flip_h) || (direction == 1 && $body3.flip_h):
+			animation_tree[\"parameters/conditions/isNotSprintA\"] = true
+			animation_tree[\"parameters/conditions/isNotWalkA\"] = true 
+			animation_tree[\"parameters/conditions/isNotWalkBA\"] = false # back walking state
+			
+			animation_tree[\"parameters/conditions/isSprintA\"] = false
+			animation_tree[\"parameters/conditions/isWalkA\"] = false 
+			animation_tree[\"parameters/conditions/isWalkBA\"] = true # back walking state
+			
+		
+# Makes player ignore input for some time
+var _deafenTimer: float = 0.0;
+func deafen(time: float):
+	_deafenTimer = time;
+
+
+
+
+var gunEmpty = preload(\"res://scenes/gun.tscn\")
+var gun = gunEmpty.instantiate()
+var maxHP
+
+
+func _ready():
+	maxHP = HP
+	position.x = 200
+	position.y = 200
+	
+	GUN.position = Vector2(0,0)
+	GUN.world = world
+	GUN.spawner = $body3
+	GUN.visible = gunsAreGo
+	
+	$body3.flip_h = true
+	
+	# flip_v of gun true == left, false == right
+	
+	animation_tree.active = true
+
+func _process(delta):
+	_deafenTimer = max(0, _deafenTimer - delta);
+	checkClimbInput()
+	if !isClimbing:
+		update_animation_tree_param()
+	else:
+		climb(delta)
+	interact()
+
+
+var airtime = 0
+@export var airtimeforDMG = 0.4
+func _physics_process(delta: float) -> void:
+	if !inInventory && !isClimbing: # no movement in inventory
+		checkGun()
+		
+		accel = ACCELERATION
+		speedcap = MAX_SPEED
+		# Add the gravity.
+		if not is_on_floor():
+			velocity += Vector2.DOWN * GRAVITY * delta
+			velocity.x = move_toward(velocity.x, 0, 20*delta)
+			
+			if velocity.y > 0:
+				airtime += delta
+
+		else:
+			if airtime > airtimeforDMG:
+				HP -= ceil(airtime*falldmg_multiplier)
+				print(HP)
+			airtime = 0
+
+		# Handle jump.
+		if Input.is_action_just_pressed(\"ui_accept\") and is_on_floor(): # worthless, no jump
+			velocity.y = JUMP_VELOCITY
+
+		# Get the input direction and handle the movement/deceleration.
+		# As good practice, you should replace UI actions with custom gameplay actions.
+		
+		if is_on_floor() and _deafenTimer <= 0:
+			direction = 0
+
+			if Input.is_action_pressed(\"Left\"):
+				direction -= 1
+			if Input.is_action_pressed(\"Right\"):
+				direction += 1	
+
+			if Input.is_action_pressed(\"sprint\") && ((direction == -1 && $body3.flip_h) || (direction == 1 && !$body3.flip_h)):
+				accel = ACCELERATION*2
+				speedcap = MAX_SPEED*1.3
+			
+			if direction != 0:
+				velocity.x += direction * accel * delta
+				
+				if velocity.x > 0:
+					velocity.x = min(velocity.x, speedcap)
+				if velocity.x < 0:
+					velocity.x = max(velocity.x, -speedcap)
+
+			else:
+				velocity.x = move_toward(velocity.x, 0, delta*1000)
+		
+		move_and_slide()
+
+
+
+
+var isInWeapons = false
+var isInHospital = false
+var isInWater = false
+
+var isInGenerator = false
+var isInGeneratorVent = false
+
+var isInCom = false
+
+var isInBed = false
+
+
+var ladder_array = []
+
+func _on_area_2d_area_entered(area: Area2D) -> void:
+	#print(area)
+	if area.name == \"Weapons\":
+		isInWeapons = true
+		$Label.show()
+	else:
+		isInWeapons = false
+	
+	
+	if area.name == \"Healing\":
+		isInHospital = true
+		$Label.show()
+	else:
+		isInHospital = false
+
+	
+	if area.name == \"Water\":
+		isInWater = true
+		$Label.show()
+	else:
+		isInWater = false
+	
+	
+	if area.name == \"Vent\":
+		isInGeneratorVent = true
+		$Label.show()
+	else:
+		isInGeneratorVent = false
+
+	
+	if area.name == \"Generator\":
+		isInGenerator = true
+		$Label.show()
+	else:
+		isInGenerator = false
+	
+	
+	if area.name == \"Communication\":
+		isInCom = true
+		$Label.show()
+	else:
+		isInCom = false
+	
+	
+	if area.name == \"Bed\":
+		isInBed = true
+		$Label.show()
+	else:
+		isInBed = false
+	
+	
+	if area.name == \"Ladder\":
+		ladder_array.append(area)
+	else:
+		isClimbing = false
+		gun.isClimbing = isClimbing
+		gun.visible = gunsAreGo
+
+
+
+	print(isInWeapons)
+	
+func _on_area_2d_area_exited(area: Area2D) -> void:
+	if area.name == \"Weapons\":
+		isInWeapons = false
+		$Label.hide()
+	
+	if area.name == \"Healing\":
+		isInHospital = false
+		$Label.hide()
+	
+	if area.name == \"Water\":
+		isInWater = false
+		$Label.hide()
+	
+	
+	
+	if area.name == \"Vent\":
+		isInGeneratorVent = false
+		$Label.hide()
+		
+	if area.name == \"Generator\":
+		isInGenerator = false
+		$Label.hide()
+		
+	
+	if area.name == \"Communication\":
+		isInCom = false
+		$Label.hide()
+		
+	
+	if area.name == \"Bed\":
+		isInBed = false
+		$Label.hide()
+	
+	
+	if area.name == \"Ladder\":
+		ladder_array.pop_front()
+		if ladder_array.size() == 0:
+			isClimbing = false
+			gun.isClimbing = isClimbing
+			$AnimationTree2.active = true
+	
+	
+	
+func interact():
+	if isInWeapons && Input.is_action_just_pressed(\"interact\"):
+		GUN.ammunition_pool_total = 200
+	
+	if isInHospital && Input.is_action_just_pressed(\"interact\"):
+		if HP < maxHP:
+			self.HP = maxHP
+	
+	if isInWater && Input.is_action_just_pressed(\"interact\"):
+		print(\"water gtfo\")
+	
+	
+	if isInGeneratorVent && Input.is_action_just_pressed(\"interact\"):
+		print(\"Vent gtfo\")
+		
+	if isInGenerator && Input.is_action_just_pressed(\"interact\"):
+		print(\"Generator gtfo\")
+	
+	if isInCom && Input.is_action_just_pressed(\"interact\"):
+		print(\"Communication gtfo\")
+	
+	if isInBed && Input.is_action_just_pressed(\"interact\"):
+		print(\"Bed gtfo\")
+"
+
+[sub_resource type="Gradient" id="Gradient_6josf"]
 interpolation_mode = 2
 offsets = PackedFloat32Array(0, 0.5)
 colors = PackedColorArray(1, 1, 1, 1, 0.0354537, 0.0354537, 0.0354537, 1)
 
 [sub_resource type="GradientTexture2D" id="GradientTexture2D_x2omx"]
-gradient = SubResource("Gradient_ix6ti")
+gradient = SubResource("Gradient_6josf")
 width = 1024
 height = 1024
 fill = 1
@@ -686,7 +1127,7 @@ states/walk/position = Vector2(498, 52.4445)
 states/walk_b/node = SubResource("AnimationNodeAnimation_nhh5h")
 states/walk_b/position = Vector2(535.333, 258.667)
 transitions = ["facing", "walk", SubResource("AnimationNodeStateMachineTransition_xy5a8"), "walk", "sprint", SubResource("AnimationNodeStateMachineTransition_ls6v0"), "facing", "walk_b", SubResource("AnimationNodeStateMachineTransition_wrb8h"), "walk_b", "facing", SubResource("AnimationNodeStateMachineTransition_u8oec"), "walk", "facing", SubResource("AnimationNodeStateMachineTransition_snn0d"), "sprint", "walk", SubResource("AnimationNodeStateMachineTransition_1s6tq"), "Start", "a_facing_2", SubResource("AnimationNodeStateMachineTransition_a3l4m"), "a_facing_2", "a_walk_2", SubResource("AnimationNodeStateMachineTransition_o0hev"), "a_facing_2", "a_walk_b", SubResource("AnimationNodeStateMachineTransition_k06ch"), "a_walk_2", "a_facing_2", SubResource("AnimationNodeStateMachineTransition_ctg4l"), "a_walk_2", "a_sprint_2", SubResource("AnimationNodeStateMachineTransition_xbyde"), "a_sprint_2", "a_walk_2", SubResource("AnimationNodeStateMachineTransition_dekcx"), "a_walk_b", "a_facing_2", SubResource("AnimationNodeStateMachineTransition_3iy75"), "a_facing_2", "a_climbing_2", SubResource("AnimationNodeStateMachineTransition_ykfro"), "a_climbing_2", "a_facing_2", SubResource("AnimationNodeStateMachineTransition_iycsj"), "a_facing_2", "facing", SubResource("AnimationNodeStateMachineTransition_pf3ul"), "facing", "a_facing_2", SubResource("AnimationNodeStateMachineTransition_a0lv3")]
-graph_offset = Vector2(116, -30)
+graph_offset = Vector2(-251, 356)
 
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_fcb8y"]
 radius = 4.0
@@ -712,16 +1153,11 @@ sound_light_on = ExtResource("4_ch04v")
 sound_light_off = ExtResource("5_76aoe")
 sound_foot_steps = Array[AudioStreamMP3]([ExtResource("6_kbj1v"), ExtResource("7_ndd1u"), ExtResource("8_01px5"), ExtResource("9_igb8x"), ExtResource("10_nncqf"), ExtResource("11_4s113"), ExtResource("12_rh8bm"), ExtResource("13_n4g3t"), ExtResource("14_4o2oy")])
 sound_random = Array[AudioStreamMP3]([ExtResource("19_fdaxv"), ExtResource("20_1lwuc"), ExtResource("21_nq4b5"), ExtResource("22_d6db7"), ExtResource("23_2opvi"), ExtResource("24_eal8t"), ExtResource("25_4k2ct"), ExtResource("26_8fepu"), ExtResource("27_2xppg"), ExtResource("29_256ve"), ExtResource("30_22bms")])
-sound_random_very_close = Array[AudioStreamMP3]([ExtResource("26_0lfmj"), ExtResource("27_g7mrr"), ExtResource("28_cvbbk")])
 
 [node name="Foot_Steps" type="AudioStreamPlayer" parent="Audio_Control"]
 bus = &"SFX"
 
 [node name="Random_Sounds" type="AudioStreamPlayer" parent="Audio_Control"]
-bus = &"SFX"
-
-[node name="Gun_Shot" type="AudioStreamPlayer" parent="Audio_Control"]
-stream = ExtResource("29_wxeml")
 bus = &"SFX"
 
 [node name="Modules" type="NavigationRegion2D" parent="."]
@@ -778,18 +1214,22 @@ debug_color = Color(0, 0.6, 0.701961, 0)
 [node name="NavigationAgent2D" type="NavigationAgent2D" parent="Monster"]
 
 [node name="Player" type="CharacterBody2D" parent="." node_paths=PackedStringArray("GUN")]
-z_index = 2
 position = Vector2(0, -2)
 collision_layer = 2
 collision_mask = 3
-script = ExtResource("30_bvicb")
-MAX_SPEED = 100
-ACCELERATION = 300
-JUMP_VELOCITY = -120.0
-GRAVITY = 500.0
+script = SubResource("GDScript_dossv")
+MAX_SPEED = null
+ACCELERATION = null
+FRICITON = null
+JUMP_VELOCITY = null
+GRAVITY = null
 GUN = NodePath("gun")
+HP = null
+falldmg_multiplier = null
+weaponswitchCooltime = null
+airtimeforDMG = null
 
-[node name="gun" parent="Player" node_paths=PackedStringArray("monster") instance=ExtResource("35_l6ijx")]
+[node name="gun" parent="Player" node_paths=PackedStringArray("monster") instance=ExtResource("7_yae1m")]
 monster = NodePath("../../Monster")
 
 [node name="Aura" type="PointLight2D" parent="Player"]
@@ -805,8 +1245,6 @@ current = true
 scale = Vector2(0.987829, 0.884354)
 offset = Vector2(0, -15)
 zoom = Vector2(5, 5)
-script = ExtResource("35_6pws3")
-randomStrength = 10.0
 
 [node name="Background" type="CanvasLayer" parent="Player/Camera"]
 layer = -1
@@ -829,22 +1267,6 @@ position = Vector2(0, 4.666)
 texture = ExtResource("6_qws5h")
 hframes = 23
 frame = 10
-
-[node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="Player/body3"]
-stream = ExtResource("36_5chg8")
-volume_db = -28.0
-
-[node name="AudioStreamPlayer2" type="AudioStreamPlayer" parent="Player/body3"]
-stream = ExtResource("37_8gsgm")
-volume_db = -32.0
-
-[node name="AudioStreamPlayer3" type="AudioStreamPlayer" parent="Player/body3"]
-stream = ExtResource("38_tu37q")
-volume_db = -32.0
-
-[node name="AudioStreamPlayer4" type="AudioStreamPlayer" parent="Player/body3"]
-stream = ExtResource("39_homny")
-volume_db = -32.0
 
 [node name="AnimationPlayer2" type="AnimationPlayer" parent="Player"]
 libraries = {
@@ -891,239 +1313,6 @@ theme_override_fonts/font = ExtResource("7_5wvvi")
 text = "press E to interact"
 
 [node name="GUI" type="CanvasLayer" parent="."]
-layer = 99
-
-[node name="Menus" type="Control" parent="GUI"]
-process_mode = 3
-layout_mode = 3
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-mouse_filter = 1
-script = ExtResource("38_ptr41")
-
-[node name="Pause" type="Control" parent="GUI/Menus"]
-visible = false
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-
-[node name="Background" type="ColorRect" parent="GUI/Menus/Pause"]
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-color = Color(0, 0, 0, 0.588235)
-
-[node name="RichTextLabel" type="RichTextLabel" parent="GUI/Menus/Pause"]
-layout_mode = 1
-anchors_preset = 5
-anchor_left = 0.5
-anchor_right = 0.5
-offset_left = -276.0
-offset_top = 100.0
-offset_right = 277.0
-offset_bottom = 146.0
-grow_horizontal = 2
-theme_override_fonts/normal_font = ExtResource("7_5wvvi")
-theme_override_font_sizes/normal_font_size = 30
-bbcode_enabled = true
-text = "[center][color=ccc]STATUS: [color=888]PAUSED"
-
-[node name="VolumeSlider" type="HSlider" parent="GUI/Menus/Pause"]
-layout_mode = 1
-anchors_preset = 5
-anchor_left = 0.5
-anchor_right = 0.5
-offset_left = -225.0
-offset_top = 300.0
-offset_right = 225.0
-offset_bottom = 350.0
-grow_horizontal = 2
-mouse_default_cursor_shape = 2
-value = 50.0
-
-[node name="Label" type="Label" parent="GUI/Menus/Pause/VolumeSlider"]
-layout_mode = 0
-offset_top = -15.0
-offset_right = 126.0
-offset_bottom = 8.0
-theme_override_fonts/font = ExtResource("7_5wvvi")
-theme_override_font_sizes/font_size = 18
-text = "Volume:"
-
-[node name="ResumeButton" type="Button" parent="GUI/Menus/Pause"]
-layout_mode = 1
-anchors_preset = 5
-anchor_left = 0.5
-anchor_right = 0.5
-offset_left = -225.0
-offset_top = 400.0
-offset_right = 225.0
-offset_bottom = 450.0
-grow_horizontal = 2
-mouse_default_cursor_shape = 2
-theme_override_fonts/font = ExtResource("7_5wvvi")
-text = "Resume"
-
-[node name="QuitToMenuButton" type="Button" parent="GUI/Menus/Pause"]
-layout_mode = 1
-anchors_preset = 5
-anchor_left = 0.5
-anchor_right = 0.5
-offset_left = -225.0
-offset_top = 475.0
-offset_right = 225.0
-offset_bottom = 525.0
-grow_horizontal = 2
-mouse_default_cursor_shape = 2
-theme_override_fonts/font = ExtResource("7_5wvvi")
-text = "Quit to Menu"
-
-[node name="Victory" type="Control" parent="GUI/Menus"]
-visible = false
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-
-[node name="Background" type="ColorRect" parent="GUI/Menus/Victory"]
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-color = Color(0, 0, 0, 0.588235)
-
-[node name="RichTextLabel" type="RichTextLabel" parent="GUI/Menus/Victory"]
-layout_mode = 1
-anchors_preset = 5
-anchor_left = 0.5
-anchor_right = 0.5
-offset_left = -276.0
-offset_top = 100.0
-offset_right = 277.0
-offset_bottom = 146.0
-grow_horizontal = 2
-theme_override_fonts/normal_font = ExtResource("7_5wvvi")
-theme_override_font_sizes/normal_font_size = 30
-bbcode_enabled = true
-text = "[center][color=ccc]STATUS: [color=32ac32]SURVIVED"
-
-[node name="VolumeSlider" type="HSlider" parent="GUI/Menus/Victory"]
-layout_mode = 1
-anchors_preset = 5
-anchor_left = 0.5
-anchor_right = 0.5
-offset_left = -225.0
-offset_top = 300.0
-offset_right = 225.0
-offset_bottom = 350.0
-grow_horizontal = 2
-mouse_default_cursor_shape = 2
-value = 50.0
-
-[node name="Label" type="Label" parent="GUI/Menus/Victory/VolumeSlider"]
-layout_mode = 0
-offset_top = -15.0
-offset_right = 126.0
-offset_bottom = 8.0
-theme_override_fonts/font = ExtResource("7_5wvvi")
-theme_override_font_sizes/font_size = 18
-text = "Volume:"
-
-[node name="QuitToMenuButton" type="Button" parent="GUI/Menus/Victory"]
-layout_mode = 1
-anchors_preset = 5
-anchor_left = 0.5
-anchor_right = 0.5
-offset_left = -225.0
-offset_top = 400.0
-offset_right = 225.0
-offset_bottom = 450.0
-grow_horizontal = 2
-mouse_default_cursor_shape = 2
-theme_override_fonts/font = ExtResource("7_5wvvi")
-text = "Back to Menu"
-
-[node name="Defeat" type="Control" parent="GUI/Menus"]
-visible = false
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-
-[node name="Background" type="ColorRect" parent="GUI/Menus/Defeat"]
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-color = Color(0, 0, 0, 0.588235)
-
-[node name="RichTextLabel" type="RichTextLabel" parent="GUI/Menus/Defeat"]
-layout_mode = 1
-anchors_preset = 5
-anchor_left = 0.5
-anchor_right = 0.5
-offset_left = -276.0
-offset_top = 100.0
-offset_right = 277.0
-offset_bottom = 146.0
-grow_horizontal = 2
-theme_override_fonts/normal_font = ExtResource("7_5wvvi")
-theme_override_font_sizes/normal_font_size = 30
-bbcode_enabled = true
-text = "[center][color=ccc]STATUS: [color=ac3232]YOU DIED"
-
-[node name="VolumeSlider" type="HSlider" parent="GUI/Menus/Defeat"]
-layout_mode = 1
-anchors_preset = 5
-anchor_left = 0.5
-anchor_right = 0.5
-offset_left = -225.0
-offset_top = 300.0
-offset_right = 225.0
-offset_bottom = 350.0
-grow_horizontal = 2
-mouse_default_cursor_shape = 2
-value = 50.0
-
-[node name="Label" type="Label" parent="GUI/Menus/Defeat/VolumeSlider"]
-layout_mode = 0
-offset_top = -15.0
-offset_right = 126.0
-offset_bottom = 8.0
-theme_override_fonts/font = ExtResource("7_5wvvi")
-theme_override_font_sizes/font_size = 18
-text = "Volume:"
-
-[node name="QuitToMenuButton" type="Button" parent="GUI/Menus/Defeat"]
-layout_mode = 1
-anchors_preset = 5
-anchor_left = 0.5
-anchor_right = 0.5
-offset_left = -225.0
-offset_top = 400.0
-offset_right = 225.0
-offset_bottom = 450.0
-grow_horizontal = 2
-mouse_default_cursor_shape = 2
-theme_override_fonts/font = ExtResource("7_5wvvi")
-text = "Back to Menu"
 
 [node name="Timer" type="Label" parent="GUI"]
 texture_filter = 1
@@ -1145,8 +1334,6 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="GUI2" type="CanvasLayer" parent="."]
-
 [node name="Storm" type="Node2D" parent="." node_paths=PackedStringArray("timeDisplay")]
 script = ExtResource("35_ui06t")
 timeDisplay = NodePath("../GUI/Timer")
@@ -1156,10 +1343,3 @@ timeDisplay = NodePath("../GUI/Timer")
 [connection signal="bake_finished" from="Modules" to="Monster" method="_on_modules_bake_finished"]
 [connection signal="area_entered" from="Player/Collision" to="Player" method="_on_area_2d_area_entered"]
 [connection signal="area_exited" from="Player/Collision" to="Player" method="_on_area_2d_area_exited"]
-[connection signal="value_changed" from="GUI/Menus/Pause/VolumeSlider" to="Audio_Control" method="_on_volume_slider_value_changed"]
-[connection signal="pressed" from="GUI/Menus/Pause/ResumeButton" to="GUI/Menus" method="_on_resume_button_pressed"]
-[connection signal="pressed" from="GUI/Menus/Pause/QuitToMenuButton" to="GUI/Menus" method="_on_quit_to_menu_button_pressed"]
-[connection signal="value_changed" from="GUI/Menus/Victory/VolumeSlider" to="Audio_Control" method="_on_volume_slider_value_changed"]
-[connection signal="pressed" from="GUI/Menus/Victory/QuitToMenuButton" to="GUI/Menus" method="_on_quit_to_menu_button_pressed"]
-[connection signal="value_changed" from="GUI/Menus/Defeat/VolumeSlider" to="Audio_Control" method="_on_volume_slider_value_changed"]
-[connection signal="pressed" from="GUI/Menus/Defeat/QuitToMenuButton" to="GUI/Menus" method="_on_quit_to_menu_button_pressed"]
