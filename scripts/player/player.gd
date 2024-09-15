@@ -474,6 +474,7 @@ func _on_area_2d_area_exited(area: Area2D) -> void:
 	if area is WaterValve:
 		isInWater = false
 		waterBody = null;
+		$water.hide()
 		#$Label.hide()
 	
 	
