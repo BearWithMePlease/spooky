@@ -53,10 +53,10 @@ func set_zoom_level(level: float, mouse_world_position = self.get_global_mouse_p
 	
 func center_on_bunker() -> void:
 	var boundry: Rect2 = mainScene.getBunkerBounds();
-	var max_x = boundry.position.x + boundry.size.x + Modules.GRID_SIZE;
-	var min_x = boundry.position.x - Modules.GRID_SIZE;
-	var max_y = boundry.position.y + boundry.size.y + Modules.GRID_SIZE;
-	var min_y = boundry.position.y - Modules.GRID_SIZE;
+	var max_x = boundry.position.x + boundry.size.x + Module.GRID_SIZE;
+	var min_x = boundry.position.x - Module.GRID_SIZE;
+	var max_y = boundry.position.y + boundry.size.y + Module.GRID_SIZE;
+	var min_y = boundry.position.y - Module.GRID_SIZE;
 	
 	var center = Vector2((max_x - min_x) / 2 + min_x, (max_y - min_y) / 2 + min_y)
 	global_position = center

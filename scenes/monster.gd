@@ -144,7 +144,7 @@ class TaskWander extends TreeNode:
 	func _init(monsterBody: MonsterBody, modules: Array[Module], navigationAgent: NavigationAgent2D) -> void:
 		super();
 		_monsterBody = monsterBody;
-		_modules = modules.filter(func(module: Module): return module.type != Modules.ModuleType.CORRIDOR);
+		_modules = modules.filter(func(module: Module): return module.type != Module.ModuleType.CORRIDOR);
 		_navigationAgent = navigationAgent;
 		_rndRoomToGo = _modules.pick_random();
 		_changeRoomTimer = 0.0;
@@ -152,7 +152,7 @@ class TaskWander extends TreeNode:
 	func evaluate(delta: float) -> TreeNodeState:
 		_changeRoomTimer += delta
 		var dst := _monsterBody.global_position.distance_to(_rndRoomToGo.global_position);
-		if dst < Modules.GRID_SIZE || _changeRoomTimer >= TIME_CHANGE_ROOM:
+		if dst < Module.GRID_SIZE || _changeRoomTimer >= TIME_CHANGE_ROOM:
 			_changeRoomTimer = 0.0;
 			_rndRoomToGo = _modules.pick_random();
 		
@@ -403,7 +403,7 @@ class CheckSpawned extends TreeNode:
 			
 			# If reached the most far room, despawn
 			var dstToMonster := _monsterBody.global_position.distance_to(_targetModule.global_position);
-			if dstToMonster < Modules.GRID_SIZE or _timerToDespawn <= 0.0:
+			if dstToMonster < Module.GRID_SIZE or _timerToDespawn <= 0.0:
 				_monsterBody.visible = false;
 				teleport(Vector2(-1e5, -1e5));
 				_targetModule = null;

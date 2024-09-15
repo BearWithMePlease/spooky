@@ -28,7 +28,6 @@ gdscript/warnings/integer_division=0
 
 window/stretch/mode="viewport"
 window/stretch/aspect="expand"
-window/vsync/vsync_mode=0
 window/main_scene="res://prefab/modules/generator.tscn"
 
 [global_group]

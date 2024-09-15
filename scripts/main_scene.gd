@@ -100,10 +100,10 @@ func _getAllModuleBoundingBoxes() -> Array[Rect2]:
 	var boundsArr: Array[Rect2] = []
 	for child in modules.get_children():
 		var module := child as Module
-		var moduleSize: Vector2 = Modules.scales[module.type]
-		var width: float = moduleSize.x * Modules.GRID_SIZE
-		var height: float = moduleSize.y * Modules.GRID_SIZE
-		var boundry := Rect2(module.global_position.x - Modules.GRID_SIZE * 0.5, module.global_position.y + Modules.GRID_SIZE * 0.5 - height, width, height)
+		var moduleSize: Vector2 = Module.scales[module.type]
+		var width: float = moduleSize.x * Module.GRID_SIZE
+		var height: float = moduleSize.y * Module.GRID_SIZE
+		var boundry := Rect2(module.global_position.x - Module.GRID_SIZE * 0.5, module.global_position.y + Module.GRID_SIZE * 0.5 - height, width, height)
 		boundsArr.append(boundry)
 	return boundsArr
 
