@@ -262,6 +262,10 @@ func _process(delta):
 		else:
 			climb(delta)
 		interact()
+	
+	if $"../Storm".isStorm():
+		ammoCooldown = []
+		hospitalCooldown = false
 
 @onready var camera = $Camera
 
@@ -351,11 +355,13 @@ var isInBed = false
 
 var ladder_array = []
 
+var lastWeaponsBuddy
 func _on_area_2d_area_entered(area: Area2D) -> void:
 	#print(area)
 	if area.name == "Weapons":
 		isInWeapons = true
 		$Label.show()
+		lastWeaponsBuddy = area
 	else:
 		isInWeapons = false
 	
@@ -369,35 +375,35 @@ func _on_area_2d_area_entered(area: Area2D) -> void:
 	
 	if area.name == "Water":
 		isInWater = true
-		$Label.show()
+		#$Label.show()
 	else:
 		isInWater = false
 	
 	
 	if area.name == "Vent":
 		isInGeneratorVent = true
-		$Label.show()
+		#$Label.show()
 	else:
 		isInGeneratorVent = false
 
 	
 	if area.name == "Generator":
 		isInGenerator = true
-		$Label.show()
+		#$Label.show()
 	else:
 		isInGenerator = false
 	
 	
 	if area.name == "Communication":
 		isInCom = true
-		$Label.show()
+		#$Label.show()
 	else:
 		isInCom = false
 	
 	
 	if area.name == "Bed":
 		isInBed = true
-		$Label.show()
+		#$Label.show()
 	else:
 		isInBed = false
 	
@@ -411,7 +417,6 @@ func _on_area_2d_area_entered(area: Area2D) -> void:
 
 
 
-	
 func _on_area_2d_area_exited(area: Area2D) -> void:
 	if area.name == "Weapons":
 		isInWeapons = false
@@ -423,27 +428,27 @@ func _on_area_2d_area_exited(area: Area2D) -> void:
 	
 	if area.name == "Water":
 		isInWater = false
-		$Label.hide()
+		#$Label.hide()
 	
 	
 	
 	if area.name == "Vent":
 		isInGeneratorVent = false
-		$Label.hide()
+		#$Label.hide()
 		
 	if area.name == "Generator":
 		isInGenerator = false
-		$Label.hide()
+		#$Label.hide()
 		
 	
 	if area.name == "Communication":
 		isInCom = false
-		$Label.hide()
+		#$Label.hide()
 		
 	
 	if area.name == "Bed":
 		isInBed = false
-		$Label.hide()
+		#$Label.hide()
 	
 	
 	if area.name == "Ladder":
@@ -454,14 +459,22 @@ func _on_area_2d_area_exited(area: Area2D) -> void:
 			$AnimationTree2.active = true
 	
 	
-	
+var ammoCooldown = []
+var hospitalCooldown = false
 func interact():
-	if isInWeapons && Input.is_action_just_pressed("interact"):
-		GUN.ammunition_pool_total = 200
-	
-	if isInHospital && Input.is_action_just_pressed("interact"):
-		if HP < maxHP:
-			self.HP = maxHP
+	if !$"../Storm".isStorm(): 
+		if isInWeapons && Input.is_action_just_pressed("interact") && !ammoCooldown.has(lastWeaponsBuddy):
+			GUN.ammunition_pool_total += 30
+			ammoCooldown.append(lastWeaponsBuddy)
+			print(GUN.ammunition_pool_total)
+		
+		if isInHospital && Input.is_action_just_pressed("interact") && !hospitalCooldown:
+			if HP +50 > maxHP:
+				self.HP = maxHP
+			if HP < maxHP:
+				self.HP += 50
+			hospitalCooldown = true
+			print(HP)
 	
 	if isInWater && Input.is_action_just_pressed("interact"):
 		print("water gtfo")
