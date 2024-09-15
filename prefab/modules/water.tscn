@@ -1,9 +1,11 @@
-[gd_scene load_steps=14 format=3 uid="uid://qr05ktwbxvl1"]
+[gd_scene load_steps=17 format=3 uid="uid://qr05ktwbxvl1"]
 
 [ext_resource type="Script" path="res://scripts/module.gd" id="1_ihai3"]
 [ext_resource type="Texture2D" uid="uid://bbdoyjknw2ka" path="res://imgs/modules/water/wall.png" id="2_2nl0j"]
 [ext_resource type="Texture2D" uid="uid://bylcwkiuwpvgc" path="res://imgs/modules/water/n.png" id="2_rcalp"]
+[ext_resource type="Texture2D" uid="uid://cjqb8npbi0g2p" path="res://imgs/modules/water/water_layer.png" id="3_hn2q4"]
 [ext_resource type="PackedScene" uid="uid://dki4talhc74jp" path="res://prefab/ceiling_lamp.tscn" id="3_oe547"]
+[ext_resource type="Script" path="res://prefab/modules/water_valve.gd" id="4_e6r60"]
 [ext_resource type="PackedScene" uid="uid://bospy2knasfaj" path="res://prefab/sound_effect.tscn" id="5_wcbpo"]
 [ext_resource type="AudioStream" uid="uid://daqp0biulpdko" path="res://audio/sfx/water_pump.mp3" id="6_176fv"]
 
@@ -32,7 +34,11 @@ fill = 1
 fill_from = Vector2(0.5, 0.5)
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_fgi5g"]
-size = Vector2(76, 44)
+size = Vector2(28, 44)
+
+[sub_resource type="Gradient" id="Gradient_5dwip"]
+offsets = PackedFloat32Array(0.342308, 0.65, 1)
+colors = PackedColorArray(0.141176, 0.321569, 0.45098, 1, 0.141176, 0.321569, 0.45098, 0.784314, 0.529412, 0.619608, 0.639216, 0.623529)
 
 [node name="Water" type="Node2D"]
 script = ExtResource("1_ihai3")
@@ -102,14 +108,32 @@ texture = SubResource("GradientTexture2D_fp0cu")
 
 [node name="Interactables" type="Node2D" parent="Sprite"]
 
-[node name="Water" type="Area2D" parent="Sprite/Interactables" groups=["interact_water"]]
-position = Vector2(132, 98)
+[node name="WaterValve" type="Area2D" parent="Sprite/Interactables" groups=["interact_water"]]
+position = Vector2(88, 91)
 collision_layer = 4194304
 collision_mask = 4194304
+script = ExtResource("4_e6r60")
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Sprite/Interactables/Water"]
-position = Vector2(-20, 5)
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Sprite/Interactables/WaterValve"]
+position = Vector2(0, 9)
 shape = SubResource("RectangleShape2D_fgi5g")
+
+[node name="WaterLayer" type="Sprite2D" parent="Sprite/Interactables/WaterValve"]
+z_index = 10
+texture_filter = 1
+position = Vector2(9, 33)
+texture = ExtResource("3_hn2q4")
+
+[node name="CPUParticles2D" type="CPUParticles2D" parent="Sprite/Interactables/WaterValve"]
+z_index = 1
+amount = 50
+lifetime = 0.17
+spread = 180.0
+initial_velocity_min = 136.36
+initial_velocity_max = 136.36
+angular_velocity_min = -9.35
+angular_velocity_max = 720.0
+color_ramp = SubResource("Gradient_5dwip")
 
 [node name="Wall" type="Sprite2D" parent="Sprite"]
 z_index = 10

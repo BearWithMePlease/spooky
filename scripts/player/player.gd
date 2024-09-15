@@ -250,7 +250,7 @@ func _ready():
 	
 	animation_tree.active = true
 
-	self.add_child(GUN)
+	#self.add_child(GUN)
 
 func _process(delta):
 	_deafenTimer = max(0, _deafenTimer - delta);
@@ -340,6 +340,7 @@ func _physics_process(delta: float) -> void:
 var isInWeapons = false
 var isInHospital = false
 var isInWater = false
+var waterBody: Area2D = null;
 
 var isInGenerator = false
 var isInGeneratorVent = false
@@ -367,11 +368,13 @@ func _on_area_2d_area_entered(area: Area2D) -> void:
 		isInHospital = false
 
 	
-	if area.name == "Water":
+	if area is WaterValve:
+		waterBody = area;
 		isInWater = true
 		$Label.show()
 	else:
 		isInWater = false
+		waterBody = null;
 	
 	
 	if area.name == "Vent":
@@ -421,8 +424,9 @@ func _on_area_2d_area_exited(area: Area2D) -> void:
 		isInHospital = false
 		$Label.hide()
 	
-	if area.name == "Water":
+	if area is WaterValve:
 		isInWater = false
+		waterBody = null;
 		$Label.hide()
 	
 	
@@ -465,7 +469,7 @@ func interact():
 	
 	if isInWater && Input.is_action_just_pressed("interact"):
 		print("water gtfo")
-	
+		(waterBody as WaterValve).raiseUpWater();
 	
 	if isInGeneratorVent && Input.is_action_just_pressed("interact"):
 		print("Vent gtfo")

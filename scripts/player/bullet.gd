@@ -29,7 +29,6 @@ func _process(delta: float) -> void:
 	#ray_cast.target_position += Vector2(20*delta, 0)
 	ray_cast.force_raycast_update()
 
-
 	if ray_cast.is_colliding():
 		var body = ray_cast.get_collider()
 		#print("Bullet hit: ", body)
@@ -47,8 +46,27 @@ func _process(delta: float) -> void:
 				hit.position = ray_cast.get_collision_point()
 				hit.rotation = rotation
 				get_parent().add_child(hit)
+			elif body is Barrel:
+				if not (body as Barrel).isExploded():
+					(body as Barrel).explodeBarrel();
+					var player := _gun.get_parent() as Player;
+					for child in player.get_children():
+						if child is PanZoomCamera:
+							(child as PanZoomCamera).apply_shake()
+							break;
+						
+				if body.global_position.distance_to(_gun.monster.global_position) < 200.0:
+					for monsterChild in _gun.monster.get_children():
+						if monsterChild is MonsterBody:
+							var monsterBody := monsterChild as MonsterBody;
+							var monsterHealth := monsterChild.getHealth() as int;
+							const BARREL_EXPLOSION_DAMAGE := 25.0;
+							monsterHealth = max(0, monsterHealth - BARREL_EXPLOSION_DAMAGE);
+							monsterChild.setHealth(monsterHealth);
+							break;
 				
-		
+				# TODO: Gott abziehe hier health
+			
 			queue_free()
 		else:
 			print("fuckoff")
