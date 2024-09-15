@@ -1,20 +1,743 @@
-[gd_scene load_steps=2 format=3 uid="uid://7v4330h5f84m"]
+[gd_scene load_steps=62 format=3 uid="uid://7v4330h5f84m"]
 
+[ext_resource type="Script" path="res://scripts/start_menu.gd" id="1_4npf5"]
 [ext_resource type="PackedScene" uid="uid://dmfpfr5xhngv5" path="res://prefab/modules/corridor.tscn" id="1_kloau"]
+[ext_resource type="Script" path="res://scripts/light_control.gd" id="2_88ema"]
+[ext_resource type="Script" path="res://scripts/audio_control.gd" id="2_tgbuw"]
+[ext_resource type="Texture2D" uid="uid://ckjwibltv5j8l" path="res://imgs/modules/corridor/n_v.png" id="2_xuug3"]
+[ext_resource type="Texture2D" uid="uid://d3tonhbl3hoxn" path="res://imgs/modules/corridor/r_d.png" id="3_gkduj"]
+[ext_resource type="AudioStream" uid="uid://d0sc8vvf4rlv0" path="res://audio/sfx/light_on.mp3" id="3_h0gqc"]
+[ext_resource type="AudioStream" uid="uid://ckeqab8exdk7q" path="res://audio/sfx/light_off.mp3" id="4_4otei"]
+[ext_resource type="Texture2D" uid="uid://comtihp4vni8" path="res://imgs/modules/corridor/h_n.png" id="4_vqmqg"]
+[ext_resource type="Texture2D" uid="uid://dwc2mmx3m0bdu" path="res://imgs/modules/corridor/l_d.png" id="5_7nq6q"]
+[ext_resource type="AudioStream" uid="uid://cedmjxxqnpqpy" path="res://audio/sfx/footsteps/footsteps-1.mp3" id="5_lxo7c"]
+[ext_resource type="Texture2D" uid="uid://bahc3spqbwwxl" path="res://images/player/hazmat_with_hands.png" id="6_732b2"]
+[ext_resource type="AudioStream" uid="uid://be62gfc1nvc07" path="res://audio/sfx/footsteps/footsteps-2.mp3" id="6_elihr"]
+[ext_resource type="Texture2D" uid="uid://gdarcja0ie7" path="res://imgs/modules/corridor/n_u.png" id="6_k2xnb"]
+[ext_resource type="AudioStream" uid="uid://da2qdiqee6jvq" path="res://audio/sfx/footsteps/footsteps-3.mp3" id="7_u5jl5"]
+[ext_resource type="FontFile" uid="uid://gosmfve4h532" path="res://imgs/PressStart2P-Regular.ttf" id="8_0j5l3"]
+[ext_resource type="AudioStream" uid="uid://oaivvndflsnd" path="res://audio/sfx/footsteps/footsteps-4.mp3" id="8_jolsa"]
+[ext_resource type="AudioStream" uid="uid://dpk8jtf88ue36" path="res://audio/sfx/footsteps/footsteps-5.mp3" id="9_4f3pk"]
+[ext_resource type="Texture2D" uid="uid://fs5tafk47xm0" path="res://imgs/enter_bunker_button.png" id="9_crt7k"]
+[ext_resource type="AudioStream" uid="uid://dujohafgqeag5" path="res://audio/sfx/footsteps/footsteps-6.mp3" id="10_31i54"]
+[ext_resource type="AudioStream" uid="uid://c8t6dqtku2qvm" path="res://audio/sfx/footsteps/footsteps-7.mp3" id="11_06731"]
+[ext_resource type="AudioStream" uid="uid://0qbjq8bt2nod" path="res://audio/sfx/footsteps/footsteps-8.mp3" id="12_ojgxe"]
+[ext_resource type="AudioStream" uid="uid://l1ukey07yihq" path="res://audio/sfx/footsteps/footsteps-9.mp3" id="13_6kqnn"]
+[ext_resource type="AudioStream" uid="uid://been7pf5q8okq" path="res://audio/sfx/random_noise/sound_1.mp3" id="14_msfiv"]
+[ext_resource type="AudioStream" uid="uid://cuke1jy26sxv1" path="res://audio/sfx/random_noise/sound_2.mp3" id="15_nc7jk"]
+[ext_resource type="AudioStream" uid="uid://cx1j8xvkm78dw" path="res://audio/sfx/random_noise/sound_3.mp3" id="16_ecowb"]
+[ext_resource type="AudioStream" uid="uid://oeck355i337q" path="res://audio/sfx/random_noise/sound_4.mp3" id="17_e3tt4"]
+[ext_resource type="AudioStream" uid="uid://drewawapbdp4w" path="res://audio/sfx/random_noise/sound_5.mp3" id="18_6hyvg"]
+[ext_resource type="AudioStream" uid="uid://27yx3pked2kp" path="res://audio/sfx/random_noise/sound_6.mp3" id="19_07qcf"]
+[ext_resource type="AudioStream" uid="uid://ccynk1hjmewto" path="res://audio/sfx/random_noise/sound_7.mp3" id="20_gdmms"]
+[ext_resource type="AudioStream" uid="uid://u6brqy6vxytv" path="res://audio/sfx/random_noise/sound_8.mp3" id="21_c3yrt"]
+[ext_resource type="AudioStream" uid="uid://0t1l64nksl6q" path="res://audio/sfx/random_noise/sound_9.mp3" id="22_qx1hl"]
+[ext_resource type="AudioStream" uid="uid://dgplj62jo2m88" path="res://audio/sfx/random_noise/sound_10.mp3" id="23_hyern"]
+[ext_resource type="AudioStream" uid="uid://cihfhgsuq7wif" path="res://audio/sfx/random_noise/sound_11.mp3" id="24_vuvef"]
+[ext_resource type="AudioStream" uid="uid://bwa4q3uu7bxl2" path="res://audio/sfx/random_noise/monster_close/monster_close_1.mp3" id="25_8t33g"]
+[ext_resource type="AudioStream" uid="uid://ttq2xd7ypj7w" path="res://audio/sfx/random_noise/monster_close/monster_close_2.mp3" id="26_7a56m"]
+[ext_resource type="AudioStream" uid="uid://cu02un1sdut4u" path="res://audio/sfx/random_noise/monster_close/monster_close_3.mp3" id="27_7xfsh"]
+[ext_resource type="AudioStream" uid="uid://c5nau1045ak6b" path="res://audio/sfx/gun_shoot.mp3" id="28_2ngqf"]
+[ext_resource type="AudioStream" uid="uid://dv1ar6vdej4ob" path="res://audio/music/start_menu_music.mp3" id="29_5ohri"]
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_hvbax"]
+texture = ExtResource("9_crt7k")
+modulate_color = Color(0.67451, 0.196078, 0.196078, 1)
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_sx832"]
+texture = ExtResource("9_crt7k")
+modulate_color = Color(0.666667, 0.666667, 0.666667, 1)
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_gvnvo"]
+texture = ExtResource("9_crt7k")
+modulate_color = Color(0.8, 0.8, 0.8, 1)
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_8i0xa"]
+texture = ExtResource("9_crt7k")
+modulate_color = Color(0.666667, 0.666667, 0.666667, 1)
+
+[sub_resource type="StyleBoxTexture" id="StyleBoxTexture_imq5f"]
+texture = ExtResource("9_crt7k")
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_31b8q"]
+atlas = ExtResource("6_732b2")
+region = Rect2(360, 0, 30, 36)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_crswh"]
+atlas = ExtResource("6_732b2")
+region = Rect2(390, 0, 30, 36)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_2yr70"]
+atlas = ExtResource("6_732b2")
+region = Rect2(420, 0, 30, 36)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_axuwo"]
+atlas = ExtResource("6_732b2")
+region = Rect2(450, 0, 30, 36)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_ecrmd"]
+atlas = ExtResource("6_732b2")
+region = Rect2(480, 0, 30, 36)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_i857n"]
+atlas = ExtResource("6_732b2")
+region = Rect2(510, 0, 30, 36)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_p0dgy"]
+atlas = ExtResource("6_732b2")
+region = Rect2(540, 0, 30, 36)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_8idf1"]
+atlas = ExtResource("6_732b2")
+region = Rect2(570, 0, 30, 36)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_40y4o"]
+atlas = ExtResource("6_732b2")
+region = Rect2(600, 0, 30, 36)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_uah6q"]
+atlas = ExtResource("6_732b2")
+region = Rect2(630, 0, 30, 36)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_4e86t"]
+atlas = ExtResource("6_732b2")
+region = Rect2(660, 0, 30, 36)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_i4grw"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_31b8q")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_crswh")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_2yr70")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_axuwo")
+}],
+"loop": true,
+"name": &"climbing",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_ecrmd")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_i857n")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_p0dgy")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_8idf1")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_40y4o")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_uah6q")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_4e86t")
+}],
+"loop": true,
+"name": &"walking",
+"speed": 5.0
+}]
+
+[sub_resource type="Gradient" id="Gradient_6josf"]
+interpolation_mode = 2
+offsets = PackedFloat32Array(0, 0.5)
+colors = PackedColorArray(1, 1, 1, 1, 0.0354537, 0.0354537, 0.0354537, 1)
+
+[sub_resource type="GradientTexture2D" id="GradientTexture2D_gn1ob"]
+gradient = SubResource("Gradient_6josf")
+width = 256
+height = 256
+fill = 1
+fill_from = Vector2(0.5, 0.5)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_4j571"]
+size = Vector2(11, 27)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_xudfi"]
+size = Vector2(12, 5)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_fvm5s"]
+size = Vector2(30, 23)
 
 [node name="StartMenu" type="Node2D"]
+script = ExtResource("1_4npf5")
+
+[node name="Audio_Control" type="Node2D" parent="."]
+script = ExtResource("2_tgbuw")
+sound_light_on = ExtResource("3_h0gqc")
+sound_light_off = ExtResource("4_4otei")
+sound_foot_steps = Array[AudioStreamMP3]([ExtResource("5_lxo7c"), ExtResource("6_elihr"), ExtResource("7_u5jl5"), ExtResource("8_jolsa"), ExtResource("9_4f3pk"), ExtResource("10_31i54"), ExtResource("11_06731"), ExtResource("12_ojgxe"), ExtResource("13_6kqnn")])
+sound_random = Array[AudioStreamMP3]([ExtResource("14_msfiv"), ExtResource("15_nc7jk"), ExtResource("16_ecowb"), ExtResource("17_e3tt4"), ExtResource("18_6hyvg"), ExtResource("19_07qcf"), ExtResource("20_gdmms"), ExtResource("21_c3yrt"), ExtResource("22_qx1hl"), ExtResource("23_hyern"), ExtResource("24_vuvef")])
+sound_random_very_close = Array[AudioStreamMP3]([ExtResource("25_8t33g"), ExtResource("26_7a56m"), ExtResource("27_7xfsh")])
+will_play_random_sounds = false
+
+[node name="Foot_Steps" type="AudioStreamPlayer" parent="Audio_Control"]
+bus = &"SFX"
+
+[node name="Random_Sounds" type="AudioStreamPlayer" parent="Audio_Control"]
+bus = &"SFX"
+
+[node name="Gun_Shot" type="AudioStreamPlayer" parent="Audio_Control"]
+stream = ExtResource("28_2ngqf")
+bus = &"SFX"
+
+[node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="Audio_Control"]
+stream = ExtResource("29_5ohri")
+volume_db = -30.0
+autoplay = true
+bus = &"Music"
+
+[node name="Light_Control" type="Node2D" parent="."]
+script = ExtResource("2_88ema")
+will_randomly_switch_closeness = false
+
+[node name="Global_Light" type="DirectionalLight2D" parent="Light_Control"]
+energy = 0.8
+blend_mode = 1
 
 [node name="Modules" type="Node2D" parent="."]
 
-[node name="Corridor" parent="Modules" instance=ExtResource("1_kloau")]
+[node name="Corridors" type="Node2D" parent="Modules"]
 
-[node name="Borders" parent="Modules/Corridor/Sprite" index="0"]
+[node name="Corridor" parent="Modules/Corridors" instance=ExtResource("1_kloau")]
+position = Vector2(-288, 98)
+script = null
+
+[node name="Sprite" parent="Modules/Corridors/Corridor" index="0"]
+texture = ExtResource("2_xuug3")
+
+[node name="Ceiling" parent="Modules/Corridors/Corridor/Sprite/Borders" index="0"]
 visible = false
 
-[node name="Lights" parent="Modules/Corridor/Sprite" index="1"]
+[node name="Vertical_Ceiling_Left" parent="Modules/Corridors/Corridor/Sprite/Borders" index="1"]
 visible = false
 
-[node name="Interactables" parent="Modules/Corridor/Sprite" index="2"]
+[node name="Vertical_Ceiling_Right" parent="Modules/Corridors/Corridor/Sprite/Borders" index="2"]
+visible = false
+
+[node name="Floor" parent="Modules/Corridors/Corridor/Sprite/Borders" index="3"]
+visible = false
+
+[node name="Connection_Left" parent="Modules/Corridors/Corridor/Sprite/Borders" index="6"]
+visible = false
+
+[node name="Connection_Right" parent="Modules/Corridors/Corridor/Sprite/Borders" index="7"]
+visible = false
+
+[node name="Vertical_Connection_Left" parent="Modules/Corridors/Corridor/Sprite/Borders" index="8"]
+visible = true
+
+[node name="Vertical_Connection_Right" parent="Modules/Corridors/Corridor/Sprite/Borders" index="9"]
+visible = true
+
+[node name="Lights" parent="Modules/Corridors/Corridor/Sprite" index="1"]
+visible = false
+
+[node name="Interactables" parent="Modules/Corridors/Corridor/Sprite" index="2"]
+visible = false
+
+[node name="Corridor2" parent="Modules/Corridors" instance=ExtResource("1_kloau")]
+position = Vector2(-288, 34)
+script = null
+
+[node name="Sprite" parent="Modules/Corridors/Corridor2" index="0"]
+texture = ExtResource("2_xuug3")
+
+[node name="Ceiling" parent="Modules/Corridors/Corridor2/Sprite/Borders" index="0"]
+visible = false
+
+[node name="Vertical_Ceiling_Left" parent="Modules/Corridors/Corridor2/Sprite/Borders" index="1"]
+visible = false
+
+[node name="Vertical_Ceiling_Right" parent="Modules/Corridors/Corridor2/Sprite/Borders" index="2"]
+visible = false
+
+[node name="Floor" parent="Modules/Corridors/Corridor2/Sprite/Borders" index="3"]
+visible = false
+
+[node name="Connection_Left" parent="Modules/Corridors/Corridor2/Sprite/Borders" index="6"]
+visible = false
+
+[node name="Connection_Right" parent="Modules/Corridors/Corridor2/Sprite/Borders" index="7"]
+visible = false
+
+[node name="Vertical_Connection_Left" parent="Modules/Corridors/Corridor2/Sprite/Borders" index="8"]
+visible = true
+
+[node name="Vertical_Connection_Right" parent="Modules/Corridors/Corridor2/Sprite/Borders" index="9"]
+visible = true
+
+[node name="Lights" parent="Modules/Corridors/Corridor2/Sprite" index="1"]
+visible = false
+
+[node name="Interactables" parent="Modules/Corridors/Corridor2/Sprite" index="2"]
+visible = false
+
+[node name="Corridor3" parent="Modules/Corridors" instance=ExtResource("1_kloau")]
+position = Vector2(-288, 34)
+script = null
+
+[node name="Sprite" parent="Modules/Corridors/Corridor3" index="0"]
+position = Vector2(0, -64)
+texture = ExtResource("3_gkduj")
+
+[node name="Vertical_Ceiling_Left" parent="Modules/Corridors/Corridor3/Sprite/Borders" index="1"]
+visible = false
+
+[node name="Vertical_Ceiling_Right" parent="Modules/Corridors/Corridor3/Sprite/Borders" index="2"]
+visible = false
+
+[node name="Floor" parent="Modules/Corridors/Corridor3/Sprite/Borders" index="3"]
+visible = false
+
+[node name="Vertical_Floor_Right" parent="Modules/Corridors/Corridor3/Sprite/Borders" index="5"]
+visible = true
+
+[node name="Connection_Left" parent="Modules/Corridors/Corridor3/Sprite/Borders" index="6"]
+visible = false
+
+[node name="Connection_Right" parent="Modules/Corridors/Corridor3/Sprite/Borders" index="7"]
+visible = false
+
+[node name="Vertical_Connection_Left" parent="Modules/Corridors/Corridor3/Sprite/Borders" index="8"]
+visible = true
+
+[node name="Lights" parent="Modules/Corridors/Corridor3/Sprite" index="1"]
+visible = false
+
+[node name="Interactables" parent="Modules/Corridors/Corridor3/Sprite" index="2"]
+visible = false
+
+[node name="Corridor4" parent="Modules/Corridors" instance=ExtResource("1_kloau")]
+position = Vector2(-224, 34)
+script = null
+
+[node name="Sprite" parent="Modules/Corridors/Corridor4" index="0"]
+position = Vector2(0, -64)
+texture = ExtResource("4_vqmqg")
+
+[node name="Vertical_Ceiling_Left" parent="Modules/Corridors/Corridor4/Sprite/Borders" index="1"]
+visible = false
+
+[node name="Vertical_Ceiling_Right" parent="Modules/Corridors/Corridor4/Sprite/Borders" index="2"]
+visible = false
+
+[node name="Connection_Left" parent="Modules/Corridors/Corridor4/Sprite/Borders" index="6"]
+visible = false
+
+[node name="Connection_Right" parent="Modules/Corridors/Corridor4/Sprite/Borders" index="7"]
+visible = false
+
+[node name="Interactables" parent="Modules/Corridors/Corridor4/Sprite" index="2"]
+visible = false
+
+[node name="Corridor5" parent="Modules/Corridors" instance=ExtResource("1_kloau")]
+position = Vector2(-160, 34)
+script = null
+
+[node name="Sprite" parent="Modules/Corridors/Corridor5" index="0"]
+position = Vector2(0, -64)
+texture = ExtResource("4_vqmqg")
+
+[node name="Vertical_Ceiling_Left" parent="Modules/Corridors/Corridor5/Sprite/Borders" index="1"]
+visible = false
+
+[node name="Vertical_Ceiling_Right" parent="Modules/Corridors/Corridor5/Sprite/Borders" index="2"]
+visible = false
+
+[node name="Connection_Left" parent="Modules/Corridors/Corridor5/Sprite/Borders" index="6"]
+visible = false
+
+[node name="Connection_Right" parent="Modules/Corridors/Corridor5/Sprite/Borders" index="7"]
+visible = false
+
+[node name="Interactables" parent="Modules/Corridors/Corridor5/Sprite" index="2"]
+visible = false
+
+[node name="Corridor6" parent="Modules/Corridors" instance=ExtResource("1_kloau")]
+position = Vector2(-96, 34)
+script = null
+
+[node name="Sprite" parent="Modules/Corridors/Corridor6" index="0"]
+position = Vector2(0, -64)
+texture = ExtResource("4_vqmqg")
+
+[node name="Vertical_Ceiling_Left" parent="Modules/Corridors/Corridor6/Sprite/Borders" index="1"]
+visible = false
+
+[node name="Vertical_Ceiling_Right" parent="Modules/Corridors/Corridor6/Sprite/Borders" index="2"]
+visible = false
+
+[node name="Connection_Left" parent="Modules/Corridors/Corridor6/Sprite/Borders" index="6"]
+visible = false
+
+[node name="Connection_Right" parent="Modules/Corridors/Corridor6/Sprite/Borders" index="7"]
+visible = false
+
+[node name="Interactables" parent="Modules/Corridors/Corridor6/Sprite" index="2"]
+visible = false
+
+[node name="Corridor7" parent="Modules/Corridors" instance=ExtResource("1_kloau")]
+position = Vector2(-32, 34)
+script = null
+
+[node name="Sprite" parent="Modules/Corridors/Corridor7" index="0"]
+position = Vector2(0, -64)
+texture = ExtResource("4_vqmqg")
+
+[node name="Vertical_Ceiling_Left" parent="Modules/Corridors/Corridor7/Sprite/Borders" index="1"]
+visible = false
+
+[node name="Vertical_Ceiling_Right" parent="Modules/Corridors/Corridor7/Sprite/Borders" index="2"]
+visible = false
+
+[node name="Connection_Left" parent="Modules/Corridors/Corridor7/Sprite/Borders" index="6"]
+visible = false
+
+[node name="Connection_Right" parent="Modules/Corridors/Corridor7/Sprite/Borders" index="7"]
+visible = false
+
+[node name="Interactables" parent="Modules/Corridors/Corridor7/Sprite" index="2"]
+visible = false
+
+[node name="Corridor8" parent="Modules/Corridors" instance=ExtResource("1_kloau")]
+position = Vector2(32, 34)
+script = null
+
+[node name="Sprite" parent="Modules/Corridors/Corridor8" index="0"]
+position = Vector2(0, -64)
+texture = ExtResource("4_vqmqg")
+
+[node name="Vertical_Ceiling_Left" parent="Modules/Corridors/Corridor8/Sprite/Borders" index="1"]
+visible = false
+
+[node name="Vertical_Ceiling_Right" parent="Modules/Corridors/Corridor8/Sprite/Borders" index="2"]
+visible = false
+
+[node name="Connection_Left" parent="Modules/Corridors/Corridor8/Sprite/Borders" index="6"]
+visible = false
+
+[node name="Connection_Right" parent="Modules/Corridors/Corridor8/Sprite/Borders" index="7"]
+visible = false
+
+[node name="Interactables" parent="Modules/Corridors/Corridor8/Sprite" index="2"]
+visible = false
+
+[node name="Corridor9" parent="Modules/Corridors" instance=ExtResource("1_kloau")]
+position = Vector2(96, 34)
+script = null
+
+[node name="Sprite" parent="Modules/Corridors/Corridor9" index="0"]
+position = Vector2(0, -64)
+texture = ExtResource("4_vqmqg")
+
+[node name="Vertical_Ceiling_Left" parent="Modules/Corridors/Corridor9/Sprite/Borders" index="1"]
+visible = false
+
+[node name="Vertical_Ceiling_Right" parent="Modules/Corridors/Corridor9/Sprite/Borders" index="2"]
+visible = false
+
+[node name="Connection_Left" parent="Modules/Corridors/Corridor9/Sprite/Borders" index="6"]
+visible = false
+
+[node name="Connection_Right" parent="Modules/Corridors/Corridor9/Sprite/Borders" index="7"]
+visible = false
+
+[node name="Interactables" parent="Modules/Corridors/Corridor9/Sprite" index="2"]
+visible = false
+
+[node name="Corridor10" parent="Modules/Corridors" instance=ExtResource("1_kloau")]
+position = Vector2(160, 34)
+script = null
+
+[node name="Sprite" parent="Modules/Corridors/Corridor10" index="0"]
+position = Vector2(0, -64)
+texture = ExtResource("4_vqmqg")
+
+[node name="Vertical_Ceiling_Left" parent="Modules/Corridors/Corridor10/Sprite/Borders" index="1"]
+visible = false
+
+[node name="Vertical_Ceiling_Right" parent="Modules/Corridors/Corridor10/Sprite/Borders" index="2"]
+visible = false
+
+[node name="Connection_Left" parent="Modules/Corridors/Corridor10/Sprite/Borders" index="6"]
+visible = false
+
+[node name="Connection_Right" parent="Modules/Corridors/Corridor10/Sprite/Borders" index="7"]
+visible = false
+
+[node name="Interactables" parent="Modules/Corridors/Corridor10/Sprite" index="2"]
+visible = false
+
+[node name="Corridor11" parent="Modules/Corridors" instance=ExtResource("1_kloau")]
+position = Vector2(224, 34)
+script = null
+
+[node name="Sprite" parent="Modules/Corridors/Corridor11" index="0"]
+position = Vector2(0, -64)
+texture = ExtResource("5_7nq6q")
+
+[node name="Vertical_Ceiling_Left" parent="Modules/Corridors/Corridor11/Sprite/Borders" index="1"]
+visible = false
+
+[node name="Vertical_Ceiling_Right" parent="Modules/Corridors/Corridor11/Sprite/Borders" index="2"]
+visible = false
+
+[node name="Floor" parent="Modules/Corridors/Corridor11/Sprite/Borders" index="3"]
+visible = false
+
+[node name="Vertical_Floor_Left" parent="Modules/Corridors/Corridor11/Sprite/Borders" index="4"]
+visible = true
+
+[node name="Vertical_Floor_Right" parent="Modules/Corridors/Corridor11/Sprite/Borders" index="5"]
+visible = true
+
+[node name="Connection_Left" parent="Modules/Corridors/Corridor11/Sprite/Borders" index="6"]
+visible = false
+
+[node name="Connection_Right" parent="Modules/Corridors/Corridor11/Sprite/Borders" index="7"]
+visible = false
+
+[node name="Vertical_Connection_Right" parent="Modules/Corridors/Corridor11/Sprite/Borders" index="9"]
+visible = true
+
+[node name="Lights" parent="Modules/Corridors/Corridor11/Sprite" index="1"]
+visible = false
+
+[node name="Interactables" parent="Modules/Corridors/Corridor11/Sprite" index="2"]
+visible = false
+
+[node name="Corridor12" parent="Modules/Corridors" instance=ExtResource("1_kloau")]
+position = Vector2(224, 98)
+script = null
+
+[node name="Sprite" parent="Modules/Corridors/Corridor12" index="0"]
+position = Vector2(0, -64)
+texture = ExtResource("2_xuug3")
+
+[node name="Ceiling" parent="Modules/Corridors/Corridor12/Sprite/Borders" index="0"]
+visible = false
+
+[node name="Vertical_Ceiling_Left" parent="Modules/Corridors/Corridor12/Sprite/Borders" index="1"]
+visible = false
+
+[node name="Vertical_Ceiling_Right" parent="Modules/Corridors/Corridor12/Sprite/Borders" index="2"]
+visible = false
+
+[node name="Floor" parent="Modules/Corridors/Corridor12/Sprite/Borders" index="3"]
+visible = false
+
+[node name="Connection_Left" parent="Modules/Corridors/Corridor12/Sprite/Borders" index="6"]
+visible = false
+
+[node name="Connection_Right" parent="Modules/Corridors/Corridor12/Sprite/Borders" index="7"]
+visible = false
+
+[node name="Vertical_Connection_Left" parent="Modules/Corridors/Corridor12/Sprite/Borders" index="8"]
+visible = true
+
+[node name="Vertical_Connection_Right" parent="Modules/Corridors/Corridor12/Sprite/Borders" index="9"]
+visible = true
+
+[node name="Lights" parent="Modules/Corridors/Corridor12/Sprite" index="1"]
+visible = false
+
+[node name="Interactables" parent="Modules/Corridors/Corridor12/Sprite" index="2"]
+visible = false
+
+[node name="Corridor13" parent="Modules/Corridors" instance=ExtResource("1_kloau")]
+position = Vector2(224, 162)
+script = null
+
+[node name="Sprite" parent="Modules/Corridors/Corridor13" index="0"]
+position = Vector2(0, -64)
+texture = ExtResource("2_xuug3")
+
+[node name="Ceiling" parent="Modules/Corridors/Corridor13/Sprite/Borders" index="0"]
+visible = false
+
+[node name="Vertical_Ceiling_Left" parent="Modules/Corridors/Corridor13/Sprite/Borders" index="1"]
+visible = false
+
+[node name="Vertical_Ceiling_Right" parent="Modules/Corridors/Corridor13/Sprite/Borders" index="2"]
+visible = false
+
+[node name="Floor" parent="Modules/Corridors/Corridor13/Sprite/Borders" index="3"]
+visible = false
+
+[node name="Connection_Left" parent="Modules/Corridors/Corridor13/Sprite/Borders" index="6"]
+visible = false
+
+[node name="Connection_Right" parent="Modules/Corridors/Corridor13/Sprite/Borders" index="7"]
+visible = false
+
+[node name="Vertical_Connection_Left" parent="Modules/Corridors/Corridor13/Sprite/Borders" index="8"]
+visible = true
+
+[node name="Vertical_Connection_Right" parent="Modules/Corridors/Corridor13/Sprite/Borders" index="9"]
+visible = true
+
+[node name="Lights" parent="Modules/Corridors/Corridor13/Sprite" index="1"]
+visible = false
+
+[node name="Interactables" parent="Modules/Corridors/Corridor13/Sprite" index="2"]
+visible = false
+
+[node name="Corridor14" parent="Modules/Corridors" instance=ExtResource("1_kloau")]
+position = Vector2(224, 226)
+script = null
+
+[node name="Sprite" parent="Modules/Corridors/Corridor14" index="0"]
+position = Vector2(0, -64)
+texture = ExtResource("2_xuug3")
+
+[node name="Ceiling" parent="Modules/Corridors/Corridor14/Sprite/Borders" index="0"]
+visible = false
+
+[node name="Vertical_Ceiling_Left" parent="Modules/Corridors/Corridor14/Sprite/Borders" index="1"]
+visible = false
+
+[node name="Vertical_Ceiling_Right" parent="Modules/Corridors/Corridor14/Sprite/Borders" index="2"]
+visible = false
+
+[node name="Floor" parent="Modules/Corridors/Corridor14/Sprite/Borders" index="3"]
+visible = false
+
+[node name="Connection_Left" parent="Modules/Corridors/Corridor14/Sprite/Borders" index="6"]
+visible = false
+
+[node name="Connection_Right" parent="Modules/Corridors/Corridor14/Sprite/Borders" index="7"]
+visible = false
+
+[node name="Vertical_Connection_Left" parent="Modules/Corridors/Corridor14/Sprite/Borders" index="8"]
+visible = true
+
+[node name="Vertical_Connection_Right" parent="Modules/Corridors/Corridor14/Sprite/Borders" index="9"]
+visible = true
+
+[node name="Lights" parent="Modules/Corridors/Corridor14/Sprite" index="1"]
+visible = false
+
+[node name="Interactables" parent="Modules/Corridors/Corridor14/Sprite" index="2"]
+visible = false
+
+[node name="Corridor15" parent="Modules/Corridors" instance=ExtResource("1_kloau")]
+position = Vector2(224, 289)
+script = null
+
+[node name="Sprite" parent="Modules/Corridors/Corridor15" index="0"]
+position = Vector2(0, -63)
+texture = ExtResource("6_k2xnb")
+
+[node name="Ceiling" parent="Modules/Corridors/Corridor15/Sprite/Borders" index="0"]
+visible = false
+
+[node name="Vertical_Ceiling_Left" parent="Modules/Corridors/Corridor15/Sprite/Borders" index="1"]
+visible = false
+
+[node name="Vertical_Ceiling_Right" parent="Modules/Corridors/Corridor15/Sprite/Borders" index="2"]
+visible = false
+
+[node name="Connection_Left" parent="Modules/Corridors/Corridor15/Sprite/Borders" index="6"]
+visible = false
+
+[node name="Connection_Right" parent="Modules/Corridors/Corridor15/Sprite/Borders" index="7"]
+visible = false
+
+[node name="Vertical_Connection_Left" parent="Modules/Corridors/Corridor15/Sprite/Borders" index="8"]
+visible = true
+
+[node name="Vertical_Connection_Right" parent="Modules/Corridors/Corridor15/Sprite/Borders" index="9"]
+visible = true
+
+[node name="Lights" parent="Modules/Corridors/Corridor15/Sprite" index="1"]
+visible = false
+
+[node name="Interactables" parent="Modules/Corridors/Corridor15/Sprite" index="2"]
+visible = false
+
+[node name="Corridor16" parent="Modules/Corridors" instance=ExtResource("1_kloau")]
+position = Vector2(-288, 226)
+script = null
+
+[node name="Sprite" parent="Modules/Corridors/Corridor16" index="0"]
+position = Vector2(0, -64)
+texture = ExtResource("2_xuug3")
+
+[node name="Ceiling" parent="Modules/Corridors/Corridor16/Sprite/Borders" index="0"]
+visible = false
+
+[node name="Vertical_Ceiling_Left" parent="Modules/Corridors/Corridor16/Sprite/Borders" index="1"]
+visible = false
+
+[node name="Vertical_Ceiling_Right" parent="Modules/Corridors/Corridor16/Sprite/Borders" index="2"]
+visible = false
+
+[node name="Floor" parent="Modules/Corridors/Corridor16/Sprite/Borders" index="3"]
+visible = false
+
+[node name="Connection_Left" parent="Modules/Corridors/Corridor16/Sprite/Borders" index="6"]
+visible = false
+
+[node name="Connection_Right" parent="Modules/Corridors/Corridor16/Sprite/Borders" index="7"]
+visible = false
+
+[node name="Vertical_Connection_Left" parent="Modules/Corridors/Corridor16/Sprite/Borders" index="8"]
+visible = true
+
+[node name="Vertical_Connection_Right" parent="Modules/Corridors/Corridor16/Sprite/Borders" index="9"]
+visible = true
+
+[node name="Lights" parent="Modules/Corridors/Corridor16/Sprite" index="1"]
+visible = false
+
+[node name="Interactables" parent="Modules/Corridors/Corridor16/Sprite" index="2"]
+visible = false
+
+[node name="Corridor17" parent="Modules/Corridors" instance=ExtResource("1_kloau")]
+position = Vector2(-288, 289)
+script = null
+
+[node name="Sprite" parent="Modules/Corridors/Corridor17" index="0"]
+position = Vector2(0, -63)
+texture = ExtResource("6_k2xnb")
+
+[node name="Ceiling" parent="Modules/Corridors/Corridor17/Sprite/Borders" index="0"]
+visible = false
+
+[node name="Vertical_Ceiling_Left" parent="Modules/Corridors/Corridor17/Sprite/Borders" index="1"]
+visible = false
+
+[node name="Vertical_Ceiling_Right" parent="Modules/Corridors/Corridor17/Sprite/Borders" index="2"]
+visible = false
+
+[node name="Connection_Left" parent="Modules/Corridors/Corridor17/Sprite/Borders" index="6"]
+visible = false
+
+[node name="Connection_Right" parent="Modules/Corridors/Corridor17/Sprite/Borders" index="7"]
+visible = false
+
+[node name="Vertical_Connection_Left" parent="Modules/Corridors/Corridor17/Sprite/Borders" index="8"]
+visible = true
+
+[node name="Vertical_Connection_Right" parent="Modules/Corridors/Corridor17/Sprite/Borders" index="9"]
+visible = true
+
+[node name="Lights" parent="Modules/Corridors/Corridor17/Sprite" index="1"]
+visible = false
+
+[node name="Interactables" parent="Modules/Corridors/Corridor17/Sprite" index="2"]
 visible = false
 
 [node name="Background" type="CanvasLayer" parent="."]
@@ -26,6 +749,146 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+color = Color(0.00784314, 0.0117647, 0.0156863, 1)
+
+[node name="Foreground" type="CanvasLayer" parent="."]
+layer = 50
+
+[node name="RichTextLabel" type="RichTextLabel" parent="Foreground"]
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -576.0
+offset_top = 150.0
+offset_right = 576.0
+offset_bottom = 195.0
+grow_horizontal = 2
+theme_override_fonts/normal_font = ExtResource("8_0j5l3")
+theme_override_font_sizes/normal_font_size = 45
+bbcode_enabled = true
+text = "[center][color=#3B6D62]SURVIVE THE BUNKER"
+
+[node name="Play_Game" type="Button" parent="Foreground"]
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -150.0
+offset_top = 490.0
+offset_right = 150.0
+offset_bottom = 565.0
+grow_horizontal = 2
+mouse_default_cursor_shape = 2
+theme_override_styles/disabled = SubResource("StyleBoxTexture_hvbax")
+theme_override_styles/hover_pressed = SubResource("StyleBoxTexture_sx832")
+theme_override_styles/hover = SubResource("StyleBoxTexture_gvnvo")
+theme_override_styles/pressed = SubResource("StyleBoxTexture_8i0xa")
+theme_override_styles/normal = SubResource("StyleBoxTexture_imq5f")
+
+[node name="ColorRect" type="ColorRect" parent="Foreground/Play_Game"]
+z_index = -1
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
 color = Color(0.0431373, 0.0627451, 0.0862745, 1)
 
-[editable path="Modules/Corridor"]
+[node name="Camera2D" type="Camera2D" parent="."]
+zoom = Vector2(2, 2)
+
+[node name="FakePlayer" type="AnimatedSprite2D" parent="."]
+position = Vector2(0, 10)
+sprite_frames = SubResource("SpriteFrames_i4grw")
+animation = &"walking"
+
+[node name="Aura" type="PointLight2D" parent="FakePlayer"]
+position = Vector2(0, -2)
+shadow_enabled = true
+texture = SubResource("GradientTexture2D_gn1ob")
+
+[node name="HitBox" type="Area2D" parent="FakePlayer"]
+collision_layer = 536870912
+collision_mask = 536870912
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="FakePlayer/HitBox"]
+position = Vector2(-0.5, 4.5)
+shape = SubResource("RectangleShape2D_4j571")
+
+[node name="Audio_Control" type="Node2D" parent="FakePlayer"]
+position = Vector2(0, -10)
+script = ExtResource("2_tgbuw")
+sound_light_on = ExtResource("3_h0gqc")
+sound_light_off = ExtResource("4_4otei")
+sound_foot_steps = Array[AudioStreamMP3]([ExtResource("5_lxo7c"), ExtResource("6_elihr"), ExtResource("7_u5jl5"), ExtResource("8_jolsa"), ExtResource("9_4f3pk"), ExtResource("10_31i54"), ExtResource("11_06731"), ExtResource("12_ojgxe"), ExtResource("13_6kqnn")])
+sound_random = Array[AudioStreamMP3]([ExtResource("14_msfiv"), ExtResource("15_nc7jk"), ExtResource("16_ecowb"), ExtResource("17_e3tt4"), ExtResource("18_6hyvg"), ExtResource("19_07qcf"), ExtResource("20_gdmms"), ExtResource("21_c3yrt"), ExtResource("22_qx1hl"), ExtResource("23_hyern"), ExtResource("24_vuvef")])
+sound_random_very_close = Array[AudioStreamMP3]([ExtResource("25_8t33g"), ExtResource("26_7a56m"), ExtResource("27_7xfsh")])
+will_play_random_sounds = false
+
+[node name="Foot_Steps" type="AudioStreamPlayer2D" parent="FakePlayer/Audio_Control"]
+max_distance = 1000.0
+attenuation = 3.0
+bus = &"SFX"
+
+[node name="Random_Sounds" type="AudioStreamPlayer" parent="FakePlayer/Audio_Control"]
+bus = &"SFX"
+
+[node name="Gun_Shot" type="AudioStreamPlayer" parent="FakePlayer/Audio_Control"]
+stream = ExtResource("28_2ngqf")
+bus = &"SFX"
+
+[node name="Animation_Positions" type="Node2D" parent="."]
+
+[node name="Left" type="Area2D" parent="Animation_Positions"]
+collision_layer = 536870912
+collision_mask = 536870912
+
+[node name="Left_Ladder" type="CollisionShape2D" parent="Animation_Positions/Left"]
+position = Vector2(-256, 2)
+shape = SubResource("RectangleShape2D_xudfi")
+
+[node name="Right" type="Area2D" parent="Animation_Positions"]
+collision_layer = 536870912
+collision_mask = 536870912
+
+[node name="Right_Ladder" type="CollisionShape2D" parent="Animation_Positions/Right"]
+position = Vector2(265, 1)
+shape = SubResource("RectangleShape2D_xudfi")
+
+[node name="Despawn" type="Area2D" parent="Animation_Positions"]
+collision_layer = 536870912
+collision_mask = 536870912
+
+[node name="Right_Ladder" type="CollisionShape2D" parent="Animation_Positions/Despawn"]
+position = Vector2(256, 483)
+shape = SubResource("RectangleShape2D_fvm5s")
+
+[node name="SpawnPoint" type="Node2D" parent="Animation_Positions"]
+position = Vector2(-256, 483)
+
+[node name="AudioListener2D" type="AudioListener2D" parent="."]
+current = true
+
+[connection signal="pressed" from="Foreground/Play_Game" to="." method="_on_play_game_pressed"]
+[connection signal="area_entered" from="Animation_Positions/Left" to="." method="left_area_entered"]
+[connection signal="area_entered" from="Animation_Positions/Right" to="." method="right_area_entered"]
+[connection signal="area_entered" from="Animation_Positions/Despawn" to="." method="despawn"]
+
+[editable path="Modules/Corridors/Corridor"]
+[editable path="Modules/Corridors/Corridor2"]
+[editable path="Modules/Corridors/Corridor3"]
+[editable path="Modules/Corridors/Corridor4"]
+[editable path="Modules/Corridors/Corridor5"]
+[editable path="Modules/Corridors/Corridor6"]
+[editable path="Modules/Corridors/Corridor7"]
+[editable path="Modules/Corridors/Corridor8"]
+[editable path="Modules/Corridors/Corridor9"]
+[editable path="Modules/Corridors/Corridor10"]
+[editable path="Modules/Corridors/Corridor11"]
+[editable path="Modules/Corridors/Corridor12"]
+[editable path="Modules/Corridors/Corridor13"]
+[editable path="Modules/Corridors/Corridor14"]
+[editable path="Modules/Corridors/Corridor15"]
+[editable path="Modules/Corridors/Corridor16"]
+[editable path="Modules/Corridors/Corridor17"]

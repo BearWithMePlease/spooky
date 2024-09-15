@@ -13,6 +13,7 @@ var close_to_monster: Area2D
 var very_close_to_monster: Area2D
 var fix_on_ready_area_bug: bool = false
 @export var very_close_to_monster_color: Color = Color.RED
+@export var will_randomly_switch_closeness: bool = true
 
 enum MonsterCloseness {
 	DISTANT,
@@ -29,15 +30,18 @@ func on_main_finished_ready():
 		default_ceiling_lamp_color = ceiling_lamps[0].color
 	
 	close_to_monster = get_tree().get_first_node_in_group("close_to_monster_area") as Area2D
-	close_to_monster.area_entered.connect(on_near_monster.bind().bind(MonsterCloseness.CLOSE, false))
-	close_to_monster.area_exited.connect(on_near_monster.bind().bind(MonsterCloseness.DISTANT, false))
-
+	if close_to_monster != null:
+		close_to_monster.area_entered.connect(on_near_monster.bind().bind(MonsterCloseness.CLOSE, false))
+		close_to_monster.area_exited.connect(on_near_monster.bind().bind(MonsterCloseness.DISTANT, false))
+	
 	very_close_to_monster = get_tree().get_first_node_in_group("very_close_to_monster_area") as Area2D
-	very_close_to_monster.area_entered.connect(on_near_monster.bind().bind(MonsterCloseness.VERY_CLOSE, true))
-	very_close_to_monster.area_exited.connect(on_near_monster.bind().bind(MonsterCloseness.CLOSE, true))
+	if very_close_to_monster != null:
+		very_close_to_monster.area_entered.connect(on_near_monster.bind().bind(MonsterCloseness.VERY_CLOSE, true))
+		very_close_to_monster.area_exited.connect(on_near_monster.bind().bind(MonsterCloseness.CLOSE, true))
 	
 	#
-	randomly_switch_closeness()
+	if will_randomly_switch_closeness:
+		randomly_switch_closeness()
 
 func randomly_switch_closeness():
 	var delay = randf_range(60, 120)
@@ -63,7 +67,7 @@ func on_near_monster(area: Area2D, closeness: MonsterCloseness, from_very_close:
 		if not fix_on_ready_area_bug and self.closeness == MonsterCloseness.VERY_CLOSE and not from_very_close:
 			# Only on startup. Disable that close_to_monster_area can switch from very_close to close
 			self.fix_on_ready_area_bug = true
-			return 
+			return
 		set_ceiling_lamp_flicker(true, default_ceiling_lamp_color)
 	elif closeness == MonsterCloseness.VERY_CLOSE:
 		set_ceiling_lamp_flicker(false, very_close_to_monster_color)
@@ -72,11 +76,13 @@ func on_near_monster(area: Area2D, closeness: MonsterCloseness, from_very_close:
 
 func set_ceiling_lamp_flicker(enabled:bool, color: Color = default_ceiling_lamp_color):
 	flicker_id += 1
+
 	for lamp:PointLight2D in ceiling_lamps:
 		lamp.color = color
 		if enabled:
 			var sound_pitch = randf_range(0.7, 1.2)
 			var delay = randf_range(0, 1.5)
+			
 			_ceiling_lamp_flicker_animation(flicker_id, lamp, color, sound_pitch, delay)
 
 
