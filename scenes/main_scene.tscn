@@ -884,7 +884,7 @@ z_index = 2
 position = Vector2(0, 4.666)
 texture = ExtResource("6_qws5h")
 hframes = 23
-frame = 9
+frame = 10
 
 [node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="Player/body3"]
 stream = ExtResource("36_5chg8")
