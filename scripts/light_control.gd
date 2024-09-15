@@ -1,5 +1,7 @@
 extends Node2D
 
+class_name LightControl;
+
 @onready var audio_control := $"../Audio_Control"
 
 @onready var global_light: DirectionalLight2D = $Global_Light

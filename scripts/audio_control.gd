@@ -1,7 +1,7 @@
 extends Node
 class_name AudioControl
 
-@onready var light_control := $"../Light_Control"
+@export var light_control: LightControl = null;
 
 @export_category("Ceiling Light Sound")
 @export var sound_light_on: AudioStreamMP3

@@ -173,8 +173,9 @@ size = Vector2(30, 23)
 [node name="StartMenu" type="Node2D"]
 script = ExtResource("1_4npf5")
 
-[node name="Audio_Control" type="Node2D" parent="."]
+[node name="Audio_Control" type="Node2D" parent="." node_paths=PackedStringArray("light_control")]
 script = ExtResource("2_tgbuw")
+light_control = NodePath("../Light_Control")
 sound_light_on = ExtResource("3_h0gqc")
 sound_light_off = ExtResource("4_4otei")
 sound_foot_steps = Array[AudioStreamMP3]([ExtResource("5_lxo7c"), ExtResource("6_elihr"), ExtResource("7_u5jl5"), ExtResource("8_jolsa"), ExtResource("9_4f3pk"), ExtResource("10_31i54"), ExtResource("11_06731"), ExtResource("12_ojgxe"), ExtResource("13_6kqnn")])
@@ -820,9 +821,10 @@ collision_mask = 536870912
 position = Vector2(-0.5, 4.5)
 shape = SubResource("RectangleShape2D_4j571")
 
-[node name="Audio_Control" type="Node2D" parent="FakePlayer"]
+[node name="Audio_Control" type="Node2D" parent="FakePlayer" node_paths=PackedStringArray("light_control")]
 position = Vector2(0, -10)
 script = ExtResource("2_tgbuw")
+light_control = NodePath("../../Light_Control")
 sound_light_on = ExtResource("3_h0gqc")
 sound_light_off = ExtResource("4_4otei")
 sound_foot_steps = Array[AudioStreamMP3]([ExtResource("5_lxo7c"), ExtResource("6_elihr"), ExtResource("7_u5jl5"), ExtResource("8_jolsa"), ExtResource("9_4f3pk"), ExtResource("10_31i54"), ExtResource("11_06731"), ExtResource("12_ojgxe"), ExtResource("13_6kqnn")])

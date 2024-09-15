@@ -13,14 +13,14 @@ var packed_scenes := {
 }
 
 var module_prefabs = {
-	Modules.ModuleType.COMMUNICATION: preload("res://prefab/modules/communication.tscn"),
-	Modules.ModuleType.CORRIDOR: preload("res://prefab/modules/corridor.tscn"),
-	Modules.ModuleType.ENTRY: preload("res://prefab/modules/entry.tscn"),
-	Modules.ModuleType.GENERATOR: preload("res://prefab/modules/generator.tscn"),
-	Modules.ModuleType.WATER: preload("res://prefab/modules/water.tscn"),
-	Modules.ModuleType.WEAPONS: preload("res://prefab/modules/weapons.tscn"),
-	Modules.ModuleType.BEDROOM: preload("res://prefab/modules/bedroom.tscn"),
-	Modules.ModuleType.HOSPITAL: preload("res://prefab/modules/hospital.tscn"),
+	Module.ModuleType.COMMUNICATION: preload("res://prefab/modules/communication.tscn"),
+	Module.ModuleType.CORRIDOR: preload("res://prefab/modules/corridor.tscn"),
+	Module.ModuleType.ENTRY: preload("res://prefab/modules/entry.tscn"),
+	Module.ModuleType.GENERATOR: preload("res://prefab/modules/generator.tscn"),
+	Module.ModuleType.WATER: preload("res://prefab/modules/water.tscn"),
+	Module.ModuleType.WEAPONS: preload("res://prefab/modules/weapons.tscn"),
+	Module.ModuleType.BEDROOM: preload("res://prefab/modules/bedroom.tscn"),
+	Module.ModuleType.HOSPITAL: preload("res://prefab/modules/hospital.tscn"),
 }
 
 var builder_modules: Array[Module] = []
