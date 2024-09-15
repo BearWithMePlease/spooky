@@ -711,9 +711,15 @@ blend_mode = 1
 script = ExtResource("5_wrx4j")
 sound_light_on = ExtResource("4_ch04v")
 sound_light_off = ExtResource("5_76aoe")
+sound_light_volume = null
 sound_foot_steps = Array[AudioStreamMP3]([ExtResource("6_kbj1v"), ExtResource("7_ndd1u"), ExtResource("8_01px5"), ExtResource("9_igb8x"), ExtResource("10_nncqf"), ExtResource("11_4s113"), ExtResource("12_rh8bm"), ExtResource("13_n4g3t"), ExtResource("14_4o2oy")])
+sound_foot_volume = null
 sound_random = Array[AudioStreamMP3]([ExtResource("19_fdaxv"), ExtResource("20_1lwuc"), ExtResource("21_nq4b5"), ExtResource("22_d6db7"), ExtResource("23_2opvi"), ExtResource("24_eal8t"), ExtResource("25_4k2ct"), ExtResource("26_8fepu"), ExtResource("27_2xppg"), ExtResource("29_256ve"), ExtResource("30_22bms")])
+sound_random_volume = null
 sound_random_very_close = Array[AudioStreamMP3]([ExtResource("26_0lfmj"), ExtResource("27_g7mrr"), ExtResource("28_cvbbk")])
+sound_random_very_close_volume = null
+will_play_random_sounds = null
+sound_gun_shot_volume = null
 
 [node name="Foot_Steps" type="AudioStreamPlayer" parent="Audio_Control"]
 bus = &"SFX"

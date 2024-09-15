@@ -277,10 +277,10 @@ func _process(delta):
 			aura.enabled = true;
 	
 	
-	#if gunsAreGo:
-		#Input.set_custom_mouse_cursor(custom_cross, Input.CURSOR_ARROW) #TODO fix this shit
-	#else:
-		#Input.set_custom_mouse_cursor(custom_cursor, Input.CURSOR_ARROW)
+	if gunsAreGo:
+		Input.set_custom_mouse_cursor(custom_cross, Input.CURSOR_ARROW) #TODO fix this shit
+	else:
+		Input.set_custom_mouse_cursor(custom_cursor, Input.CURSOR_ARROW)
 	
 	
 	if $"../Monster/MonsterBody".getHealth() <= 0:
