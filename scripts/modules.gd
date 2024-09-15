@@ -274,13 +274,12 @@ func on_module_type_select(type: ModuleType, new_position = null):
 	self.type = type
 	moving = true
 	
+	var module_button = module_buttons.get(self.type) as ModuleButton
 	if new_position == null:
 		animation_new_position = grid_position
 		mover.init(grid_position, type, ModuleDirection.N)
 		mover.position.y -= GRID_SIZE
 		force_update = true
-		
-		var module_button = module_buttons.get(self.type) as ModuleButton
 		if module_button != null:
 			module_button.add_to_placeable_count(-1)
 	else:
@@ -391,6 +390,11 @@ func on_build_module():
 		# Grab second corridor and move it to lower grid spot
 		on_module_type_select(ModuleType.CORRIDOR)
 		mover.position.y += 2 * GRID_SIZE
+		
+		var module_button = module_buttons.get(self.type) as ModuleButton
+		if module_button != null:
+			module_button.add_to_placeable_count(-1)
+	
 	
 	if !firstBuilding:
 		$"../../AudioStreamPlayer2".play()
@@ -438,7 +442,7 @@ func on_undo_build_module(grab_item:bool):
 		# Move to cursor grid slot
 		adjust_surroundings(current_position, true)
 		grid_position = current_position
-	
+		
 	check_all_connected()
 	force_update = true
 	$"../../AudioStreamPlayer3".play()
