@@ -830,7 +830,7 @@ z_index = 2
 position = Vector2(0, 4.666)
 texture = ExtResource("6_qws5h")
 hframes = 23
-frame = 10
+frame = 9
 
 [node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="Player/body3"]
 stream = ExtResource("36_5chg8")
@@ -883,12 +883,11 @@ position = Vector2(0, 6)
 shape = SubResource("CapsuleShape2D_fcb8y")
 
 [node name="Label" type="Label" parent="Player"]
-visible = false
 offset_left = -75.0
 offset_top = -25.0
 offset_right = 229.0
 offset_bottom = -2.0
-scale = Vector2(0.5, 0.5)
+scale = Vector2(0.3, 0.3)
 theme_override_fonts/font = ExtResource("7_5wvvi")
 text = "press E to interact"
 
@@ -1046,28 +1045,6 @@ theme_override_font_sizes/normal_font_size = 30
 bbcode_enabled = true
 text = "[center][color=ccc]STATUS: [color=32ac32]SURVIVED"
 
-[node name="VolumeSlider" type="HSlider" parent="GUI/Menus/Victory"]
-layout_mode = 1
-anchors_preset = 5
-anchor_left = 0.5
-anchor_right = 0.5
-offset_left = -225.0
-offset_top = 300.0
-offset_right = 225.0
-offset_bottom = 350.0
-grow_horizontal = 2
-mouse_default_cursor_shape = 2
-value = 50.0
-
-[node name="Label" type="Label" parent="GUI/Menus/Victory/VolumeSlider"]
-layout_mode = 0
-offset_top = -15.0
-offset_right = 126.0
-offset_bottom = 8.0
-theme_override_fonts/font = ExtResource("7_5wvvi")
-theme_override_font_sizes/font_size = 18
-text = "Volume:"
-
 [node name="QuitToMenuButton" type="Button" parent="GUI/Menus/Victory"]
 layout_mode = 1
 anchors_preset = 5
@@ -1115,28 +1092,6 @@ theme_override_font_sizes/normal_font_size = 30
 bbcode_enabled = true
 text = "[center][color=ccc]STATUS: [color=ac3232]YOU DIED"
 
-[node name="VolumeSlider" type="HSlider" parent="GUI/Menus/Defeat"]
-layout_mode = 1
-anchors_preset = 5
-anchor_left = 0.5
-anchor_right = 0.5
-offset_left = -225.0
-offset_top = 300.0
-offset_right = 225.0
-offset_bottom = 350.0
-grow_horizontal = 2
-mouse_default_cursor_shape = 2
-value = 50.0
-
-[node name="Label" type="Label" parent="GUI/Menus/Defeat/VolumeSlider"]
-layout_mode = 0
-offset_top = -15.0
-offset_right = 126.0
-offset_bottom = 8.0
-theme_override_fonts/font = ExtResource("7_5wvvi")
-theme_override_font_sizes/font_size = 18
-text = "Volume:"
-
 [node name="QuitToMenuButton" type="Button" parent="GUI/Menus/Defeat"]
 layout_mode = 1
 anchors_preset = 5
@@ -1159,7 +1114,5 @@ text = "Back to Menu"
 [connection signal="value_changed" from="GUI/Menus/Pause/VolumeSlider" to="Audio_Control" method="_on_volume_slider_value_changed"]
 [connection signal="pressed" from="GUI/Menus/Pause/ResumeButton" to="GUI/Menus" method="_on_resume_button_pressed"]
 [connection signal="pressed" from="GUI/Menus/Pause/QuitToMenuButton" to="GUI/Menus" method="_on_quit_to_menu_button_pressed"]
-[connection signal="value_changed" from="GUI/Menus/Victory/VolumeSlider" to="Audio_Control" method="_on_volume_slider_value_changed"]
 [connection signal="pressed" from="GUI/Menus/Victory/QuitToMenuButton" to="GUI/Menus" method="_on_quit_to_menu_button_pressed"]
-[connection signal="value_changed" from="GUI/Menus/Defeat/VolumeSlider" to="Audio_Control" method="_on_volume_slider_value_changed"]
 [connection signal="pressed" from="GUI/Menus/Defeat/QuitToMenuButton" to="GUI/Menus" method="_on_quit_to_menu_button_pressed"]

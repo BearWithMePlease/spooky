@@ -27,6 +27,14 @@ var isClimbing = false
 var climbInputU = false
 var climbInputD = false
 
+
+func takeDMG(dmgvalue):
+	if HP > dmgvalue:
+		HP -= dmgvalue
+	else:
+		HP = 0
+
+
 func climb(delta):
 	
 	if climbInputU:
@@ -253,6 +261,9 @@ func _ready():
 	self.add_child(GUN)
 
 func _process(delta):
+	if $"../Monster/MonsterBody".getHealth() <= 0:
+		$"../GUI/Menus".victory() #virctory here
+
 	_deafenTimer = max(0, _deafenTimer - delta);
 	
 	if _deafenTimer <= 0:

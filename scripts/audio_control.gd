@@ -135,4 +135,4 @@ func _play_shoot_sound(id: int):
 
 func _on_volume_slider_value_changed(value: float) -> void:
 	var id = AudioServer.get_bus_index("Master")
-	AudioServer.set_bus_volume_db(id, linear_to_db(value))
+	AudioServer.set_bus_volume_db(id, linear_to_db(value)*0.4)
