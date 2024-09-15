@@ -791,6 +791,20 @@ GRAVITY = 500.0
 GUN = NodePath("gun")
 airtimeforDMG = 0.6
 
+[node name="generator" type="Label" parent="Player"]
+visible = false
+offset_left = -78.14
+offset_top = -25.8
+offset_right = 441.86
+offset_bottom = 9.2
+scale = Vector2(0.3, 0.3)
+theme_override_fonts/font = ExtResource("7_5wvvi")
+theme_override_font_sizes/font_size = 16
+text = "press E 
+to repair explosive Barrel"
+horizontal_alignment = 1
+vertical_alignment = 1
+
 [node name="expired" type="Label" parent="Player"]
 visible = false
 offset_left = -77.8
@@ -802,6 +816,34 @@ theme_override_fonts/font = ExtResource("7_5wvvi")
 theme_override_font_sizes/font_size = 16
 text = "no more supplies 
 for today in this stash"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="water" type="Label" parent="Player"]
+visible = false
+offset_left = -51.0
+offset_top = -27.399
+offset_right = 285.0
+offset_bottom = 15.601
+scale = Vector2(0.3, 0.3)
+theme_override_fonts/font = ExtResource("7_5wvvi")
+theme_override_font_sizes/font_size = 16
+text = "press E 
+to turn valve"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="communications" type="Label" parent="Player"]
+visible = false
+offset_left = -50.0
+offset_top = -27.23
+offset_right = 286.0
+offset_bottom = 15.77
+scale = Vector2(0.3, 0.3)
+theme_override_fonts/font = ExtResource("7_5wvvi")
+theme_override_font_sizes/font_size = 16
+text = "press E 
+to scout"
 horizontal_alignment = 1
 vertical_alignment = 1
 
