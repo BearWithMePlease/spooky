@@ -9,13 +9,13 @@ enum TreeNodeState {
 	FAILURE,
 }
 
-const GO_TO_PLAYER_SPEED := 1.5;
+const GO_TO_PLAYER_SPEED := 2;
 const GRAB_DST := 75.0;
 const CHARGE_TIME_THROW := 0.6;
 const LEG_DST_TO_THROW := 15.0;
 const THROW_DEAFEN_TIME := 0.5;
 const THROW_VELOCITY := 250.0;
-const TIME_TO_HURT := 0.5;
+const TIME_TO_HURT := 0.01;
 const RETREAT_SPEED := 1.0;
 const TIME_CHANGE_ROOM := 20.0;
 const WANDER_SPEED := 1.0;
