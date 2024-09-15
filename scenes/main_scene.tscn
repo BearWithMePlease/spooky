@@ -788,6 +788,7 @@ ACCELERATION = 300
 JUMP_VELOCITY = -120.0
 GRAVITY = 500.0
 GUN = NodePath("gun")
+airtimeforDMG = 0.6
 
 [node name="gun" parent="Player" node_paths=PackedStringArray("monster") instance=ExtResource("35_l6ijx")]
 monster = NodePath("../../Monster")
