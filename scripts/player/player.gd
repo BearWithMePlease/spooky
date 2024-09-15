@@ -303,7 +303,7 @@ func _physics_process(delta: float) -> void:
 		else:
 			if airtime > airtimeforDMG:
 				var dmgtaken = ceil(airtime*falldmg_multiplier)
-				if HP < dmgtaken:
+				if HP <= dmgtaken:
 					$"../GUI/Menus".defeat() #death here
 				else:
 					HP -= ceil(airtime*falldmg_multiplier)
@@ -375,7 +375,13 @@ func _on_area_2d_area_entered(area: Area2D) -> void:
 	#print(area)
 	if area.name == "Weapons":
 		isInWeapons = true
-		$Label.show()
+		
+		if !$"../Storm".isStorm():
+			if !ammoCooldown.has(lastWeaponsBuddy):
+				$"unused  weapons".show()
+			else:
+				$expired.show()
+		
 		lastWeaponsBuddy = area
 	else:
 		isInWeapons = false
@@ -435,7 +441,9 @@ func _on_area_2d_area_entered(area: Area2D) -> void:
 func _on_area_2d_area_exited(area: Area2D) -> void:
 	if area.name == "Weapons":
 		isInWeapons = false
-		$Label.hide()
+		
+		$"unused  weapons".hide()
+		$expired.hide()
 	
 	if area.name == "Healing":
 		isInHospital = false
