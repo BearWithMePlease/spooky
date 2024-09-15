@@ -375,13 +375,6 @@ func _on_area_2d_area_entered(area: Area2D) -> void:
 	#print(area)
 	if area.name == "Weapons":
 		isInWeapons = true
-		
-		if !$"../Storm".isStorm():
-			if !ammoCooldown.has(lastWeaponsBuddy):
-				$"unused  weapons".show()
-			else:
-				$expired.show()
-		
 		lastWeaponsBuddy = area
 	else:
 		isInWeapons = false
@@ -389,7 +382,7 @@ func _on_area_2d_area_entered(area: Area2D) -> void:
 	
 	if area.name == "Healing":
 		isInHospital = true
-		$Label.show()
+		#$Label.show()
 	else:
 		isInHospital = false
 
@@ -447,8 +440,9 @@ func _on_area_2d_area_exited(area: Area2D) -> void:
 	
 	if area.name == "Healing":
 		isInHospital = false
-		$Label.hide()
-	
+		$expired.hide()
+		$"unused hospital".hide()	
+		
 	if area.name == "Water":
 		isInWater = false
 		#$Label.hide()
@@ -486,10 +480,29 @@ var ammoCooldown = []
 var hospitalCooldown = false
 func interact():
 	if !$"../Storm".isStorm(): 
+		
+		if isInWeapons:
+			if !ammoCooldown.has(lastWeaponsBuddy):
+				$"unused  weapons".show()
+				$expired.hide()
+			else:
+				$expired.show()
+				$"unused  weapons".hide()
+		
 		if isInWeapons && Input.is_action_just_pressed("interact") && !ammoCooldown.has(lastWeaponsBuddy):
 			GUN.ammunition_pool_total += 30
 			ammoCooldown.append(lastWeaponsBuddy)
 			print(GUN.ammunition_pool_total)
+		
+		
+		if isInHospital:
+			if !hospitalCooldown:
+				$"unused hospital".show()
+				$expired.hide()
+			else:
+				$expired.show()
+				$"unused hospital".hide()
+		
 		
 		if isInHospital && Input.is_action_just_pressed("interact") && !hospitalCooldown:
 			if HP +50 > maxHP:
