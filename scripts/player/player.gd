@@ -272,7 +272,6 @@ func _process(delta):
 var airtime = 0
 @export var airtimeforDMG = 0.4
 func _physics_process(delta: float) -> void:
-	print(airtime)
 	if isClimbing:
 		airtime = 0
 	
